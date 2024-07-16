@@ -7,23 +7,37 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const cookieStore = request.cookies;
   const access_token = cookieStore.get("access_token")?.value;
-  const protectedRoutes = ["/teste"];
+  const protectedRoutes = ["/review"];
   const validate = await validateSession();
+
+  let currentUrl = new URL(request.url);
 
   headers.set("x-current-path", pathname);
 
+  if (pathname.endsWith("/")) {
+    const pageNumber = currentUrl.searchParams.get("pageNumber");
+
+    if (!pageNumber) {
+      if (!pageNumber) {
+        currentUrl.searchParams.set("pageNumber", "1");
+      }
+
+      return NextResponse.redirect(currentUrl.href);
+    }
+  }
+
   const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
 
   if (isProtectedRoute && !access_token) {
-    return NextResponse.redirect(new URL("/signin", request.url));
+    return NextResponse.redirect(new URL("/signin", currentUrl.href));
   }
 
   if (isProtectedRoute && access_token) {
     if (!validate) {
       logout();
-      return NextResponse.redirect(new URL("/signin", request.url));
+      return NextResponse.redirect(new URL("/signin", currentUrl.href));
     }
   }
 
@@ -31,7 +45,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/signin") || pathname.startsWith("/signup");
 
   if (validate && isAuthenticateRoutes) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/", currentUrl.href));
   }
 
   const response = NextResponse.next({
