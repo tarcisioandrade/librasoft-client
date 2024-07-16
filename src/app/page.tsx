@@ -33,7 +33,7 @@ export default async function Home({
   const hasPreviusPage = books ? books?.currentPage > 1 : false;
   const hasNextPage = books ? books?.currentPage < books.totalPages : false;
 
-  return (
+  return (  
     <>
       <Header />
       <div className="container">
