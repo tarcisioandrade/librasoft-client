@@ -3,5 +3,7 @@ export type Pagination<TData> = {
   totalPages: number;
   pageSize: number;
   totalCount: number;
-  data: Array<TData>
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+  data: Array<TData>;
 };

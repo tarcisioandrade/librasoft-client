@@ -1,5 +1,6 @@
 import { CacheKeys } from "@/cache-keys";
 import env from "@/env";
+import { Pagination } from "@/types/Pagination";
 import { Response } from "@/types/Response";
 import { Review } from "@/types/Review";
 import { fetchWithCredentials } from "@/utils/fetch-with-credentials";
@@ -7,11 +8,12 @@ import { fetchWithCredentials } from "@/utils/fetch-with-credentials";
 export class ReviewService {
   private baseURL = `${env.BACKEND_URL}/review`;
 
-  async GetAll(bookId: string) {
-    const res = await fetch(this.baseURL + `/${bookId}`, {
+  async GetAll(bookId: string, pageNumber: number = 1) {
+    const res = await fetch(this.baseURL + `/${bookId}?pageNumber=${pageNumber}`, {
       next: { tags: [CacheKeys.Review.GetAll] },
     });
-    const data = (await res.json()) as Response<Review[]>;
+
+    const data = (await res.json()) as Pagination<Review>;
     return data;
   }
 
@@ -30,7 +32,7 @@ export class ReviewService {
   }
 
   async Get(bookId: string) {
-    const { data, response } = await fetchWithCredentials<Response<Review>>(
+    const { data } = await fetchWithCredentials<Response<Review>>(
       `/review/${bookId}/user`,
     );
 
