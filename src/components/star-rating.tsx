@@ -12,9 +12,9 @@ const StarRating = ({ rating, totalStars = 5, size }: Props) => {
 
   for (let i = 0; i < totalStars; i++) {
     if (i < rating) {
-      stars.push(<Star size={size} fill="gold" color="gold" key={i} />);
+      stars.push(<Star size={size} fill="#fb5" color="#fb5" key={i} />);
     } else {
-      stars.push(<Star size={size} color="gold" key={i} />);
+      stars.push(<Star size={size} color="#fb5" key={i} />);
     }
   }
 

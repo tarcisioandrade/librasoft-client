@@ -2,12 +2,13 @@
 
 import { cn } from "@/lib/utils";
 import { Review } from "@/types/Review";
-import { User, Star } from "lucide-react";
+import { User } from "lucide-react";
 import { ComponentProps, useOptimistic } from "react";
 import { Button } from "./ui/button";
 import { createLike } from "@/actions/create-like-action";
 import { deleteLike } from "@/actions/delete-like.action";
 import { useRouter } from "next/navigation";
+import StarRating from "./star-rating";
 
 type Props = {
   review: Review;
@@ -60,7 +61,7 @@ const ReviewCard = ({
         </span>
         <div className="flex items-center gap-1">
           <span className="flex items-center gap-1">
-            <Star size={14} /> {review.rating.toFixed(1)}
+            <StarRating rating={review.rating} size={14} />
           </span>
           <strong>{review.title}</strong>
         </div>
