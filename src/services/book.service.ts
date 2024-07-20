@@ -1,12 +1,12 @@
 import env from "@/env";
-import { Book } from "@/types/Book";
+import { Book, BookRelated } from "@/types/Book";
 import { Pagination } from "@/types/Pagination";
 import { Response } from "@/types/Response";
 
 export class BookService {
   private baseURL = `${env.BACKEND_URL}/book`;
 
-  async GetBooks(params: { [key: string]: string | null }) {
+  async Get(params: { [key: string]: string | null }) {
     const url = new URL(this.baseURL);
 
     const DEFAULT_PARAMS = {
@@ -30,9 +30,16 @@ export class BookService {
     return data;
   }
 
-  async GetBookById(id: string) {
+  async GetById(id: string) {
     const res = await fetch(`${this.baseURL}/${id}`);
     const data = (await res.json()) as Response<Book>;
+
+    return data;
+  }
+
+  async GetRelated(id: string) {
+    const res = await fetch(this.baseURL + `/${id}/related`);
+    const data = (await res.json()) as Response<BookRelated[]>;
 
     return data;
   }

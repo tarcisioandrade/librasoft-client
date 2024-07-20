@@ -3,11 +3,13 @@ import Header from "@/components/header";
 import ReviewCard from "@/components/review-card";
 import StarRating from "@/components/star-rating";
 import { Button } from "@/components/ui/button";
+import { ECoverType } from "@/enums/ECoverType";
 import { BookService } from "@/services/book.service";
 import { LikeService } from "@/services/like.service";
 import { ReviewService } from "@/services/review.service";
 import { getSession } from "@/services/session";
 import { Review } from "@/types/Review";
+import { truncateString } from "@/utils/truncate-string";
 import {
   Barcode,
   BookA,
@@ -19,7 +21,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, {  } from "react";
+import React from "react";
 
 const bookService = new BookService();
 const reviewService = new ReviewService();
@@ -27,7 +29,8 @@ const likeService = new LikeService();
 
 const BookPage = async ({ params }: { params: { id: string } }) => {
   const session = await getSession();
-  const book = await bookService.GetBookById(params.id);
+  const book = await bookService.GetById(params.id);
+  const relatedBooks = await bookService.GetRelated(params.id);
   const reviews = await reviewService.GetAll(book.data.id);
   let reviewUser: Review | null = null;
   if (session) {
@@ -35,11 +38,13 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
     if (review?.data) reviewUser = review.data;
   }
 
+  // @ts-ignore
+  let key: keyof typeof ECoverType = book.data.coverType;
+
   return (
     <>
       <Header />
       <div className="container-secondary my-6">
-        <div className="mb-4 text-sm">Home {">"} Tecnologia</div>
         <div className="flex gap-12">
           <div className="flex-1">
             <div className="h-[414px] w-[292px]">
@@ -59,7 +64,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
                 <p>Devolução 30 dias após a data de aluguel.</p>
                 <p>Sujeito a penalidades em caso de atraso.</p>
                 <p>
-                  48 horas para a retirada do livro ou o aluguel é cancelado
+                  48 horas para a retirada do livro ou o pedido é cancelado
                   automaticamente.
                 </p>
               </div>
@@ -69,11 +74,11 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
             <h1 className="text-2xl font-semibold">
               {book.data.title}{" "}
               <span className="font-normal text-muted-foreground">
-                Capa Comum -{" "}
+                {ECoverType[key]} -{" "}
               </span>
               <span className="font-normal text-muted-foreground">
                 {new Date(book.data.publicationAt).toLocaleDateString("pt-BR", {
-                  dateStyle: "medium",
+                  dateStyle: "long",
                 })}
               </span>
             </h1>
@@ -88,20 +93,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
               <StarRating size={12} rating={book.data.averageRating} />
             </span>
             <Divider />
-            <p className="text-sm leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Perferendis facilis iusto blanditiis exercitationem illum
-              necessitatibus voluptatem quam. Nobis labore quisquam rerum
-              fugiat, inventore, iusto quod delectus aspernatur id sit quasi
-              ducimus ipsam, voluptas earum maxime perspiciatis eaque commodi
-              dolores eos. Veniam laudantium blanditiis eum error odit omnis ab
-              impedit sunt dignissimos, sapiente numquam culpa nisi ea
-              distinctio sequi at magni! Itaque dolor facilis perferendis vel
-              vero ex error fugit natus iste repellat quos iure sequi excepturi,
-              tenetur veniam eius culpa autem blanditiis cumque labore. Minus,
-              molestias doloribus enim nostrum quasi eaque voluptate soluta
-              similique quibusdam consectetur minima? Et, vero temporibus.
-            </p>
+            <p className="text-sm leading-relaxed">{book.data.sinopse}</p>
             <Divider />
             <div>
               <p className="mb-6 text-lg">Detalhes do Produto</p>
@@ -111,15 +103,15 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
                   <Hotel />
                   {book.data.publisher}
                 </li>
-                <li>
+                <li className="capitalize">
                   <span className="font-semibold">Idioma</span>
                   <BookA />
-                  Português
+                  {book.data.language}
                 </li>
                 <li>
                   <span className="font-semibold">Numero de Páginas</span>
                   <BookOpenText />
-                  432 páginas
+                  {book.data.pageCount} páginas
                 </li>
                 <li>
                   <span className="font-semibold">ISBN-13</span>
@@ -129,11 +121,11 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
                 <li>
                   <span className="font-semibold">Dimensões</span>
                   <Ruler />
-                  16 x 12 x 25 cm
+                  {`${book.data.dimensions.width} x ${book.data.dimensions.height} x ${book.data.dimensions.depth} cm`}
                 </li>
                 <li>
                   <span className="font-semibold">Avaliação</span>
-                  <Star color="gold" fill="gold" />
+                  <Star color="#fb5" fill="#fb5" />
                   {book.data.averageRating.toFixed(1)}
                 </li>
                 <li>
@@ -154,15 +146,30 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
         <section>
           <p className="text-2xl">Livros Relacionados</p>
           <div className="mt-4 flex gap-4">
-            {Array.from({ length: 5 }).map((_v, index) => (
-              <Link href={`/book/${book.data.id}`} key={index}>
-                <div className="h-[284px] w-52 rounded bg-muted" />
-                <p className="tracking-tighter">{book.data.title}</p>
+            {relatedBooks.data.map((related) => (
+              <Link
+                className="w-[calc(20%-13px)] space-y-1 rounded"
+                href={`/book/${related.id}`}
+                key={related.id}
+              >
+                <div className="h-[284px] w-52 rounded bg-muted">
+                  <Image
+                    src={related.image}
+                    width={215}
+                    height={284}
+                    alt={related.title}
+                    className="h-full"
+                  />
+                </div>
+                <p className="h-10 w-fit text-sm font-semibold">
+                  {truncateString(related.title, 56)}
+                </p>
                 <div className="text-xs text-muted-foreground">
-                  {book.data.author.name}
+                  {related.authorName}
                 </div>
                 <div className="flex items-center gap-1 text-sm">
-                  4.9 <Star size={14} />
+                  {related.averageRating.toFixed(1)}{" "}
+                  <Star size={14} color="#fb5" fill="#fb5" />
                 </div>
               </Link>
             ))}
@@ -207,33 +214,43 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
             )}
             <p className="pl-4 text-2xl">Principais Avaliações dos usuários</p>
             <div className="mt-6 space-y-6">
-              {reviews.data
-                .filter((review) =>
-                  reviewUser ? reviewUser.id !== review.id : review,
-                )
-                .map(async (review) => {
-                  const isLiked = session
-                    ? await likeService.Get(review.id)
-                    : false;
+              {!reviews.data.length ? (
+                <p className="pl-4">Não há comentários disponíveis.</p>
+              ) : (
+                reviews.data
+                  .filter((review) =>
+                    reviewUser ? reviewUser.id !== review.id : review,
+                  )
+                  .map(async (review) => {
+                    const isLiked = session
+                      ? await likeService.Get(review.id)
+                      : false;
 
-                  return (
-                    <ReviewCard
-                      key={review.id}
-                      review={review}
-                      currentUserReviewId={reviewUser?.id}
-                      isLiked={isLiked}
-                      authenticate={!!session}
-                    />
-                  );
-                })}
+                    return (
+                      <ReviewCard
+                        key={review.id}
+                        review={review}
+                        currentUserReviewId={reviewUser?.id}
+                        isLiked={isLiked}
+                        authenticate={!!session}
+                      />
+                    );
+                  })
+              )}
             </div>
-
-            <Link
-              href={`/book/${book.data.id}/book-review`}
-              className="mt-6 block pl-4 text-sm text-blue-700"
-            >
-              Ver mais avaliações →
-            </Link>
+            {reviews.totalPages > 1 && (
+              <Link
+                href={{
+                  pathname: `/book/${book.data.id}/book-review`,
+                  query: {
+                    pageNumber: 1,
+                  },
+                }}
+                className="mt-6 block pl-4 text-sm text-blue-700"
+              >
+                Ver mais avaliações →
+              </Link>
+            )}
           </div>
         </section>
       </div>

@@ -11,7 +11,7 @@ const bookService = new BookService();
 const reviewService = new ReviewService();
 
 const ReviewPage = async ({ params }: { params: { id: string } }) => {
-  const book = await bookService.GetBookById(params.id);
+  const book = await bookService.GetById(params.id);
   const review = await reviewService.Get(book.data.id);
   if (review?.data) redirect(`/book/${book.data.id}`);
 
