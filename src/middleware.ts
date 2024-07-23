@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { logout, validateSession } from "./services/session";
 
+const protectedRoutes = ["/review", "/rent"];
+
 export async function middleware(request: NextRequest) {
   const headers = new Headers(request.headers);
   const pathname = request.nextUrl.pathname;
   const cookieStore = request.cookies;
   const access_token = cookieStore.get("access_token")?.value;
-  const protectedRoutes = ["/review"];
   const validate = await validateSession();
 
   let currentUrl = new URL(request.url);
