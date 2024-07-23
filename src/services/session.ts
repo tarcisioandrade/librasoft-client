@@ -3,6 +3,7 @@ import { authenticateTokensSchema } from "../schemas/session.schema";
 import env from "../env";
 import { userSchema } from "../schemas/user.schema";
 import { decrypt, encrypt } from "@/lib/jwt";
+import { $fetch } from "@/lib/fetch-base";
 
 const DEFAULT_ERROR_MESSAGE =
   "Ocorreu um erro inesperado, por favor, tente novamente.";
@@ -13,38 +14,31 @@ export async function signin(formData: FormData) {
     password: formData.get("password"),
   };
 
-  const request = await fetch(`${env.BACKEND_URL}/authenticate/signin`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const { data, error } = await $fetch(
+    `${env.BACKEND_URL}/authenticate/signin`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formSignin),
+      output: authenticateTokensSchema,
     },
-    body: JSON.stringify(formSignin),
-  });
+  );
 
-  const json = await request.json();
-
-  const tokens = await authenticateTokensSchema.safeParseAsync(json);
-
-  if (!request.ok) {
+  if (error) {
     return {
       success: false,
       error: {
-        message: [json.errors[0] || DEFAULT_ERROR_MESSAGE],
+        message: [error.errors ?? DEFAULT_ERROR_MESSAGE],
       },
-    };
-  }
-
-  if (!tokens.success) {
-    return {
-      success: false,
-      error: { message: [DEFAULT_ERROR_MESSAGE] },
     };
   }
 
   cookies().set({
     name: "access_token",
     secure: process.env.NODE_ENV === "production",
-    value: tokens.data.access_token,
+    value: data.access_token,
     httpOnly: true,
     path: "/",
   });
@@ -67,7 +61,7 @@ export async function signup(formData: FormData) {
     password: formData.get("password"),
   };
 
-  const request = await fetch(`${env.BACKEND_URL}/authenticate/signup`, {
+  const { error } = await $fetch(`${env.BACKEND_URL}/authenticate/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -75,12 +69,11 @@ export async function signup(formData: FormData) {
     body: JSON.stringify(formSignup),
   });
 
-  if (!request.ok) {
-    const json = await request.json();
+  if (error) {
     return {
       success: false,
       error: {
-        message: [json.errors[0] || DEFAULT_ERROR_MESSAGE],
+        message: [error.errors[0] || DEFAULT_ERROR_MESSAGE],
       },
     };
   }
@@ -107,27 +100,26 @@ async function setSession() {
     };
   }
 
-  const req = await fetch(`${env.BACKEND_URL}/user`, {
+  const { data, error } = await $fetch(`${env.BACKEND_URL}/user`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
     cache: "force-cache",
+    output: userSchema,
     next: {
       tags: ["session"],
     },
   });
 
-  const json = await req.json();
-
-  if (!req.ok) {
+  if (error) {
     return {
       success: false,
       error: { message: [DEFAULT_ERROR_MESSAGE] },
     };
   }
 
-  const parsed = await encrypt(json);
+  const parsed = await encrypt(data);
 
   cookies().set({
     name: "session",
@@ -154,14 +146,19 @@ export async function getSession() {
 
 export async function validateSession() {
   const access_token = cookies().get("access_token")?.value;
+  let status: boolean = false;
 
-  const req = await fetch(`${env.BACKEND_URL}/authenticate/check`, {
+  await $fetch(`${env.BACKEND_URL}/authenticate/check`, {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
+    onSuccess() {
+      status = true;
+    },
+    onError() {
+      status = false;
+    },
   });
 
-  const STATUS_OK_CODE = 200;
-
-  return req.status === STATUS_OK_CODE;
+  return status;
 }

@@ -1,12 +1,12 @@
 import env from "@/env";
+import { $fetch } from "@/lib/fetch-base";
 import { Category } from "@/types/Category";
 
 export class CategoryService {
   private baseURL = `${env.BACKEND_URL}/category`;
 
   async getCategories() {
-    const request = await fetch(this.baseURL);
-    const data = (await request.json()) as Array<Category>;
-    return data;
+    const req = await $fetch<Category[]>(this.baseURL);
+    return req.data;
   }
 }

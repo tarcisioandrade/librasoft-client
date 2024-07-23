@@ -1,5 +1,6 @@
 import { CacheKeys } from "@/cache-keys";
 import env from "@/env";
+import { $fetch } from "@/lib/fetch-base";
 import { Pagination } from "@/types/Pagination";
 import { Response } from "@/types/Response";
 import { Review } from "@/types/Review";
@@ -9,12 +10,13 @@ export class ReviewService {
   private baseURL = `${env.BACKEND_URL}/review`;
 
   async GetAll(bookId: string, pageNumber: number = 1) {
-    const res = await fetch(this.baseURL + `/${bookId}?pageNumber=${pageNumber}`, {
-      next: { tags: [CacheKeys.Review.GetAll] },
-    });
-
-    const data = (await res.json()) as Pagination<Review>;
-    return data;
+    const res = await $fetch<Pagination<Review>>(
+      this.baseURL + `/${bookId}?pageNumber=${pageNumber}`,
+      {
+        next: { tags: [CacheKeys.Review.GetAll] },
+      },
+    );
+    return res.data;
   }
 
   async Create(

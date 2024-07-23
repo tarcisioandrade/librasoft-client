@@ -22,6 +22,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import RentButton from "../components/rent-button";
+import { notFound } from "next/navigation";
 
 const bookService = new BookService();
 const reviewService = new ReviewService();
@@ -30,6 +32,9 @@ const likeService = new LikeService();
 const BookPage = async ({ params }: { params: { id: string } }) => {
   const session = await getSession();
   const book = await bookService.GetById(params.id);
+
+  if (!book) return notFound();
+
   const relatedBooks = await bookService.GetRelated(params.id);
   const reviews = await reviewService.GetAll(book.data.id);
   let reviewUser: Review | null = null;
@@ -58,7 +63,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
             </div>
             <div className="mt-4 flex flex-col gap-2">
               <span className="text-green-700">Disponivel</span>
-              <Button>Alugar</Button>
+              <RentButton bookId={book.data.id}>Alugar</RentButton>
               <Button variant="secondary">Adicionar aos Favoritos</Button>
               <div className="space-y-1 text-xs text-muted-foreground">
                 <p>Devolução 30 dias após a data de aluguel.</p>
@@ -146,7 +151,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
         <section>
           <p className="text-2xl">Livros Relacionados</p>
           <div className="mt-4 flex gap-4">
-            {relatedBooks.data.map((related) => (
+            {relatedBooks?.data.map((related) => (
               <Link
                 className="w-[calc(20%-13px)] space-y-1 rounded"
                 href={`/book/${related.id}`}
@@ -214,7 +219,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
             )}
             <p className="pl-4 text-2xl">Principais Avaliações dos usuários</p>
             <div className="mt-6 space-y-6">
-              {!reviews.data.length ? (
+              {!reviews?.data.length ? (
                 <p className="pl-4">Não há comentários disponíveis.</p>
               ) : (
                 reviews.data
@@ -238,7 +243,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
                   })
               )}
             </div>
-            {reviews.totalPages > 1 && (
+            {reviews && reviews.totalPages > 1 && (
               <Link
                 href={{
                   pathname: `/book/${book.data.id}/book-review`,

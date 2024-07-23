@@ -28,7 +28,7 @@ export default async function Home({
     pageNumber: searchParams.pageNumber || "1",
     search: searchParams.search || null,
   };
-  const books = await bookService.Get(queries);
+  const books = await bookService.GetAll(queries);
   const categories = await categoryService.getCategories();
   const hasPreviusPage = books ? books?.currentPage > 1 : false;
   const hasNextPage = books ? books?.currentPage < books.totalPages : false;

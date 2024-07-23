@@ -1,4 +1,5 @@
 import env from "@/env";
+import { $fetch } from "@/lib/fetch-base";
 import { Book, BookRelated } from "@/types/Book";
 import { Pagination } from "@/types/Pagination";
 import { Response } from "@/types/Response";
@@ -6,7 +7,7 @@ import { Response } from "@/types/Response";
 export class BookService {
   private baseURL = `${env.BACKEND_URL}/book`;
 
-  async Get(params: { [key: string]: string | null }) {
+  async GetAll(params: { [key: string]: string | null }) {
     const url = new URL(this.baseURL);
 
     const DEFAULT_PARAMS = {
@@ -24,23 +25,22 @@ export class BookService {
       }
     });
 
-    const res = await fetch(url.href);
-    const data = (await res.json()) as Pagination<Book>;
+    const { data } = await $fetch<Pagination<Book>>(url.href);
 
     return data;
   }
 
   async GetById(id: string) {
-    const res = await fetch(`${this.baseURL}/${id}`);
-    const data = (await res.json()) as Response<Book>;
+    const res = await $fetch<Response<Book>>(`${this.baseURL}/${id}`);
 
-    return data;
+    return res.data;
   }
 
   async GetRelated(id: string) {
-    const res = await fetch(this.baseURL + `/${id}/related`);
-    const data = (await res.json()) as Response<BookRelated[]>;
+    const res = await $fetch<Response<BookRelated[]>>(
+      this.baseURL + `/${id}/related`,
+    );
 
-    return data;
+    return res.data;
   }
 }

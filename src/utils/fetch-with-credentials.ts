@@ -2,29 +2,47 @@ import "server-only";
 
 import env from "@/env";
 import { cookies } from "next/headers";
+import { betterFetch, BetterFetchOption } from "@better-fetch/fetch";
+
+type FetchError = {
+  message?: string | undefined;
+  status: number;
+  statusText: string;
+} | null;
+
+type FetchReturns<TData> = {
+  data: TData | null;
+  error: FetchError;
+  response: Response;
+};
 
 export async function fetchWithCredentials<TData>(
   path: string,
-  options?: RequestInit,
-): Promise<{ data: TData | null; response: Response }> {
-  let response: Response = new Response();
-  let data: TData | null = null;
+  options?: BetterFetchOption,
+): Promise<FetchReturns<TData>> {
+  const access_token = cookies().get("access_token")?.value;
 
-  try {
-    const access_token = cookies().get("access_token")?.value;
-    response = await fetch(`${env.BACKEND_URL}${path}`, {
+  if (!access_token) throw new Error("Acces token not found.");
+
+  let response = new Response();
+
+  const { data, error } = await betterFetch<TData>(
+    `${env.BACKEND_URL}${path}`,
+    {
       ...options,
       headers: {
         ...options?.headers,
-        Authorization: `Bearer ${access_token}`,
       },
-    });
-    if (!access_token) throw new Error("Acces token not found.");
-    if (response.status === 200) data = (await response.json()) as TData;
-  } catch (error) {
-    console.log("error", error);
-    throw error;
-  } finally {
-    return { response, data };
-  }
+      auth: {
+        type: "Bearer",
+        token: access_token,
+      },
+      onResponse(context) {
+        response = context.response;
+        return context.response;
+      },
+    },
+  );
+
+  return { data, error, response };
 }
