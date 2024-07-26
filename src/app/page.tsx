@@ -1,3 +1,4 @@
+import { CreateBagAction } from "@/actions/create-bag.action";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import {
@@ -65,33 +66,43 @@ export default async function Home({
             {!books?.data.length && <p>Nada encontrado.</p>}
             <div className="flex flex-wrap gap-4">
               {books?.data.map((book) => (
-                <Link
+                <div
                   key={book.id}
                   className="h-min-[460px] flex w-[calc(20%-13px)] flex-col justify-between rounded bg-secondary p-2"
-                  href={`/book/${book.id}`}
                 >
-                  <div className="mx-auto h-[260px] w-[180px]">
-                    <Image
-                      src={book.image}
-                      alt={book.title}
-                      width={440}
-                      height={480}
-                      className="h-full"
-                    />
-                  </div>
-                  <h3 className="mt-2 min-h-[40px] text-sm font-semibold tracking-tighter">
-                    {truncateString(book.title, 56)}
-                  </h3>
-                  <div className="space-y-1 py-2">
-                    <p className="text-sm font-medium tracking-tighter text-muted-foreground">
-                      {book.author.name}
-                    </p>
-                    <p className="text-xs tracking-tighter text-muted-foreground">
-                      Capa Dura
-                    </p>
-                  </div>
-                  <Button className="uppercase">Alugar</Button>
-                </Link>
+                  <Link href={`/book/${book.id}`}>
+                    <div className="mx-auto h-[260px] w-[180px]">
+                      <Image
+                        src={book.image}
+                        alt={book.title}
+                        width={440}
+                        height={480}
+                        className="h-full"
+                      />
+                    </div>
+                    <h3 className="mt-2 min-h-[40px] text-sm font-semibold tracking-tighter">
+                      {truncateString(book.title, 72)}
+                    </h3>
+                    <div className="space-y-1 py-2">
+                      <p className="text-sm font-medium tracking-tighter text-muted-foreground">
+                        {book.author.name}
+                      </p>
+                      <p className="text-xs tracking-tighter text-muted-foreground">
+                        Capa Dura
+                      </p>
+                    </div>
+                  </Link>
+                  <form action={CreateBagAction}>
+                    <input hidden name="bookId" defaultValue={book.id} />
+                    <Button
+                      className="w-full uppercase"
+                      type="submit"
+                      disabled={book.averageRating <= 0}
+                    >
+                      {book.averageRating <= 0 ? "Indisponível" : "Alugar"}
+                    </Button>
+                  </form>
+                </div>
               ))}
             </div>
             <PaginationComponent className="my-12">
