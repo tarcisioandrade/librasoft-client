@@ -1,6 +1,9 @@
 export class CacheKeys {
   static Review = {
-    Get: "get-key",
-    GetAll: "get-all-key",
+    Get: "get-review",
+    GetAll: "get-all-review",
+  };
+  static Bag = {
+    GetAll: "get-all-bag",
   };
 }

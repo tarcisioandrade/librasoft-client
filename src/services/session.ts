@@ -4,9 +4,7 @@ import env from "../env";
 import { userSchema } from "../schemas/user.schema";
 import { decrypt, encrypt } from "@/lib/jwt";
 import { $fetch } from "@/lib/fetch-base";
-
-const DEFAULT_ERROR_MESSAGE =
-  "Ocorreu um erro inesperado, por favor, tente novamente.";
+import { Constants } from "@/constants";
 
 export async function signin(formData: FormData) {
   const formSignin = {
@@ -14,23 +12,20 @@ export async function signin(formData: FormData) {
     password: formData.get("password"),
   };
 
-  const { data, error } = await $fetch(
-    `${env.BACKEND_URL}/authenticate/signin`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formSignin),
-      output: authenticateTokensSchema,
+  const { data, error } = await $fetch(`${env.BACKEND_URL}/authenticate/signin`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify(formSignin),
+    output: authenticateTokensSchema,
+  });
 
   if (error) {
     return {
       success: false,
       error: {
-        message: [error.errors ?? DEFAULT_ERROR_MESSAGE],
+        message: [error.errors ?? Constants.DEFAULT_ERROR_MESSAGE],
       },
     };
   }
@@ -73,7 +68,7 @@ export async function signup(formData: FormData) {
     return {
       success: false,
       error: {
-        message: [error.errors[0] || DEFAULT_ERROR_MESSAGE],
+        message: [error.errors[0] || Constants.DEFAULT_ERROR_MESSAGE],
       },
     };
   }
@@ -115,7 +110,7 @@ async function setSession() {
   if (error) {
     return {
       success: false,
-      error: { message: [DEFAULT_ERROR_MESSAGE] },
+      error: { message: [Constants.DEFAULT_ERROR_MESSAGE] },
     };
   }
 

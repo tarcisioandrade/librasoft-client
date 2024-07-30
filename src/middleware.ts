@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { logout, validateSession } from "./services/session";
 
-const protectedRoutes = ["/review", "/rent"];
+const protectedRoutes = ["/review", "/bag", "/rent"];
 
 export async function middleware(request: NextRequest) {
   const headers = new Headers(request.headers);
@@ -27,9 +27,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route),
-  );
+  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
   if (isProtectedRoute && !access_token) {
     return NextResponse.redirect(new URL("/signin", currentUrl.href));
@@ -42,8 +40,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const isAuthenticateRoutes =
-    pathname.startsWith("/signin") || pathname.startsWith("/signup");
+  const isAuthenticateRoutes = pathname.startsWith("/signin") || pathname.startsWith("/signup");
 
   if (validate && isAuthenticateRoutes) {
     return NextResponse.redirect(new URL("/", currentUrl.href));
