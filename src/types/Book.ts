@@ -34,3 +34,14 @@ export type BookRelated = {
   averageRating: number;
   coverType: ECoverType;
 };
+
+export interface BookInBag {
+  id: string;
+  title: string;
+  publisher: string;
+  image: string;
+  copiesAvaliable: number;
+  averageRating: number;
+  coverType: ECoverType;
+  status: string;
+}
