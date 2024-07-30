@@ -37,9 +37,7 @@ export class BookService {
   }
 
   async GetRelated(id: string) {
-    const res = await $fetch<Response<BookRelated[]>>(
-      this.baseURL + `/${id}/related`,
-    );
+    const res = await $fetch<Response<BookRelated[]>>(this.baseURL + `/${id}/related`);
 
     return res.data;
   }
