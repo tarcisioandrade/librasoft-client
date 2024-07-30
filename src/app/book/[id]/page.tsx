@@ -1,29 +1,21 @@
 import Divider from "@/components/divider";
 import Header from "@/components/header";
-import ReviewCard from "@/components/review-card";
+import ReviewCard from "@/app/book/components/review-card";
 import StarRating from "@/components/star-rating";
 import { Button } from "@/components/ui/button";
-import { ECoverType } from "@/enums/ECoverType";
 import { BookService } from "@/services/book.service";
 import { LikeService } from "@/services/like.service";
 import { ReviewService } from "@/services/review.service";
 import { getSession } from "@/services/session";
 import { Review } from "@/types/Review";
 import { truncateString } from "@/utils/truncate-string";
-import {
-  Barcode,
-  BookA,
-  BookOpenText,
-  CalendarDays,
-  Hotel,
-  Ruler,
-  Star,
-} from "lucide-react";
+import { Barcode, BookA, BookOpenText, CalendarDays, Hotel, Ruler, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import RentButton from "../components/rent-button";
 import { notFound } from "next/navigation";
+import { createBagAction } from "@/actions/bag/create.action";
+import { getCoverType } from "@/utils/get-cover-type";
 
 const bookService = new BookService();
 const reviewService = new ReviewService();
@@ -43,9 +35,6 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
     if (review?.data) reviewUser = review.data;
   }
 
-  // @ts-ignore
-  let key: keyof typeof ECoverType = book.data.coverType;
-
   return (
     <>
       <Header />
@@ -62,16 +51,22 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
               />
             </div>
             <div className="mt-4 flex flex-col gap-2">
-              <span className="text-green-700">Disponivel</span>
-              <RentButton bookId={book.data.id}>Alugar</RentButton>
+              {book.data.averageRating > 0 ? (
+                <p className="text-green-700">Disponivel</p>
+              ) : (
+                <p className="text-red-700">Indisponivel</p>
+              )}
+              <form action={createBagAction}>
+                <input hidden name="bookId" defaultValue={book.data.id} />
+                <Button className="w-full" type="submit" disabled={book.data.averageRating <= 0}>
+                  Alugar
+                </Button>
+              </form>
               <Button variant="secondary">Adicionar aos Favoritos</Button>
               <div className="space-y-1 text-xs text-muted-foreground">
                 <p>Devolução 30 dias após a data de aluguel.</p>
                 <p>Sujeito a penalidades em caso de atraso.</p>
-                <p>
-                  48 horas para a retirada do livro ou o pedido é cancelado
-                  automaticamente.
-                </p>
+                <p>48 horas para a retirada do livro ou o pedido é cancelado automaticamente.</p>
               </div>
             </div>
           </div>
@@ -79,7 +74,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
             <h1 className="text-2xl font-semibold">
               {book.data.title}{" "}
               <span className="font-normal text-muted-foreground">
-                {ECoverType[key]} -{" "}
+                {getCoverType(book.data.coverType)} -{" "}
               </span>
               <span className="font-normal text-muted-foreground">
                 {new Date(book.data.publicationAt).toLocaleDateString("pt-BR", {
@@ -89,14 +84,9 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
             </h1>
             <div className="flex gap-2 text-sm">
               <span>Edição Português</span> |{" "}
-              <span className="text-muted-foreground">
-                por {book.data.author.name}
-              </span>
+              <span className="text-muted-foreground">por {book.data.author.name}</span>
             </div>
-            <span className="flex items-center gap-1 text-sm">
-              {book.data.averageRating.toFixed(1)}{" "}
-              <StarRating size={12} rating={book.data.averageRating} />
-            </span>
+            <StarRating size={12} rating={book.data.averageRating} />
             <Divider />
             <p className="text-sm leading-relaxed">{book.data.sinopse}</p>
             <Divider />
@@ -136,12 +126,9 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
                 <li>
                   <span className="font-semibold">Data da Publicação</span>
                   <CalendarDays />
-                  {new Date(book.data.publicationAt).toLocaleDateString(
-                    "pt-BR",
-                    {
-                      dateStyle: "long",
-                    },
-                  )}
+                  {new Date(book.data.publicationAt).toLocaleDateString("pt-BR", {
+                    dateStyle: "long",
+                  })}
                 </li>
               </ul>
             </div>
@@ -169,12 +156,9 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
                 <p className="h-10 w-fit text-sm font-semibold">
                   {truncateString(related.title, 56)}
                 </p>
-                <div className="text-xs text-muted-foreground">
-                  {related.authorName}
-                </div>
+                <div className="text-xs text-muted-foreground">{related.authorName}</div>
                 <div className="flex items-center gap-1 text-sm">
-                  {related.averageRating.toFixed(1)}{" "}
-                  <Star size={14} color="#fb5" fill="#fb5" />
+                  {related.averageRating.toFixed(1)} <Star size={14} color="#fb5" fill="#fb5" />
                 </div>
               </Link>
             ))}
@@ -188,22 +172,18 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
               <strong className="text-2xl text-primary">
                 {book.data.averageRating.toFixed(1)}/5.0
               </strong>
-              <div>{book.data.reviewsCount} avaliações</div>
-              <StarRating rating={book.data.averageRating} />
+              <p className="text-muted-foreground">{book.data.reviewsCount} avaliações</p>
+              <StarRating hiddenRatingNumber rating={book.data.averageRating} />
             </div>
             <div className="my-4 h-px bg-slate-300" />
             <div className="space-y-2 text-sm">
               <strong>Avalie este produto</strong>
               <p>Compartilhe seus pensamentos com outros clientes</p>
               {reviewUser ? (
-                <p className="text-sm text-green-700">
-                  Você já avaliou este produto.
-                </p>
+                <p className="text-sm text-green-700">Você já avaliou este produto.</p>
               ) : (
                 <Button variant="outline" asChild>
-                  <Link href={`/review/${book.data.id}`}>
-                    Escreva uma avaliação
-                  </Link>
+                  <Link href={`/review/${book.data.id}`}>Escreva uma avaliação</Link>
                 </Button>
               )}
             </div>
@@ -223,13 +203,9 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
                 <p className="pl-4">Não há comentários disponíveis.</p>
               ) : (
                 reviews.data
-                  .filter((review) =>
-                    reviewUser ? reviewUser.id !== review.id : review,
-                  )
+                  .filter((review) => (reviewUser ? reviewUser.id !== review.id : review))
                   .map(async (review) => {
-                    const isLiked = session
-                      ? await likeService.Get(review.id)
-                      : false;
+                    const isLiked = session ? await likeService.Get(review.id) : false;
 
                     return (
                       <ReviewCard
