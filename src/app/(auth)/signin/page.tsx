@@ -1,4 +1,4 @@
-import FormSignin from "@/components/form-signin";
+import FormSignin from "@/app/(auth)/signin/components/form-signin";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";

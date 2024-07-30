@@ -2,14 +2,14 @@
 
 import React, { useEffect } from "react";
 import { useFormState } from "react-dom";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Input } from "../../../../components/ui/input";
+import { Button } from "../../../../components/ui/button";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { SignupForm, signupSchema } from "@/schemas/session.schema";
-import { Label } from "./ui/label";
-import { signupAction } from "@/actions/signup-action";
+import { Label } from "../../../../components/ui/label";
+import { signupAction } from "@/actions/auth/signup.action";
 
 const FormSignup = () => {
   const [state, formAction, isPending] = useFormState(signupAction, {
@@ -41,61 +41,34 @@ const FormSignup = () => {
   });
 
   return (
-    <form
-      action={onSubmit}
-      className="mx-auto mt-6 flex flex-col gap-4 rounded border p-6"
-    >
+    <form action={onSubmit} className="mx-auto mt-6 flex flex-col gap-4 rounded border p-6">
       <Label htmlFor="name">Nome</Label>
       <Controller
         name="name"
         control={control}
         render={({ field }) => (
-          <Input
-            {...field}
-            required
-            id="name"
-            type="name"
-            autoComplete="name"
-          />
+          <Input {...field} required id="name" type="name" autoComplete="name" />
         )}
       />
-      {errors?.name && (
-        <p className="text-xs text-destructive">{errors.name.message}</p>
-      )}
+      {errors?.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
       <Label htmlFor="email">Email</Label>
       <Controller
         name="email"
         control={control}
         render={({ field }) => (
-          <Input
-            {...field}
-            required
-            id="email"
-            type="email"
-            autoComplete="email"
-          />
+          <Input {...field} required id="email" type="email" autoComplete="email" />
         )}
       />
-      {errors?.email && (
-        <p className="text-xs text-destructive">{errors.email.message}</p>
-      )}
+      {errors?.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
       <Label htmlFor="telephone">Celular</Label>
       <Controller
         name="telephone"
         control={control}
         render={({ field }) => (
-          <Input
-            {...field}
-            required
-            id="telephone"
-            type="tel"
-            autoComplete="tel"
-          />
+          <Input {...field} required id="telephone" type="tel" autoComplete="tel" />
         )}
       />
-      {errors?.telephone && (
-        <p className="text-xs text-destructive">{errors.telephone.message}</p>
-      )}
+      {errors?.telephone && <p className="text-xs text-destructive">{errors.telephone.message}</p>}
       <Label htmlFor="password">Password</Label>
       <Controller
         name="password"
@@ -110,16 +83,14 @@ const FormSignup = () => {
           />
         )}
       />
-      {errors?.password && (
-        <p className="text-xs text-destructive">{errors.password.message}</p>
-      )}
+      {errors?.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
       <Button type="submit" disabled={isPending}>
         {isPending ? "Enviando" : "Enviar"}
       </Button>
       <p className="text-xs leading-relaxed text-muted-foreground">
-        Ao continuar, você concorda com as Condições de Uso da LibraSoft. Por
-        favor verifique a Notificação de Privacidade, Notificação de Cookies e a
-        Notificação de Anúncios Baseados em Interesse.
+        Ao continuar, você concorda com as Condições de Uso da LibraSoft. Por favor verifique a
+        Notificação de Privacidade, Notificação de Cookies e a Notificação de Anúncios Baseados em
+        Interesse.
       </p>
     </form>
   );

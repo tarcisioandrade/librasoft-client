@@ -1,16 +1,16 @@
 "use client";
 
-import { signinAction } from "@/actions/signin-action";
+import { signinAction } from "@/actions/auth/signin.action";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { useFormState } from "react-dom";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Input } from "../../../../components/ui/input";
+import { Button } from "../../../../components/ui/button";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { SignForm, signinSchema } from "@/schemas/session.schema";
-import { Label } from "./ui/label";
+import { Label } from "../../../../components/ui/label";
 
 const FormSignin = () => {
   const [state, formAction, isPending] = useFormState(signinAction, {
@@ -43,27 +43,16 @@ const FormSignin = () => {
   });
 
   return (
-    <form
-      action={onSubmit}
-      className="mx-auto mt-6 flex flex-col gap-4 rounded border p-6"
-    >
+    <form action={onSubmit} className="mx-auto mt-6 flex flex-col gap-4 rounded border p-6">
       <Label htmlFor="email">Email</Label>
       <Controller
         name="email"
         control={control}
         render={({ field }) => (
-          <Input
-            {...field}
-            required
-            id="email"
-            type="email"
-            autoComplete="email"
-          />
+          <Input {...field} required id="email" type="email" autoComplete="email" />
         )}
       />
-      {errors?.email && (
-        <p className="text-xs text-destructive">{errors.email.message}</p>
-      )}
+      {errors?.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
       <Label htmlFor="password">Password</Label>
       <Controller
         name="password"
@@ -78,16 +67,14 @@ const FormSignin = () => {
           />
         )}
       />
-      {errors?.password && (
-        <p className="text-xs text-destructive">{errors.password.message}</p>
-      )}
+      {errors?.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
       <Button type="submit" disabled={isPending}>
         {isPending ? "Enviando" : "Enviar"}
       </Button>
       <p className="text-xs leading-relaxed text-muted-foreground">
-        Ao continuar, você concorda com as Condições de Uso da LibraSoft. Por
-        favor verifique a Notificação de Privacidade, Notificação de Cookies e a
-        Notificação de Anúncios Baseados em Interesse.
+        Ao continuar, você concorda com as Condições de Uso da LibraSoft. Por favor verifique a
+        Notificação de Privacidade, Notificação de Cookies e a Notificação de Anúncios Baseados em
+        Interesse.
       </p>
     </form>
   );
