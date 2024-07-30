@@ -1,4 +1,4 @@
-import { CreateBagAction } from "@/actions/create-bag.action";
+import { createBagAction } from "@/actions/bag/create.action";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,8 +31,8 @@ export default async function Home({
   };
   const books = await bookService.GetAll(queries);
   const categories = await categoryService.getCategories();
-  const hasPreviusPage = books ? books?.currentPage > 1 : false;
-  const hasNextPage = books ? books?.currentPage < books.totalPages : false;
+  const hasPreviusPage = books ? books.currentPage > 1 : false;
+  const hasNextPage = books ? books.currentPage < books.totalPages : false;
 
   return (
     <>
@@ -87,12 +87,10 @@ export default async function Home({
                       <p className="text-sm font-medium tracking-tighter text-muted-foreground">
                         {book.author.name}
                       </p>
-                      <p className="text-xs tracking-tighter text-muted-foreground">
-                        Capa Dura
-                      </p>
+                      <p className="text-xs tracking-tighter text-muted-foreground">Capa Dura</p>
                     </div>
                   </Link>
-                  <form action={CreateBagAction}>
+                  <form action={createBagAction}>
                     <input hidden name="bookId" defaultValue={book.id} />
                     <Button
                       className="w-full uppercase"
@@ -107,9 +105,7 @@ export default async function Home({
             </div>
             <PaginationComponent className="my-12">
               <PaginationContent>
-                <PaginationItem
-                  className={cn(!hasPreviusPage && "pointer-events-none")}
-                >
+                <PaginationItem className={cn(!hasPreviusPage && "pointer-events-none")}>
                   <PaginationPrevious
                     href={{
                       query: {
@@ -119,28 +115,24 @@ export default async function Home({
                     }}
                   />
                 </PaginationItem>
-                {Array.from({ length: books?.totalPages || 1 }).map(
-                  (_value, index) => (
-                    <PaginationItem key={index}>
-                      <PaginationLink
-                        href={{
-                          pathname: "/",
-                          query: { ...queries, pageNumber: index + 1 },
-                        }}
-                        className={cn(
-                          books &&
-                            books.currentPage === index + 1 &&
-                            "pointer-events-none bg-muted-foreground text-white",
-                        )}
-                      >
-                        {index + 1}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ),
-                )}
-                <PaginationItem
-                  className={cn(!hasNextPage && "pointer-events-none")}
-                >
+                {Array.from({ length: books?.totalPages || 1 }).map((_value, index) => (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      href={{
+                        pathname: "/",
+                        query: { ...queries, pageNumber: index + 1 },
+                      }}
+                      className={cn(
+                        books &&
+                          books.currentPage === index + 1 &&
+                          "pointer-events-none bg-muted-foreground text-white",
+                      )}
+                    >
+                      {index + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem className={cn(!hasNextPage && "pointer-events-none")}>
                   <PaginationNext
                     href={{
                       query: {
