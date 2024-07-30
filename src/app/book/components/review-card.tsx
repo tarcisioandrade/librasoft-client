@@ -4,11 +4,11 @@ import { cn } from "@/lib/utils";
 import { Review } from "@/types/Review";
 import { User } from "lucide-react";
 import { ComponentProps, useOptimistic } from "react";
-import { Button } from "./ui/button";
-import { createLike } from "@/actions/create-like-action";
-import { deleteLike } from "@/actions/delete-like.action";
+import { Button } from "../../../components/ui/button";
+import { createLike } from "@/actions/like/create.action";
+import { deleteLike } from "@/actions/like/delete.action";
 import { useRouter } from "next/navigation";
-import StarRating from "./star-rating";
+import StarRating from "../../../components/star-rating";
 
 type Props = {
   review: Review;
@@ -60,9 +60,7 @@ const ReviewCard = ({
           {review.author}
         </span>
         <div className="flex items-center gap-1">
-          <span className="flex items-center gap-1">
-            <StarRating rating={review.rating} size={14} />
-          </span>
+          <StarRating hiddenRatingNumber rating={review.rating} size={14} />
           <strong>{review.title}</strong>
         </div>
         <div className="text-muted-foreground">
@@ -72,8 +70,7 @@ const ReviewCard = ({
           })}
         </div>
         <p className="text-xs text-muted-foreground">
-          {optmisticLikesCount}{" "}
-          {optmisticLikesCount > 1 ? "Avaliações" : "Avaliação"}
+          {optmisticLikesCount} {optmisticLikesCount > 1 ? "Avaliações" : "Avaliação"}
         </p>
       </header>
       <div className="mt-4 space-y-2 whitespace-pre-wrap text-sm">
@@ -85,11 +82,7 @@ const ReviewCard = ({
         <div className="flex items-center gap-4">
           <form action={isLiked ? formDeleteLikeAction : formCreateLikeAction}>
             <input name="reviewId" hidden defaultValue={review.id} />
-            <Button
-              type="submit"
-              variant="outline"
-              className={cn("mt-2", isLiked && "bg-muted")}
-            >
+            <Button type="submit" variant="outline" className={cn("mt-2", isLiked && "bg-muted")}>
               Útil
             </Button>
           </form>

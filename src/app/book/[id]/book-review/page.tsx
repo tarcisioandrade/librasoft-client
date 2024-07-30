@@ -1,5 +1,5 @@
 import Header from "@/components/header";
-import ReviewCard from "@/components/review-card";
+import ReviewCard from "@/app/book/components/review-card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LikeService } from "@/services/like.service";
@@ -19,16 +19,13 @@ const ReviewBookPage = async ({
   searchParams: { [key: string]: string };
 }) => {
   const session = await getSession();
-  const reviews = await reviewService.GetAll(
-    params.id,
-    Number(searchParams.pageNumber),
-  );
+  const reviews = await reviewService.GetAll(params.id, Number(searchParams.pageNumber));
 
   return (
     <>
       <Header />
       <div className="container-secondary">
-        {reviews.data.map(async (review) => {
+        {reviews?.data.map(async (review) => {
           const isLiked = session ? await likeService.Get(review.id) : false;
           return (
             <ReviewCard
@@ -39,34 +36,24 @@ const ReviewBookPage = async ({
             />
           );
         })}
-        {reviews.totalPages > 1 && (
+        {reviews && reviews.totalPages > 1 && (
           <div className="flex items-center gap-2">
             <Button
               asChild
               disabled={!reviews.hasPreviousPage}
               aria-disabled={!reviews.hasPreviousPage}
-              className={cn(
-                !reviews.hasPreviousPage,
-                "pointer-events-none opacity-50",
-              )}
+              className={cn(!reviews.hasPreviousPage, "pointer-events-none opacity-50")}
               variant="secondary"
             >
-              <Link href={{ query: { pageNumber: reviews.currentPage - 1 } }}>
-                Anterior
-              </Link>
+              <Link href={{ query: { pageNumber: reviews.currentPage - 1 } }}>Anterior</Link>
             </Button>
             <Button
               asChild
               disabled={!reviews.hasNextPage}
               aria-disabled={!reviews.hasNextPage}
-              className={cn(
-                !reviews.hasNextPage,
-                "pointer-events-none opacity-50",
-              )}
+              className={cn(!reviews.hasNextPage, "pointer-events-none opacity-50")}
             >
-              <Link href={{ query: { pageNumber: reviews.currentPage + 1 } }}>
-                Próxima
-              </Link>
+              <Link href={{ query: { pageNumber: reviews.currentPage + 1 } }}>Próxima</Link>
             </Button>
           </div>
         )}

@@ -2,14 +2,14 @@
 
 import { Star } from "lucide-react";
 import React, { useState } from "react";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
-import { CreateReview } from "@/actions/review-action";
+import { Input } from "../../../components/ui/input";
+import { Textarea } from "../../../components/ui/textarea";
+import { Button } from "../../../components/ui/button";
+import { CreateReview } from "@/actions/review/create.action";
 import { useParams, useRouter } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
 import { toast } from "sonner";
-import Divider from "./divider";
+import Divider from "../../../components/divider";
 
 const initialState = {
   success: false,
@@ -37,12 +37,7 @@ const FormReview = () => {
       );
     } else {
       stars.push(
-        <Star
-          onClick={() => setRating(i)}
-          className="cursor-pointer"
-          color="gold"
-          key={i}
-        />,
+        <Star onClick={() => setRating(i)} className="cursor-pointer" color="gold" key={i} />,
       );
     }
   }
@@ -67,13 +62,7 @@ const FormReview = () => {
           <label htmlFor="title" className="text-bold text-lg">
             Adicione um titulo
           </label>
-          <Input
-            id="title"
-            name="title"
-            placeholder="O que você achou?"
-            required
-            maxLength={90}
-          />
+          <Input id="title" name="title" placeholder="O que você achou?" required maxLength={90} />
           {state.errors && "title" in state.errors && (
             <p className="text-xs text-destructive">{state.errors.title}</p>
           )}
@@ -108,12 +97,7 @@ const FormReview = () => {
 function Submit() {
   const { pending } = useFormStatus();
   return (
-    <Button
-      className="ml-auto block"
-      type="submit"
-      disabled={pending}
-      aria-disabled={pending}
-    >
+    <Button className="ml-auto block" type="submit" disabled={pending} aria-disabled={pending}>
       {pending ? "Enviando" : "Enviar"}
     </Button>
   );
