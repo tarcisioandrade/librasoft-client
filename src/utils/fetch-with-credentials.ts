@@ -2,17 +2,12 @@ import "server-only";
 
 import env from "@/env";
 import { cookies } from "next/headers";
-import { betterFetch, BetterFetchOption } from "@better-fetch/fetch";
-
-type FetchError = {
-  message?: string | undefined;
-  status: number;
-  statusText: string;
-} | null;
+import { BetterFetchOption } from "@better-fetch/fetch";
+import { $fetch, FetchErrorResponse } from "@/lib/fetch-base";
 
 type FetchReturns<TData> = {
   data: TData | null;
-  error: FetchError;
+  error: FetchErrorResponse | null;
   response: Response;
 };
 
@@ -26,23 +21,20 @@ export async function fetchWithCredentials<TData>(
 
   let response = new Response();
 
-  const { data, error } = await betterFetch<TData>(
-    `${env.BACKEND_URL}${path}`,
-    {
-      ...options,
-      headers: {
-        ...options?.headers,
-      },
-      auth: {
-        type: "Bearer",
-        token: access_token,
-      },
-      onResponse(context) {
-        response = context.response;
-        return context.response;
-      },
+  const { data, error } = await $fetch<TData>(`${env.BACKEND_URL}${path}`, {
+    ...options,
+    headers: {
+      ...options?.headers,
     },
-  );
+    auth: {
+      type: "Bearer",
+      token: access_token,
+    },
+    onResponse(context) {
+      response = context.response;
+      return context.response;
+    },
+  });
 
   return { data, error, response };
 }
