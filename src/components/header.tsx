@@ -6,14 +6,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import SearchHomePage from "./search-home-page";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, LibraryBig } from "lucide-react";
 import { headers } from "next/headers";
 import { getSession, logout } from "@/services/session";
 import { Button } from "./ui/button";
+import { BagService } from "@/services/bag.service";
 
 const Header = async () => {
   const session = await getSession();
   const callbackUrl = headers().get("x-current-path");
+  let bagCount: number | null = null;
+
+  if (session) {
+    const bagService = new BagService();
+    bagCount = (await bagService.GetAll())?.data.length ?? 0;
+  }
 
   return (
     <header className="bg-primary">
@@ -22,12 +29,17 @@ const Header = async () => {
           LibraSoft
         </Link>
         <SearchHomePage />
+        <Link href="/bag" className="relative">
+          <p className="sr-only">Sacola</p>
+          {bagCount ? (
+            <span className="absolute left-[-10px] top-[-10px] text-sm text-white">{bagCount}</span>
+          ) : null}
+          <LibraryBig color="white" />
+        </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="flex border-none bg-transparent text-sm text-white outline-none">
-              <span>
-                {session ? `Olá, ${session.user.name}` : "Olá, faça seu login."}
-              </span>
+              <span>{session ? `Olá, ${session.user.name}` : "Olá, faça seu login."}</span>
               <ChevronDown size={12} />
             </Button>
           </DropdownMenuTrigger>
@@ -43,10 +55,7 @@ const Header = async () => {
                   </Link>
                   <div className="mt-2 text-center text-xs">
                     Novo aqui?{" "}
-                    <Link
-                      href="/signup"
-                      className="text-blue-500 hover:underline"
-                    >
+                    <Link href="/signup" className="text-blue-500 hover:underline">
                       Cadastre-se
                     </Link>
                   </div>
@@ -67,17 +76,9 @@ const Header = async () => {
                 <li>
                   <Link
                     className="block text-muted-foreground hover:text-primary hover:underline"
-                    href={"/"}
+                    href={"/rent"}
                   >
                     Meus Empréstimos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="block text-muted-foreground hover:text-primary hover:underline"
-                    href={"/"}
-                  >
-                    Meus Favoritos
                   </Link>
                 </li>
                 {session ? (
