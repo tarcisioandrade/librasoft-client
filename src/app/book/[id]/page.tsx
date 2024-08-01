@@ -15,7 +15,7 @@ import Link from "next/link";
 import React from "react";
 import { notFound } from "next/navigation";
 import { createBagAction } from "@/actions/bag/create.action";
-import { getCoverType } from "@/utils/get-cover-type";
+import { ECoverType } from "@/enums/ECoverType";
 
 const bookService = new BookService();
 const reviewService = new ReviewService();
@@ -74,7 +74,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
             <h1 className="text-2xl font-semibold">
               {book.data.title}{" "}
               <span className="font-normal text-muted-foreground">
-                {getCoverType(book.data.coverType)} -{" "}
+                {ECoverType[book.data.coverType]} -{" "}
               </span>
               <span className="font-normal text-muted-foreground">
                 {new Date(book.data.publicationAt).toLocaleDateString("pt-BR", {

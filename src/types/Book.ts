@@ -17,7 +17,7 @@ export type Book = {
     height: number;
     depth: number;
   };
-  coverType: ECoverType;
+  coverType: keyof typeof ECoverType;
   copiesAvaliable: number;
   averageRating: number;
   reviewsCount: number;
@@ -32,7 +32,7 @@ export type BookRelated = {
   authorName: string;
   image: string;
   averageRating: number;
-  coverType: ECoverType;
+  coverType: keyof typeof ECoverType;
 };
 
 export interface BookInBag {
@@ -42,6 +42,6 @@ export interface BookInBag {
   image: string;
   copiesAvaliable: number;
   averageRating: number;
-  coverType: ECoverType;
+  coverType: keyof typeof ECoverType;
   status: string;
 }
