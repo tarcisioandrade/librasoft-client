@@ -8,7 +8,6 @@ import { LikeService } from "@/services/like.service";
 import { ReviewService } from "@/services/review.service";
 import { getSession } from "@/services/session";
 import { Review } from "@/types/Review";
-import { truncateString } from "@/utils/truncate-string";
 import { Barcode, BookA, BookOpenText, CalendarDays, Hotel, Ruler, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -51,18 +50,17 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
               />
             </div>
             <div className="mt-4 flex flex-col gap-2">
-              {book.data.averageRating > 0 ? (
+              {book.data.copiesAvaliable > 0 ? (
                 <p className="text-green-700">Disponivel</p>
               ) : (
                 <p className="text-red-700">Indisponivel</p>
               )}
               <form action={createBagAction}>
                 <input hidden name="bookId" defaultValue={book.data.id} />
-                <Button className="w-full" type="submit" disabled={book.data.averageRating <= 0}>
+                <Button className="w-full" type="submit" disabled={book.data.copiesAvaliable <= 0}>
                   Alugar
                 </Button>
               </form>
-              <Button variant="secondary">Adicionar aos Favoritos</Button>
               <div className="space-y-1 text-xs text-muted-foreground">
                 <p>Devolução 30 dias após a data de aluguel.</p>
                 <p>Sujeito a penalidades em caso de atraso.</p>
@@ -153,9 +151,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
                     className="h-full"
                   />
                 </div>
-                <p className="h-10 w-fit text-sm font-semibold">
-                  {truncateString(related.title, 56)}
-                </p>
+                <p className="line-clamp-3 w-fit text-sm font-semibold">{related.title}</p>
                 <div className="text-xs text-muted-foreground">{related.authorName}</div>
                 <div className="flex items-center gap-1 text-sm">
                   {related.averageRating.toFixed(1)} <Star size={14} color="#fb5" fill="#fb5" />
