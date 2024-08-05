@@ -1,5 +1,6 @@
 "use server";
 
+import { Constants } from "@/constants";
 import { reviewSchema } from "@/schemas/review.schema";
 import { ReviewService } from "@/services/review.service";
 import { revalidatePath } from "next/cache";
@@ -43,7 +44,7 @@ export async function CreateReview(_prevState: State, formData: FormData) {
   } catch (error) {
     return {
       success: false,
-      errors: { server: ["Algo deu errado ao tentar criar seu review."] },
+      errors: { server: [Constants.DEFAULT_ERROR_MESSAGE] },
     };
   }
 }

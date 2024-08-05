@@ -2,14 +2,14 @@
 
 import { Star } from "lucide-react";
 import React, { useState } from "react";
-import { Input } from "../../../components/ui/input";
-import { Textarea } from "../../../components/ui/textarea";
-import { Button } from "../../../components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import { CreateReview } from "@/actions/review/create.action";
 import { useParams, useRouter } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
 import { toast } from "sonner";
-import Divider from "../../../components/divider";
+import Divider from "@/components/divider";
 
 const initialState = {
   success: false,
@@ -42,6 +42,11 @@ const FormReview = () => {
     }
   }
 
+  async function action(formData: FormData) {
+    formData.append("rating", String(rating));
+    formAction(formData);
+  }
+
   if (state && state.errors && "server" in state.errors) {
     toast.error(state.errors.server);
   }
@@ -57,7 +62,7 @@ const FormReview = () => {
         <div className="flex items-center gap-1">{stars}</div>
       </div>
       <Divider />
-      <form className="flex flex-col gap-6" action={formAction}>
+      <form className="flex flex-col gap-6" action={action}>
         <div className="space-y-2">
           <label htmlFor="title" className="text-bold text-lg">
             Adicione um titulo
@@ -86,7 +91,6 @@ const FormReview = () => {
         </div>
         <input hidden name="bookId" defaultValue={params.id.toString()} />
         <input hidden name="callbackUrl" defaultValue={`/book/${params.id}`} />
-        <input hidden type="number" name="rating" defaultValue={rating} />
         <div className="h-px bg-slate-300" />
         <Submit />
       </form>
