@@ -23,22 +23,24 @@ const Header = async () => {
   }
 
   return (
-    <header className="bg-primary">
+    <header className="border-b">
       <div className="container flex h-14 items-center justify-between gap-10">
-        <Link href="/" className="font-bold text-white">
+        <Link href="/" className="text-2xl font-bold">
           LibraSoft
         </Link>
         <SearchHomePage />
-        <Link href="/bag" className="relative">
-          <p className="sr-only">Sacola</p>
+        <Link href="/bag" className="group relative flex items-center gap-1 p-1">
+          <p className="sr-only">Estante</p>
           {bagCount ? (
-            <span className="absolute left-[-10px] top-[-10px] text-sm text-white">{bagCount}</span>
+            <span className="absolute left-[-10px] top-[-8px] size-4 rounded bg-primary text-center text-xs text-white group-hover:bg-primary/90">
+              {bagCount}
+            </span>
           ) : null}
-          <LibraryBig color="white" />
+          <LibraryBig />
         </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="flex border-none bg-transparent text-sm text-white outline-none">
+            <Button className="flex border-none text-sm outline-none" variant="link">
               <span>{session ? `Olá, ${session.user.name}` : "Olá, faça seu login."}</span>
               <ChevronDown size={12} />
             </Button>
@@ -49,7 +51,7 @@ const Header = async () => {
                 <div className="p-4">
                   <Link
                     href={`/signin?callbackUrl=${callbackUrl}`}
-                    className="mx-auto block w-[80%] rounded bg-primary p-2 text-center text-white"
+                    className="mx-auto block w-[80%] rounded bg-primary p-2 text-center text-white hover:bg-primary/90"
                   >
                     Faça seu Login
                   </Link>
@@ -92,7 +94,7 @@ const Header = async () => {
                       <input
                         type="submit"
                         className="block cursor-pointer text-muted-foreground hover:text-primary hover:underline"
-                        value="Sair da conta"
+                        value="Sair"
                       />
                     </form>
                   </li>

@@ -45,7 +45,7 @@ const SearchHomePage = () => {
     <form className="flex w-full" onSubmit={handleSearch}>
       <Input
         type="search"
-        className="rounded-r-none rounded-br-none"
+        className="rounded-r-none rounded-br-none focus-visible:ring-0"
         placeholder="Pressione K para pesquisar"
         required
         onBlur={() => setHasFocused(false)}
@@ -55,7 +55,7 @@ const SearchHomePage = () => {
       />
       <Button
         type="submit"
-        className="w-fit cursor-pointer rounded-l-none rounded-bl-none bg-black/50 hover:bg-black/50"
+        className="w-fit cursor-pointer rounded-l-none rounded-bl-none bg-primary hover:bg-primary/90"
       >
         <Search />
       </Button>
