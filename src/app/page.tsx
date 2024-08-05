@@ -9,10 +9,10 @@ import {
   PaginationLink,
   PaginationNext,
 } from "@/components/ui/pagination";
+import { ECoverType } from "@/enums/ECoverType";
 import { cn } from "@/lib/utils";
 import { BookService } from "@/services/book.service";
 import { CategoryService } from "@/services/category.service";
-import { truncateString } from "@/utils/truncate-string";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -80,14 +80,16 @@ export default async function Home({
                         className="h-full"
                       />
                     </div>
-                    <h3 className="mt-2 min-h-[40px] text-sm font-semibold tracking-tighter">
-                      {truncateString(book.title, 72)}
+                    <h3 className="mt-2 line-clamp-2 min-h-[40px] text-sm font-semibold tracking-tighter">
+                      {book.title}
                     </h3>
                     <div className="space-y-1 py-2">
                       <p className="text-sm font-medium tracking-tighter text-muted-foreground">
                         {book.author.name}
                       </p>
-                      <p className="text-xs tracking-tighter text-muted-foreground">Capa Dura</p>
+                      <p className="text-xs tracking-tighter text-muted-foreground">
+                        {ECoverType[book.coverType]}
+                      </p>
                     </div>
                   </Link>
                   <form action={createBagAction}>
@@ -95,9 +97,9 @@ export default async function Home({
                     <Button
                       className="w-full uppercase"
                       type="submit"
-                      disabled={book.averageRating <= 0}
+                      disabled={book.copiesAvaliable <= 0}
                     >
-                      {book.averageRating <= 0 ? "Indisponível" : "Alugar"}
+                      {book.copiesAvaliable <= 0 ? "Indisponível" : "Alugar"}
                     </Button>
                   </form>
                 </div>
