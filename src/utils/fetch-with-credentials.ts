@@ -4,6 +4,7 @@ import env from "@/env";
 import { cookies } from "next/headers";
 import { BetterFetchOption } from "@better-fetch/fetch";
 import { $fetch, FetchErrorResponse } from "@/lib/fetch-base";
+import { redirect } from "next/navigation";
 
 type FetchReturns<TData> = {
   data: TData | null;
@@ -17,7 +18,10 @@ export async function fetchWithCredentials<TData>(
 ): Promise<FetchReturns<TData>> {
   const access_token = cookies().get("access_token")?.value;
 
-  if (!access_token) throw new Error("Acces token not found.");
+  if (!access_token) {
+    console.error(`Access token not found. Path=${path}`);
+    redirect("/signin");
+  }
 
   let response = new Response();
 
