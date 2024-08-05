@@ -1,6 +1,4 @@
-import { createBagAction } from "@/actions/bag/create.action";
 import Header from "@/components/header";
-import { Button } from "@/components/ui/button";
 import {
   Pagination as PaginationComponent,
   PaginationContent,
@@ -15,6 +13,8 @@ import { BookService } from "@/services/book.service";
 import { CategoryService } from "@/services/category.service";
 import Image from "next/image";
 import Link from "next/link";
+import Banner from "../../public/banners/initial-banner.png";
+import StarRating from "@/components/star-rating";
 
 const bookService = new BookService();
 const categoryService = new CategoryService();
@@ -38,8 +38,8 @@ export default async function Home({
     <>
       <Header />
       <div className="container">
-        <div className="my-8 grid h-52 w-full place-items-center bg-blue-500">
-          <h4 className="text-9xl text-white">BANNER</h4>
+        <div className="relative my-8 grid h-64 w-full place-items-center">
+          <Image src={Banner} alt="banner" className="object-cover" fill />
         </div>
         <section className="flex gap-4">
           <aside className="p4 h-[400px] w-56 border p-4">
@@ -68,7 +68,7 @@ export default async function Home({
               {books?.data.map((book) => (
                 <div
                   key={book.id}
-                  className="h-min-[460px] flex w-[calc(20%-13px)] flex-col justify-between rounded bg-secondary p-2"
+                  className="h-min-[460px] flex w-[calc(20%-13px)] flex-col justify-between rounded bg-secondary/30 p-2"
                 >
                   <Link href={`/book/${book.id}`}>
                     <div className="mx-auto h-[260px] w-[180px]">
@@ -80,7 +80,7 @@ export default async function Home({
                         className="h-full"
                       />
                     </div>
-                    <h3 className="mt-2 line-clamp-2 min-h-[40px] text-sm font-semibold tracking-tighter">
+                    <h3 className="mt-2 truncate text-sm font-semibold tracking-tighter">
                       {book.title}
                     </h3>
                     <div className="space-y-1 py-2">
@@ -91,17 +91,8 @@ export default async function Home({
                         {ECoverType[book.coverType]}
                       </p>
                     </div>
+                    <StarRating rating={book.averageRating} size={12} />
                   </Link>
-                  <form action={createBagAction}>
-                    <input hidden name="bookId" defaultValue={book.id} />
-                    <Button
-                      className="w-full uppercase"
-                      type="submit"
-                      disabled={book.copiesAvaliable <= 0}
-                    >
-                      {book.copiesAvaliable <= 0 ? "Indisponível" : "Alugar"}
-                    </Button>
-                  </form>
                 </div>
               ))}
             </div>
