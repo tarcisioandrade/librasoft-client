@@ -1,7 +1,7 @@
 import FormSignin from "@/app/(auth)/signin/components/form-signin";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 
 const Page = () => {
   return (
@@ -9,7 +9,9 @@ const Page = () => {
       <Link href="/" className="block text-center text-2xl font-bold">
         LibraSoft
       </Link>
-      <FormSignin />
+      <Suspense>
+        <FormSignin />
+      </Suspense>
       <div className="mt-6 flex flex-col items-center gap-4">
         <p className="text-sm text-muted-foreground">Não tem conta?</p>
         <Button variant="secondary" className="w-full" asChild>
