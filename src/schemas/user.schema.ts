@@ -13,7 +13,7 @@ export const userSchema = z.object({
       city: z.string(),
       state: z.string(),
       country: z.string(),
-      zipcode: z.string(),
+      zipCode: z.string(),
     })
     .nullish(),
   role: z.nativeEnum(EUserRole),
