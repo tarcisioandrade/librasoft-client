@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import AsideBar from "./components/aside-bar";
+import BreadcrumbToDashboard from "./components/breadcrumb-to-dashboard";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -17,7 +18,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <AsideBar />
       <div className="flex flex-1 flex-col gap-4 py-4 pl-52">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <p>DashBoard</p>
+          <BreadcrumbToDashboard />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
