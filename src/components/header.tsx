@@ -29,10 +29,13 @@ const Header = async () => {
           LibraSoft
         </Link>
         <SearchHomePage />
-        <Link href="/bag" className="group relative flex items-center gap-1 p-1">
+        <Link
+          href="/bag"
+          className="group relative flex items-center gap-1 rounded border p-1 hover:bg-secondary/50"
+        >
           <p className="sr-only">Estante</p>
           {bagCount ? (
-            <span className="absolute left-[-10px] top-[-8px] size-4 rounded bg-primary text-center text-xs text-white group-hover:bg-primary/90">
+            <span className="absolute right-[-10px] top-[-8px] h-[14px] w-[12px] rounded-full bg-primary text-center text-[10px] text-white group-hover:bg-primary/90">
               {bagCount}
             </span>
           ) : null}
