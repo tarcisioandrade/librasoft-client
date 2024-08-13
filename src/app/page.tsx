@@ -15,6 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Banner from "../../public/banners/initial-banner.png";
 import StarRating from "@/components/star-rating";
+import { FilterParams } from "@/schemas/filterParams.schema";
 
 const bookService = new BookService();
 const categoryService = new CategoryService();
@@ -24,11 +25,13 @@ export default async function Home({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) {
-  const queries = {
-    category: searchParams.category || null,
+  const queries: FilterParams = {
+    categories: searchParams.category,
     pageNumber: searchParams.pageNumber || "1",
-    search: searchParams.search || null,
+    title: searchParams.search,
+    pageSize: searchParams.pageSize || "10",
   };
+
   const books = await bookService.GetAll(queries);
   const categories = await categoryService.getCategories();
   const hasPreviusPage = books ? books.currentPage > 1 : false;
