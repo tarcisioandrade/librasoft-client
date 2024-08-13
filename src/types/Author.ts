@@ -1,7 +1,9 @@
+import { EStatusType } from "@/enums/EStatusType";
+
 export type Author = {
   id: string;
   name: string;
   biography: string;
   dateBirth: string;
-  status: string;
+  status: keyof typeof EStatusType;
 };

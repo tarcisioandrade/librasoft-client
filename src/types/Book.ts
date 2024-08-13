@@ -1,6 +1,7 @@
 import { ECoverType } from "@/enums/ECoverType";
 import { Author } from "./Author";
 import { Category } from "./Category";
+import { EStatusType } from "@/enums/EStatusType";
 
 export type Book = {
   id: string;
@@ -23,7 +24,7 @@ export type Book = {
   reviewsCount: number;
   categories: Array<Category>;
   author: Author;
-  status: string;
+  status: keyof typeof EStatusType;
 };
 
 export type BookRelated = {
@@ -43,5 +44,5 @@ export interface BookInBag {
   copiesAvaliable: number;
   averageRating: number;
   coverType: keyof typeof ECoverType;
-  status: string;
+  status: keyof typeof EStatusType;
 }
