@@ -136,7 +136,7 @@ export function useDataTable<TData>({
         if (filterableColumn) {
           filters.push({
             id: key,
-            value: value.split("."),
+            value: value.split(","),
           });
         } else if (searchableColumn) {
           filters.push({
@@ -239,7 +239,7 @@ export function useDataTable<TData>({
     // Handle filterable column filters
     for (const column of filterableColumnFilters) {
       if (typeof column.value === "object" && Array.isArray(column.value)) {
-        Object.assign(newParamsObject, { [column.id]: column.value.join(".") });
+        Object.assign(newParamsObject, { [column.id]: column.value.join(",") });
       }
     }
 

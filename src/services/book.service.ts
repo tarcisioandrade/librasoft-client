@@ -19,6 +19,7 @@ export class BookService {
       category: params.categories,
     };
 
+    console.log('category', params)
     const values = Object.entries(DEFAULT_PARAMS);
 
     values.forEach(([key, value]) => {
