@@ -1,20 +1,27 @@
 "use server";
 
+import { CacheKeys } from "@/cache-keys";
 import { Constants } from "@/constants";
 import { reviewSchema } from "@/schemas/review.schema";
 import { ReviewService } from "@/services/review.service";
-import { revalidatePath } from "next/cache";
+import { Err, Ok } from "@/utils/result";
+import { revalidatePath, revalidateTag } from "next/cache";
 
-type State = {
-  success: boolean;
-  errors: {
-    title?: string[];
-    comment?: string[];
-    bookId?: string[];
-    rating?: string[];
-    server?: string[];
-  } | null;
-};
+type State =
+  | {
+      success: false;
+      error: {
+        title?: string[];
+        comment?: string[];
+        bookId?: string[];
+        rating?: string[];
+        server?: string[];
+      };
+    }
+  | {
+      success: true;
+      value: string;
+    };
 
 export async function CreateReview(_prevState: State, formData: FormData) {
   const body = {
@@ -27,24 +34,18 @@ export async function CreateReview(_prevState: State, formData: FormData) {
   const parse = reviewSchema.safeParse(body);
 
   if (!parse.success) {
-    return { success: false, errors: parse.error.flatten().fieldErrors };
+    return Err(parse.error.flatten().fieldErrors);
   }
 
   const reviewService = new ReviewService();
 
-  try {
-    const res = await reviewService.Create(parse.data);
-
-    if (res) {
-      const callbackUrl = formData.get("callbackUrl")?.toString()!;
-      revalidatePath(callbackUrl);
-    }
-
-    return { success: true, errors: null };
-  } catch (error) {
-    return {
-      success: false,
-      errors: { server: [Constants.DEFAULT_ERROR_MESSAGE] },
-    };
+  const res = await reviewService.Create(parse.data);
+  if (!res) {
+    return Err({ server: [Constants.DEFAULT_ERROR_MESSAGE] });
   }
+
+  const callbackUrl = formData.get("callbackUrl")?.toString()!;
+  revalidatePath(callbackUrl);
+  revalidateTag(CacheKeys.Book.GetAll);
+  return Ok(null);
 }

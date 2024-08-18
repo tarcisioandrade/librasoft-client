@@ -69,7 +69,7 @@ const BagSection = ({ bags, booksRented }: Props) => {
       formDataBooks.append("books", JSON.stringify(books));
       const response = await createRentAction(formDataBooks);
       if (!response.success) {
-        toast.error(response.error?.message);
+        toast.error(response.error.message);
         return;
       }
       const bags = booksAndBagsIdSelected.map((id) => ({

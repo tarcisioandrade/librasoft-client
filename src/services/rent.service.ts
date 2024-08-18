@@ -2,6 +2,7 @@ import { Constants } from "@/constants";
 import { Rent } from "@/types/Rent";
 import { Response } from "@/types/Response";
 import { fetchWithCredentials } from "@/utils/fetch-with-credentials";
+import { Err, Ok } from "@/utils/result";
 
 export class RentService {
   private readonly endpoint = "/rent";
@@ -11,16 +12,12 @@ export class RentService {
       method: "POST",
       body: { rentDate: new Date(), books },
     });
-
     if (error) {
-      return {
-        success: false,
-        error: {
-          message: error.errors ?? Constants.DEFAULT_ERROR_MESSAGE,
-        },
-      };
+      return Err({
+        message: error.errors ?? Constants.DEFAULT_ERROR_MESSAGE,
+      });
     }
-    return { success: true, error: null };
+    return Ok(null);
   }
 
   async GetAll(status: "all" | "pending" | "complete" = "all") {
@@ -40,13 +37,10 @@ export class RentService {
       method: "DELETE",
     });
     if (error) {
-      return {
-        success: false,
-        error: {
-          message: error.errors ?? Constants.DEFAULT_ERROR_MESSAGE,
-        },
-      };
+      return Err({
+        message: error.errors ?? Constants.DEFAULT_ERROR_MESSAGE,
+      });
     }
-    return { success: true, error: null };
+    return Ok(null);
   }
 }

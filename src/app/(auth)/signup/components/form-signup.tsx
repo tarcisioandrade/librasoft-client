@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useFormState } from "react-dom";
+import React, { useTransition } from "react";
 import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { toast } from "sonner";
@@ -12,10 +11,8 @@ import { Label } from "../../../../components/ui/label";
 import { signupAction } from "@/actions/auth/signup.action";
 
 const FormSignup = () => {
-  const [state, formAction, isPending] = useFormState(signupAction, {
-    success: false,
-    error: null,
-  });
+  const [isLoading, startTransition] = useTransition();
+
   const {
     handleSubmit,
     control,
@@ -25,23 +22,26 @@ const FormSignup = () => {
     defaultValues: { email: "", password: "", name: "", telephone: "" },
   });
 
-  useEffect(() => {
-    if (!state.success && state.error) {
-      toast(state.error.message);
-    }
-  }, [state.error?.message]);
-
-  const onSubmit: () => void = handleSubmit(async (data: SignupForm) => {
+  function submitFn(data: SignupForm) {
     const formData = new FormData();
     formData.append("email", data.email);
     formData.append("password", data.password);
     formData.append("name", data.name);
     formData.append("telephone", data.telephone);
-    formAction(formData);
-  });
+
+    startTransition(async () => {
+      const result = await signupAction(formData);
+      if (!result.success) {
+        toast.error(result.error.message);
+      }
+    });
+  }
 
   return (
-    <form action={onSubmit} className="mx-auto mt-6 flex flex-col gap-4 rounded border p-6">
+    <form
+      onSubmit={handleSubmit(submitFn)}
+      className="mx-auto mt-6 flex flex-col gap-4 rounded border p-6"
+    >
       <Label htmlFor="name">Nome</Label>
       <Controller
         name="name"
@@ -84,8 +84,8 @@ const FormSignup = () => {
         )}
       />
       {errors?.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
-      <Button type="submit" disabled={isPending}>
-        {isPending ? "Enviando" : "Enviar"}
+      <Button type="submit" disabled={isLoading}>
+        {isLoading ? "Enviando" : "Enviar"}
       </Button>
       <p className="text-xs leading-relaxed text-muted-foreground">
         Ao continuar, você concorda com as Condições de Uso da LibraSoft. Por favor verifique a

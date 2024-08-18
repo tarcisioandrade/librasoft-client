@@ -2,8 +2,7 @@
 
 import { signinAction } from "@/actions/auth/signin.action";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
-import { useFormState } from "react-dom";
+import React, { useTransition } from "react";
 import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { toast } from "sonner";
@@ -13,10 +12,8 @@ import { SignForm, signinSchema } from "@/schemas/session.schema";
 import { Label } from "../../../../components/ui/label";
 
 const FormSignin = () => {
-  const [state, formAction, isPending] = useFormState(signinAction, {
-    success: false,
-    error: null,
-  });
+  const [isLoading, startTransition] = useTransition();
+
   const {
     handleSubmit,
     control,
@@ -28,22 +25,25 @@ const FormSignin = () => {
 
   const callbackUrl = useSearchParams().get("callbackUrl");
 
-  useEffect(() => {
-    if (!state.success && state.error) {
-      toast(state.error.message);
-    }
-  }, [state.error?.message]);
-
-  const onSubmit: () => void = handleSubmit(async (data: SignForm) => {
+  function submitFn(data: SignForm) {
     const formData = new FormData();
     formData.append("email", data.email);
     formData.append("password", data.password);
     formData.append("callbackUrl", callbackUrl || "/");
-    formAction(formData);
-  });
+
+    startTransition(async () => {
+      const result = await signinAction(formData);
+      if (!result.success) {
+        toast.error(result.error.message);
+      }
+    });
+  }
 
   return (
-    <form action={onSubmit} className="mx-auto mt-6 flex flex-col gap-4 rounded border p-6">
+    <form
+      onSubmit={handleSubmit(submitFn)}
+      className="mx-auto mt-6 flex flex-col gap-4 rounded border p-6"
+    >
       <Label htmlFor="email">Email</Label>
       <Controller
         name="email"
@@ -68,8 +68,8 @@ const FormSignin = () => {
         )}
       />
       {errors?.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
-      <Button type="submit" disabled={isPending}>
-        {isPending ? "Enviando" : "Enviar"}
+      <Button type="submit" disabled={isLoading}>
+        {isLoading ? "Enviando" : "Enviar"}
       </Button>
       <p className="text-xs leading-relaxed text-muted-foreground">
         Ao continuar, você concorda com as Condições de Uso da LibraSoft. Por favor verifique a

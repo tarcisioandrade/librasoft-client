@@ -11,16 +11,14 @@ import { useFormState, useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import Divider from "@/components/divider";
 
-const initialState = {
-  success: false,
-  errors: null,
-};
-
 const FormReview = () => {
   const [rating, setRating] = useState(1);
   const params = useParams();
   const route = useRouter();
-  const [state, formAction] = useFormState(CreateReview, initialState);
+  const [state, formAction] = useFormState(CreateReview, {
+    success: false,
+    error: {},
+  });
 
   const stars = [];
 
@@ -47,8 +45,8 @@ const FormReview = () => {
     formAction(formData);
   }
 
-  if (state && state.errors && "server" in state.errors) {
-    toast.error(state.errors.server);
+  if (!state.success && "server" in state.error) {
+    toast.error(state.error.server);
   }
 
   if (state.success) {
@@ -68,8 +66,8 @@ const FormReview = () => {
             Adicione um titulo
           </label>
           <Input id="title" name="title" placeholder="O que você achou?" required maxLength={90} />
-          {state.errors && "title" in state.errors && (
-            <p className="text-xs text-destructive">{state.errors.title}</p>
+          {!state.success && "title" in state.error && (
+            <p className="text-xs text-destructive">{state.error.title}</p>
           )}
         </div>
         <div className="h-px bg-slate-300" />
@@ -85,8 +83,8 @@ const FormReview = () => {
             maxLength={1100}
             rows={15}
           />
-          {state.errors && "comment" in state.errors && (
-            <p className="text-xs text-destructive">{state.errors.comment}</p>
+          {!state.success && "comment" in state.error && (
+            <p className="text-xs text-destructive">{state.error.comment}</p>
           )}
         </div>
         <input hidden name="bookId" defaultValue={params.id.toString()} />

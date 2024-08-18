@@ -7,6 +7,7 @@ export class CacheKeys {
     GetAll: "get-all-bag",
   };
   static Book = {
-    GetAll: "get-all-book"
-  }
+    GetAll: "get-all-book",
+  };
+  static User = { Get: "get-user" };
 }

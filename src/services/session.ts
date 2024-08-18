@@ -5,6 +5,8 @@ import { userSchema } from "../schemas/user.schema";
 import { decrypt, encrypt } from "@/lib/jwt";
 import { $fetch } from "@/lib/fetch-base";
 import { Constants } from "@/constants";
+import { Err, Ok } from "@/utils/result";
+import { CacheKeys } from "@/cache-keys";
 
 export async function signin(formData: FormData) {
   const formSignin = {
@@ -22,12 +24,9 @@ export async function signin(formData: FormData) {
   });
 
   if (error) {
-    return {
-      success: false,
-      error: {
-        message: [error.errors ?? Constants.DEFAULT_ERROR_MESSAGE],
-      },
-    };
+    return Err({
+      message: [error.errors ?? Constants.DEFAULT_ERROR_MESSAGE],
+    });
   }
 
   cookies().set({
@@ -42,10 +41,10 @@ export async function signin(formData: FormData) {
 
   if (!session.success) {
     logout();
-    return { success: false, error: session.error };
+    return Err(session.error);
   }
 
-  return { success: true, error: null };
+  return Ok(null);
 }
 
 export async function signup(formData: FormData) {
@@ -65,18 +64,12 @@ export async function signup(formData: FormData) {
   });
 
   if (error) {
-    return {
-      success: false,
-      error: {
-        message: [error.errors[0] || Constants.DEFAULT_ERROR_MESSAGE],
-      },
-    };
+    return Err({
+      message: [error.errors || Constants.DEFAULT_ERROR_MESSAGE],
+    });
   }
 
-  return {
-    success: true,
-    error: null,
-  };
+  return Ok(null);
 }
 
 export function logout() {
@@ -89,10 +82,7 @@ async function setSession() {
   const access_token = cookies().get("access_token")?.value;
 
   if (session || !access_token) {
-    return {
-      success: false,
-      error: { message: ["Access token not found."] },
-    };
+    return Err({ message: ["Token de acesso não encontrado."] });
   }
 
   const { data, error } = await $fetch(`${env.BACKEND_URL}/user`, {
@@ -103,15 +93,12 @@ async function setSession() {
     cache: "force-cache",
     output: userSchema,
     next: {
-      tags: ["session"],
+      tags: [CacheKeys.User.Get],
     },
   });
 
   if (error) {
-    return {
-      success: false,
-      error: { message: [Constants.DEFAULT_ERROR_MESSAGE] },
-    };
+    return Err({ message: [Constants.DEFAULT_ERROR_MESSAGE] });
   }
 
   const parsed = await encrypt(data);
@@ -124,10 +111,7 @@ async function setSession() {
     path: "/",
   });
 
-  return {
-    success: true,
-    session: parsed,
-  };
+  return Ok(parsed);
 }
 
 export async function getSession() {
@@ -147,11 +131,9 @@ export async function validateSession() {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
-    onSuccess() {
-      status = true;
-    },
-    onError() {
-      status = false;
+    onResponse(context) {
+      status = context.response.ok;
+      return context.response;
     },
   });
 

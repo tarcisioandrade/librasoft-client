@@ -8,7 +8,8 @@ const rentService = new RentService();
 export async function cancelRentAction(formData: FormData) {
   const rentId = formData.get("rentId")!.toString();
   const response = await rentService.Delete(rentId);
-
-  if (response.success) revalidatePath(`/rent/${rentId}`);
+  if (response.success) {
+    revalidatePath(`/rent/${rentId}`);
+  }
   return response;
 }

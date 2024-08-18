@@ -26,7 +26,7 @@ const AlertCancelRent = ({ rentId }: Props) => {
   async function cancelAction(formData: FormData) {
     startTransition(async () => {
       const state = await cancelRentAction(formData);
-      if (!state.success) toast.error(state.error?.message);
+      if (!state.success) toast.error(state.error.message);
       setModalOpen(false);
     });
   }
