@@ -26,14 +26,15 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 size="icon"
                 className="ml-auto overflow-hidden rounded-full"
               >
-                <img
+                {/* <img
                   src="https://github.com/tarcisioandrade.png"
                   width={36}
                   height={36}
                   alt="Avatar"
                   className="overflow-hidden rounded-full"
                   style={{ aspectRatio: "36/36", objectFit: "cover" }}
-                />
+                /> */}
+                <div className="size-9 bg-red-500" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -46,9 +47,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          {children}
-        </main>
+        <div className="grid flex-1 items-start gap-4 px-4 py-4 pb-20">{children}</div>
       </div>
     </div>
   );

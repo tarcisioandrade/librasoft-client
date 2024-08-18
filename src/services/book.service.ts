@@ -1,9 +1,12 @@
+import { CacheKeys } from "@/cache-keys";
 import env from "@/env";
 import { $fetch } from "@/lib/fetch-base";
+import { CreateBookInputType } from "@/schemas/create-book.schema";
 import { FilterParams } from "@/schemas/filterParams.schema";
 import { Book, BookRelated } from "@/types/Book";
 import { Pagination } from "@/types/Pagination";
 import { Response } from "@/types/Response";
+import { fetchWithCredentials } from "@/utils/fetch-with-credentials";
 
 export class BookService {
   private baseURL = `${env.BACKEND_URL}/book`;
@@ -19,7 +22,6 @@ export class BookService {
       category: params.categories,
     };
 
-    console.log('category', params)
     const values = Object.entries(DEFAULT_PARAMS);
 
     values.forEach(([key, value]) => {
@@ -28,7 +30,9 @@ export class BookService {
       }
     });
 
-    const { data } = await $fetch<Pagination<Book>>(url.href);
+    const { data } = await $fetch<Pagination<Book>>(url.href, {
+      next: { tags: [CacheKeys.Book.GetAll] },
+    });
 
     return data!;
   }
@@ -43,5 +47,13 @@ export class BookService {
     const res = await $fetch<Response<BookRelated[]>>(this.baseURL + `/${id}/related`);
 
     return res.data;
+  }
+  async Create(input: CreateBookInputType) {
+    const { response } = await fetchWithCredentials("/book", {
+      method: "POST",
+      body: input,
+    });
+
+    return response.ok;
   }
 }

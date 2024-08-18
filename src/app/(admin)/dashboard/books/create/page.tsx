@@ -1,9 +1,12 @@
-import React from 'react'
+import { CategoryService } from "@/services/category.service";
+import FormCreateBook from "./components/form-create";
 
-const CreateBookPage = () => {
-  return (
-    <div>CreateBookPage</div>
-  )
-}
+const categoryService = new CategoryService();
 
-export default CreateBookPage
+const CreateBookPage = async () => {
+  const categories = (await categoryService.getAll()) ?? [];
+
+  return <FormCreateBook categories={categories} />;
+};
+
+export default CreateBookPage;
