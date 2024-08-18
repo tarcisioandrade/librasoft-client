@@ -33,7 +33,7 @@ export default async function Home({
   };
 
   const books = await bookService.GetAll(queries);
-  const categories = await categoryService.getCategories();
+  const categories = await categoryService.getAll();
   const hasPreviusPage = books ? books.currentPage > 1 : false;
   const hasNextPage = books ? books.currentPage < books.totalPages : false;
 

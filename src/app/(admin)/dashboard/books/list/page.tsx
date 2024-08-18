@@ -16,14 +16,14 @@ const ListPage = async ({
   const queries = filterParamsSchema.parse(searchParams);
 
   const books = bookService.GetAll(queries);
-  const categories = categoryService.getCategories();
+  const categories = categoryService.getAll();
 
   return (
-    <div className="pb-20">
+    <>
       <Suspense fallback={<TableSkeleton />}>
         <DataTable booksPromise={books} categoriesPromise={categories} />
       </Suspense>
-    </div>
+    </>
   );
 };
 
