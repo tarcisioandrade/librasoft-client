@@ -1,3 +1,5 @@
+import "server-only";
+
 import { cookies } from "next/headers";
 import { authenticateTokensSchema } from "../schemas/session.schema";
 import env from "../env";
@@ -126,6 +128,8 @@ export async function getSession() {
 export async function validateSession() {
   const access_token = cookies().get("access_token")?.value;
   let status: boolean = false;
+
+  if (!access_token) return status;
 
   await $fetch(`${env.BACKEND_URL}/authenticate/check`, {
     headers: {

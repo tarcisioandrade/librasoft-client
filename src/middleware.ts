@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { logout, validateSession } from "./services/session";
+import { validateSession, getSession } from "./services/session";
+import { EUserRole } from "./enums/EUserRole";
 
-const protectedRoutes = ["/review", "/bag", "/rent"];
+const protectedRoutes = ["/review", "/bag", "/rent", "/dashboard"];
 
 export async function middleware(request: NextRequest) {
   const headers = new Headers(request.headers);
   const pathname = request.nextUrl.pathname;
-  const cookieStore = request.cookies;
-  const access_token = cookieStore.get("access_token")?.value;
   const validate = await validateSession();
+  const session = await getSession();
 
   let currentUrl = new URL(request.url);
 
@@ -17,32 +17,32 @@ export async function middleware(request: NextRequest) {
 
   if (pathname.endsWith("/")) {
     const pageNumber = currentUrl.searchParams.get("pageNumber");
-
     if (!pageNumber) {
-      if (!pageNumber) {
-        currentUrl.searchParams.set("pageNumber", "1");
-      }
-
+      currentUrl.searchParams.set("pageNumber", "1");
       return NextResponse.redirect(currentUrl.href);
     }
   }
 
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
-  if (isProtectedRoute && !access_token) {
+  if (isProtectedRoute && !session) {
     return NextResponse.redirect(new URL("/signin", currentUrl.href));
   }
 
-  if (isProtectedRoute && access_token) {
+  if (isProtectedRoute && session) {
     if (!validate) {
-      logout();
       return NextResponse.redirect(new URL("/signin", currentUrl.href));
     }
   }
 
   const isAuthenticateRoutes = pathname.startsWith("/signin") || pathname.startsWith("/signup");
+  const isOnlyAdminRoutes = pathname.startsWith("/dashboard");
 
-  if (validate && isAuthenticateRoutes) {
+  if (session && isAuthenticateRoutes) {
+    return NextResponse.redirect(new URL("/", currentUrl.href));
+  }
+
+  if (isOnlyAdminRoutes && session?.user.role !== EUserRole.Admin) {
     return NextResponse.redirect(new URL("/", currentUrl.href));
   }
 
