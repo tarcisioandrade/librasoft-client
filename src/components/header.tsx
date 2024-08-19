@@ -6,11 +6,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import SearchHomePage from "./search-home-page";
-import { ChevronDown, LibraryBig } from "lucide-react";
+import { ChevronDown, Database, LibraryBig } from "lucide-react";
 import { headers } from "next/headers";
 import { getSession, logout } from "@/services/session";
 import { Button } from "./ui/button";
 import { BagService } from "@/services/bag.service";
+import { EUserRole } from "@/enums/EUserRole";
 
 const Header = async () => {
   const session = await getSession();
@@ -29,11 +30,21 @@ const Header = async () => {
           LibraSoft
         </Link>
         <SearchHomePage />
+        {session?.user.role === EUserRole.Admin ? (
+          <Link
+            href="/dashboard"
+            className="group relative flex items-center gap-1 rounded border p-1 hover:bg-secondary/50"
+          >
+            <p className="sr-only">Dashboard</p>
+
+            <Database />
+          </Link>
+        ) : null}
         <Link
           href="/bag"
           className="group relative flex items-center gap-1 rounded border p-1 hover:bg-secondary/50"
         >
-          <p className="sr-only">Estante</p>
+          <p className="sr-only">Bolsa</p>
           {bagCount ? (
             <span className="absolute right-[-10px] top-[-8px] h-[14px] w-[12px] rounded-full bg-primary text-center text-[10px] text-white group-hover:bg-primary/90">
               {bagCount}
