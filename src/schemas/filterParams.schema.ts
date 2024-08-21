@@ -1,17 +1,13 @@
 import { z } from "zod";
 
+export const STATUS_FILTER_OPTIONS = ["inactive", "active"] as const;
+
 export const filterParamsSchema = z.object({
-  pageNumber: z.coerce
-    .number()
-    .default(1)
-    .transform((arg) => arg.toString()),
-  pageSize: z.coerce
-    .number()
-    .default(10)
-    .transform((arg) => arg.toString()),
+  pageNumber: z.string().default("1"),
+  pageSize: z.string().default("10"),
   title: z.string().optional(),
   categories: z.string().optional(),
-  includeInactive: z.string().optional(),
+  status: z.enum(STATUS_FILTER_OPTIONS).optional(),
 });
 
 export type FilterParams = z.output<typeof filterParamsSchema>;

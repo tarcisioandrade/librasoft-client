@@ -1,19 +1,21 @@
 import { cn } from "@/lib/utils";
 import { Star } from "lucide-react";
-import React from "react";
+import React, { ComponentProps } from "react";
 
 type Props = {
   rating: number;
   hiddenRatingNumber?: boolean;
   totalStars?: number;
   size?: number;
-};
+} & ComponentProps<"span">;
 
 const StarRating = ({
   rating,
   totalStars = 5,
   size,
   hiddenRatingNumber = false,
+  className,
+  ...props
 }: Props) => {
   const stars = [];
 
@@ -27,8 +29,9 @@ const StarRating = ({
 
   return (
     <span
-      className={cn(!hiddenRatingNumber && "flex items-center gap-1")}
+      className={cn(!hiddenRatingNumber && "flex items-center gap-1", className)}
       style={{ fontSize: size ? size : 16 }}
+      {...props}
     >
       {hiddenRatingNumber ? null : rating.toFixed(1)}{" "}
       <div className="flex items-center">{stars}</div>

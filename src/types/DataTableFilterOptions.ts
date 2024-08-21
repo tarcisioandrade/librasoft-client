@@ -7,6 +7,8 @@ export interface Option {
   value: string;
   icon?: React.ComponentType<{ className?: string }>;
   withCount?: boolean;
+  uniqueSelect?: boolean;
+  hiddenSearchInput?: boolean;
 }
 
 export interface DataTableFilterField<TData> {

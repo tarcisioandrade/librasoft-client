@@ -28,6 +28,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const selectedValues = new Set(column?.getFilterValue() as string[]);
+  const hiddenSearchInput = options.find((option) => option.hiddenSearchInput);
 
   return (
     <Popover>
@@ -66,7 +67,7 @@ export function DataTableFacetedFilter<TData, TValue>({
       </PopoverTrigger>
       <PopoverContent className="w-[12.5rem] p-0" align="start">
         <Command>
-          <CommandInput placeholder={title} />
+          {hiddenSearchInput ? null : <CommandInput placeholder={title} />}
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
@@ -80,6 +81,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       if (isSelected) {
                         selectedValues.delete(option.value);
                       } else {
+                        if (option.uniqueSelect) selectedValues.clear();
                         selectedValues.add(option.value);
                       }
                       const filterValues = Array.from(selectedValues);

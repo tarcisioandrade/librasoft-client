@@ -24,6 +24,17 @@ type Props = {
   categoriesPromise: Promise<Category[] | null>;
 };
 
+const statusFilterOptions = [
+  {
+    label: "Ativo",
+    value: "active",
+  },
+  {
+    label: "Inativo",
+    value: "inactive",
+  },
+];
+
 const DataTable = ({ booksPromise, categoriesPromise }: Props) => {
   const { data, totalPages } = React.use(booksPromise);
   const categories = React.use(categoriesPromise);
@@ -40,7 +51,16 @@ const DataTable = ({ booksPromise, categoriesPromise }: Props) => {
       options: categories?.map((categ) => ({
         label: categ.title[0]?.toUpperCase() + categ.title.slice(1),
         value: categ.title,
-        withCount: true,
+      })),
+    },
+    {
+      label: "Status",
+      value: "status",
+      options: statusFilterOptions?.map((status) => ({
+        label: status.label,
+        value: status.value,
+        uniqueSelect: true,
+        hiddenSearchInput: true,
       })),
     },
   ];
@@ -48,15 +68,18 @@ const DataTable = ({ booksPromise, categoriesPromise }: Props) => {
   const columns = React.useMemo(() => getColumns(), []);
 
   const books =
-    data.map(({ id, title, image, status, categories, copiesAvaliable, author }) => ({
-      id,
-      title,
-      image,
-      status,
-      categories,
-      copiesAvaliable,
-      authorName: author.name,
-    })) ?? [];
+    data.map(
+      ({ id, title, image, status, categories, copiesAvaliable, author, averageRating }) => ({
+        id,
+        title,
+        image,
+        status,
+        categories,
+        copiesAvaliable,
+        authorName: author.name,
+        averageRating,
+      }),
+    ) ?? [];
 
   const { table } = useDataTable({
     data: books,

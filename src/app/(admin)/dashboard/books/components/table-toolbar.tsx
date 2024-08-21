@@ -30,8 +30,9 @@ const headerTranslate: { [key: string]: string } = {
   authorName: "Autor",
   title: "Título",
   categories: "Categorias",
+  averageRating: "Classificação",
 };
-
+  
 export function DataTableToolbar<TData>({
   table,
   filterFields = [],

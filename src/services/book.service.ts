@@ -1,4 +1,5 @@
 import { CacheKeys } from "@/cache-keys";
+import { Constants } from "@/constants";
 import env from "@/env";
 import { $fetch } from "@/lib/fetch-base";
 import { CreateBookInputType } from "@/schemas/create-book.schema";
@@ -7,6 +8,12 @@ import { Book, BookRelated } from "@/types/Book";
 import { Pagination } from "@/types/Pagination";
 import { Response } from "@/types/Response";
 import { fetchWithCredentials } from "@/utils/fetch-with-credentials";
+import { Err, Ok } from "@/utils/result";
+
+type GetAllBooksFilterParams = Omit<FilterParams, "title" | "categories"> & {
+  search?: string;
+  category?: string;
+};
 
 export class BookService {
   private baseURL = `${env.BACKEND_URL}/book`;
@@ -14,10 +21,10 @@ export class BookService {
   async GetAll(params: FilterParams) {
     const url = new URL(this.baseURL);
 
-    const DEFAULT_PARAMS = {
-      pageSize: params.pageSize ?? "10",
-      pageNumber: params.pageNumber ?? "1",
-      includeInactive: params.includeInactive ?? "false",
+    const DEFAULT_PARAMS: GetAllBooksFilterParams = {
+      pageSize: params.pageSize,
+      pageNumber: params.pageNumber,
+      status: params.status,
       search: params.title,
       category: params.categories,
     };
@@ -48,6 +55,7 @@ export class BookService {
 
     return res.data;
   }
+
   async Create(input: CreateBookInputType) {
     const { response } = await fetchWithCredentials("/book", {
       method: "POST",
@@ -55,5 +63,35 @@ export class BookService {
     });
 
     return response.ok;
+  }
+
+  async Delete(id: string) {
+    const { response, error } = await fetchWithCredentials(`/book/${id}/delete`, {
+      method: "DELETE",
+    });
+    if (!response.ok && error) {
+      return Err({ message: error.errors ?? Constants.DEFAULT_ERROR_MESSAGE });
+    }
+    return Ok({ message: "Livro deletado com sucesso!" });
+  }
+
+  async Reactivate(id: string) {
+    const { response, error } = await fetchWithCredentials(`/book/${id}/reactivate`, {
+      method: "POST",
+    });
+    if (!response.ok && error) {
+      return Err({ message: error.errors ?? Constants.DEFAULT_ERROR_MESSAGE });
+    }
+    return Ok({ message: "Livro ativado com sucesso!" });
+  }
+
+  async Inactive(id: string) {
+    const { response, error } = await fetchWithCredentials(`/book/${id}/inactive`, {
+      method: "DELETE",
+    });
+    if (!response.ok && error) {
+      return Err({ message: error.errors ?? Constants.DEFAULT_ERROR_MESSAGE });
+    }
+    return Ok({ message: "Livro inativado com sucesso!" });
   }
 }

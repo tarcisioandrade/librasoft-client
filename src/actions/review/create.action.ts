@@ -20,7 +20,7 @@ type State =
     }
   | {
       success: true;
-      value: string;
+      value: null;
     };
 
 export async function CreateReview(_prevState: State, formData: FormData) {

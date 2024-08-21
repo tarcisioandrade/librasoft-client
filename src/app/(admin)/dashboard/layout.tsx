@@ -34,7 +34,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                   className="overflow-hidden rounded-full"
                   style={{ aspectRatio: "36/36", objectFit: "cover" }}
                 /> */}
-                <div className="size-9 bg-red-500" />
+                <div className="size-9 bg-blue-500" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -47,7 +47,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <div className="grid flex-1 items-start gap-4 px-4 py-4 pb-20">{children}</div>
+        <div className="grid items-start gap-4 px-4 py-4 pb-20">{children}</div>
       </div>
     </div>
   );
