@@ -45,8 +45,8 @@ const getColumns = (): ColumnDef<BookColumns>[] => {
       accessorKey: "title",
       header: "Título",
       cell: ({ row }) => (
-        <div className="flex items-center gap-1">
-          {row.original.title}
+        <div className="flex w-[600px] items-center gap-1">
+          <span className="line-clamp-1">{row.original.title}</span>
           <Button className="px-1" variant="link" asChild>
             <Link href={`/book/${row.original.id}`} target="_blank">
               <ExternalLink className="text-blue-800" size={14} />

@@ -1,9 +1,9 @@
-interface Err<T> {
+export interface Err<T> {
   success: false;
   error: T;
 }
 
-interface Ok<T> {
+export interface Ok<T> {
   success: true;
   value: T;
 }

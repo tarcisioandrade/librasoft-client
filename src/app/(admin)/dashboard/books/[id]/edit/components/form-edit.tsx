@@ -7,12 +7,9 @@ import React, { useEffect, useMemo, useState, useTransition } from "react";
 import MultipleSelector, { Option } from "@/components/ui/multi-select";
 import { Category } from "@/types/Category";
 import { ECoverType } from "@/enums/ECoverType";
-import { AuthorSelect } from "../../../components/author-select";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createBookFormSchema, CreateBookFormType } from "@/schemas/create-book.schema";
 import { Button } from "@/components/ui/button";
-import { createBookAction } from "@/actions/book/create.action";
 import Image from "next/image";
 import { useDebounce } from "@/hooks/use-debounce";
 import { Image as ImageIcon } from "lucide-react";
@@ -24,9 +21,15 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { Book } from "@/types/Book";
+import { AuthorSelect } from "@/app/(admin)/dashboard/components/author-select";
+import { useParams } from "next/navigation";
+import { editBookFormSchema, EditBookFormType } from "@/schemas/edit-book.schema";
+import { editBookAction } from "@/actions/book/edit.action";
 
 type Props = {
   categories: Category[];
+  book: Book;
 };
 
 type AuthorError = {
@@ -35,12 +38,18 @@ type AuthorError = {
   };
 };
 
-const FormCreateBook = ({ categories }: Props) => {
-  const [categoriesSelected, setCategoriesSelected] = useState<Option[]>([]);
-  const [authorSelected, setAuthorSelected] = useState<Option | null>(null);
+const FormEditBook = ({ categories, book }: Props) => {
+  const [categoriesSelected, setCategoriesSelected] = useState<Option[]>(
+    book.categories.map((c) => ({ label: c.title, value: c.id })),
+  );
+  const [authorSelected, setAuthorSelected] = useState<Option | null>({
+    label: book.author.name,
+    value: book.author.id,
+  });
   const [authorError, setAuthorError] = useState<AuthorError | null>(null);
   const [imageError, setImageError] = useState(false);
   const [isLoading, startTransition] = useTransition();
+  const params = useParams<{ id: string }>();
 
   const {
     handleSubmit,
@@ -48,21 +57,23 @@ const FormCreateBook = ({ categories }: Props) => {
     formState: { errors },
     setError,
     watch,
-    reset,
-  } = useForm<CreateBookFormType>({
-    resolver: zodResolver(createBookFormSchema),
+  } = useForm<EditBookFormType>({
+    resolver: zodResolver(editBookFormSchema),
     defaultValues: {
-      depth: "",
-      height: "",
-      image: "",
-      isbn: "",
-      publicationAt: "",
-      publisher: "",
-      sinopse: "",
-      title: "",
-      width: "",
-      copiesAvailable: "1",
-      pageCount: "1",
+      id: params.id,
+      depth: String(book.dimensions.depth),
+      height: String(book.dimensions.height),
+      image: book.image,
+      isbn: book.isbn,
+      publicationAt: new Date(book.publicationAt).toISOString().split("T")[0],
+      publisher: book.publisher,
+      sinopse: book.sinopse,
+      title: book.title,
+      width: String(book.dimensions.width),
+      copiesAvailable: String(book.copiesAvaliable),
+      pageCount: String(book.pageCount),
+      coverType: book.coverType,
+      language: book.language,
     },
   });
 
@@ -77,7 +88,7 @@ const FormCreateBook = ({ categories }: Props) => {
 
   const coverTypeEntries = Object.entries(ECoverType);
 
-  function submitFn(input: CreateBookFormType) {
+  function submitFn(input: EditBookFormType) {
     if (imageError) {
       setError("image", { message: "Verifique a URL da imagem." });
       return;
@@ -100,20 +111,13 @@ const FormCreateBook = ({ categories }: Props) => {
     formData.append("authorId", authorSelected.value);
 
     startTransition(async () => {
-      const response = await createBookAction(formData);
+      const response = await editBookAction(formData);
       if (!response.success) {
         toast.error(response.error.message);
         return;
       }
       toast.success(response.value.message);
-      clearAllFields();
     });
-  }
-
-  function clearAllFields() {
-    reset();
-    setAuthorSelected(null);
-    setCategoriesSelected([]);
   }
 
   const srcImage = watch("image");
@@ -176,7 +180,7 @@ const FormCreateBook = ({ categories }: Props) => {
               render={({ field }) => (
                 <div className="space-y-1">
                   <Label htmlFor="isbn">ISBN</Label>
-                  <Input required type="text" id="isbn" {...field} />
+                  <Input required type="text" id="isbn" {...field} disabled />
                   {errors?.isbn && (
                     <p className="text-xs text-destructive">{errors.isbn.message}</p>
                   )}
@@ -393,11 +397,11 @@ const FormCreateBook = ({ categories }: Props) => {
           />
         </div>
         <Button className="w-full" type="submit" disabled={isLoading}>
-          Submit
+          Enviar
         </Button>
       </div>
     </form>
   );
 };
 
-export default FormCreateBook;
+export default FormEditBook;

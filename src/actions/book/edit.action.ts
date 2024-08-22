@@ -1,14 +1,15 @@
 "use server";
 
 import { CacheKeys } from "@/cache-keys";
-import { createBookInputSchema } from "@/schemas/create-book.schema";
+import { editBookInputSchema } from "@/schemas/edit-book.schema";
 import { BookService } from "@/services/book.service";
 import { revalidateTag } from "next/cache";
 
 const bookService = new BookService();
 
-export async function createBookAction(formData: FormData) {
+export async function editBookAction(formData: FormData) {
   const input = {
+    id: formData.get("id"),
     title: formData.get("title"),
     image: formData.get("image"),
     isbn: formData.get("isbn"),
@@ -28,9 +29,9 @@ export async function createBookAction(formData: FormData) {
     },
   };
 
-  const parsed = createBookInputSchema.parse(input);
-  const res = await bookService.Create(parsed);
-  
+  const parsed = editBookInputSchema.parse(input);
+  const res = await bookService.Update(parsed);
+
   revalidateTag(CacheKeys.Book.GetAll);
   return res;
 }

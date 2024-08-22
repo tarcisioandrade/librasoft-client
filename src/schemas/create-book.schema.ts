@@ -22,7 +22,7 @@ export const createBookFormSchema = z.object({
     .string()
     .transform((arg) => arg.replace(",", "."))
     .refine((data) => parseFloat(data) >= 1, { message: "Deve ser maior ou igual a 1." }),
-  heigth: z
+  height: z
     .string()
     .transform((arg) => arg.replace(",", "."))
     .refine((data) => parseFloat(data) >= 1, { message: "Deve ser maior ou igual a 1." }),
@@ -39,7 +39,7 @@ export const createBookFormSchema = z.object({
 export type CreateBookFormType = z.input<typeof createBookFormSchema>;
 
 export const createBookInputSchema = createBookFormSchema
-  .omit({ width: true, heigth: true, depth: true })
+  .omit({ width: true, height: true, depth: true })
   .merge(
     z.object({
       categories: z.array(
@@ -52,7 +52,7 @@ export const createBookInputSchema = createBookFormSchema
       authorId: z.string(),
       dimensions: z.object({
         width: z.number(),
-        heigth: z.number(),
+        height: z.number(),
         depth: z.number(),
       }),
       pageCount: z.number(),
