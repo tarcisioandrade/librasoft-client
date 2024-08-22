@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { BetterFetchOption } from "@better-fetch/fetch";
 import { $fetch, FetchErrorResponse } from "@/lib/fetch-base";
 import { redirect } from "next/navigation";
+import { Constants } from "@/constants";
 
 type FetchReturns<TData> = {
   data: TData | null;
@@ -24,8 +25,9 @@ export async function fetchWithCredentials<TData>(
   }
 
   let response = new Response();
+  let error: FetchErrorResponse | null = null;
 
-  const { data, error } = await $fetch<TData>(`${env.BACKEND_URL}${path}`, {
+  const { data, error: errorResponse } = await $fetch<TData>(`${env.BACKEND_URL}${path}`, {
     ...options,
     headers: {
       ...options?.headers,
@@ -39,6 +41,13 @@ export async function fetchWithCredentials<TData>(
       return context.response;
     },
   });
+
+  if (errorResponse) {
+    error = {
+      ...errorResponse,
+      errors: errorResponse.errors ?? Constants.DEFAULT_ERROR_MESSAGE,
+    };
+  }
 
   return { data, error, response };
 }
