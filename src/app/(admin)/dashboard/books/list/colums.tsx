@@ -6,7 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import TableRowActions from "../components/table-row-actions";
+import TableRowActions from "./components/table-row-actions";
 import StarRating from "@/components/star-rating";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ export type BookColumns = {
   copiesAvaliable: number;
   title: string;
   averageRating: number;
+  authorName: string;
   status: keyof typeof EStatusType;
 };
 
@@ -45,7 +46,7 @@ const getColumns = (): ColumnDef<BookColumns>[] => {
       accessorKey: "title",
       header: "Título",
       cell: ({ row }) => (
-        <div className="flex w-[600px] items-center gap-1">
+        <div className="flex w-[550px] items-center gap-1">
           <span className="line-clamp-1">{row.original.title}</span>
           <Button className="px-1" variant="link" asChild>
             <Link href={`/book/${row.original.id}`} target="_blank">

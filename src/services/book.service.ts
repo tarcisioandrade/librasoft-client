@@ -3,14 +3,14 @@ import env from "@/env";
 import { $fetch } from "@/lib/fetch-base";
 import { CreateBookInputType } from "@/schemas/create-book.schema";
 import { EditBookInputType } from "@/schemas/edit-book.schema";
-import { FilterParams } from "@/schemas/filterParams.schema";
+import { FilterBooksParams } from "@/schemas/filterParams.schema";
 import { Book, BookRelated } from "@/types/Book";
 import { Pagination } from "@/types/Pagination";
 import { Response } from "@/types/Response";
 import { fetchWithCredentials } from "@/utils/fetch-with-credentials";
 import { Err, Ok } from "@/utils/result";
 
-type GetAllBooksFilterParams = Omit<FilterParams, "title" | "categories"> & {
+type GetAllBooksFilterParams = Omit<FilterBooksParams, "title" | "categories"> & {
   search?: string;
   category?: string;
 };
@@ -18,7 +18,7 @@ type GetAllBooksFilterParams = Omit<FilterParams, "title" | "categories"> & {
 export class BookService {
   private baseURL = `${env.BACKEND_URL}/book`;
 
-  async GetAll(params: FilterParams) {
+  async GetAll(params: FilterBooksParams) {
     const url = new URL(this.baseURL);
 
     const DEFAULT_PARAMS: GetAllBooksFilterParams = {

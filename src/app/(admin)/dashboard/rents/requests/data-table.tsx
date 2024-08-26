@@ -1,12 +1,11 @@
 "use client";
 
-import { useDataTable } from "@/hooks/use-data-table";
-import { Book } from "@/types/Book";
 import { DataTableFilterField } from "@/types/DataTableFilterOptions";
 import { Pagination } from "@/types/Pagination";
-import React from "react";
-import { flexRender } from "@tanstack/react-table";
-import { Category } from "@/types/Category";
+import { Rent } from "@/types/Rent";
+import React, { use } from "react";
+import getRentColumns, { RentsColumns } from "./columns";
+import { useDataTable } from "@/hooks/use-data-table";
 import {
   TableHeader,
   TableRow,
@@ -15,43 +14,29 @@ import {
   TableCell,
   Table,
 } from "@/components/ui/table";
-import getColumns, { BookColumns } from "./colums";
+import { flexRender } from "@tanstack/react-table";
 import { DataTableToolbar } from "../../components/table/table-toolbar";
 import { DataTablePagination } from "../../components/table/table-pagination";
+import { ERentStatus } from "@/enums/ERentStatus";
 
 type Props = {
-  booksPromise: Promise<Pagination<Book>>;
-  categoriesPromise: Promise<Category[] | null>;
+  rentsPromise: Promise<Pagination<Rent>>;
 };
 
-const statusFilterOptions = [
-  {
-    label: "Ativo",
-    value: "active",
-  },
-  {
-    label: "Inativo",
-    value: "inactive",
-  },
-];
+const rentStatusEntries = Object.entries(ERentStatus);
+const statusFilterOptions = rentStatusEntries.map(([key, value]) => ({
+  label: value,
+  value: key,
+}));
 
-const DataTable = ({ booksPromise, categoriesPromise }: Props) => {
-  const { data, totalPages } = React.use(booksPromise);
-  const categories = React.use(categoriesPromise);
+const RentDataTable = ({ rentsPromise }: Props) => {
+  const { data, totalPages } = use(rentsPromise);
 
-  const filterFields: DataTableFilterField<BookColumns>[] = [
+  const filterFields: DataTableFilterField<RentsColumns>[] = [
     {
       label: "Search",
-      value: "title",
-      placeholder: "Filtrar por títulos ou autor...",
-    },
-    {
-      label: "Categorias",
-      value: "categories",
-      options: categories?.map((categ) => ({
-        label: categ.title[0]?.toUpperCase() + categ.title.slice(1),
-        value: categ.title,
-      })),
+      value: "user_email",
+      placeholder: "Pesquisar por e-mail...",
     },
     {
       label: "Status",
@@ -65,24 +50,21 @@ const DataTable = ({ booksPromise, categoriesPromise }: Props) => {
     },
   ];
 
-  const columns = React.useMemo(() => getColumns(), []);
+  const columns = React.useMemo(() => getRentColumns(), []);
 
-  const books =
-    data.map(
-      ({ id, title, image, status, categories, copiesAvaliable, author, averageRating }) => ({
-        id,
-        title,
-        image,
-        status,
-        categories,
-        copiesAvaliable,
-        authorName: author.name,
-        averageRating,
-      }),
-    ) ?? [];
+  const rents: RentsColumns[] =
+    data.map((d) => ({
+      id: d.id,
+      books: d.books,
+      user_email: d.user.email,
+      expectedReturnDate: d.expectedReturnDate,
+      rentDate: d.rentDate,
+      returnedDate: d.returnedDate,
+      status: d.status,
+    })) ?? [];
 
   const { table } = useDataTable({
-    data: books,
+    data: rents,
     columns,
     pageCount: totalPages,
     /* optional props */
@@ -97,14 +79,13 @@ const DataTable = ({ booksPromise, categoriesPromise }: Props) => {
     getRowId: (originalRow, index) => `${originalRow.id}-${index}`,
   });
 
-  const headerTranslate: Partial<Record<keyof BookColumns, string>> = {
-    image: "Imagem",
-    copiesAvaliable: "Cópias",
+  const headerTranslate: Partial<Record<keyof RentsColumns, string>> = {
+    rentDate: "Solicitação",
+    user_email: "Email",
+    expectedReturnDate: "Retorno Esperado",
+    returnedDate: "Retorno",
+    books: "Livros",
     status: "Status",
-    authorName: "Autor",
-    title: "Título",
-    categories: "Categorias",
-    averageRating: "Classificação",
   };
 
   return (
@@ -159,4 +140,4 @@ const DataTable = ({ booksPromise, categoriesPromise }: Props) => {
   );
 };
 
-export default DataTable;
+export default RentDataTable;

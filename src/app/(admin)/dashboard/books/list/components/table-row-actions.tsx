@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Row } from "@tanstack/react-table";
 import React, { useState } from "react";
-import { BookColumns } from "../list/colums";
+import { BookColumns } from "../colums";
 import { Ellipsis } from "lucide-react";
 import { useRouter } from "next/navigation";
-import ActionRowDialog from "./action-row-dialog";
+import ActionRowDialog from "../../../components/table/action-row-dialog";
 import { deleteBookAction } from "@/actions/book/delete.action";
 import { inactiveBookAction } from "@/actions/book/inactive.action";
 import { reactivateBookAction } from "@/actions/book/reactivate.action";
@@ -34,21 +34,21 @@ const TableRowActions = ({ row }: Props) => {
       <ActionRowDialog
         messageLabel="Esta ação não pode ser desfeita. Isso vai permanentemente deletar o livro do servidor."
         open={showDeleteDialog}
-        row={row.original}
+        row_id={row.original.id}
         onOpenChange={setShowDeleteDialog}
         action={deleteBookAction}
       />
       <ActionRowDialog
         messageLabel="Deseja inativar o livro?"
         open={showInactiveDialog}
-        row={row.original}
+        row_id={row.original.id}
         onOpenChange={setShowInactiveDialog}
         action={inactiveBookAction}
       />
       <ActionRowDialog
         messageLabel="Deseja reativar o livro?"
         open={showReactivateDialog}
-        row={row.original}
+        row_id={row.original.id}
         onOpenChange={setShowReactivateDialog}
         action={reactivateBookAction}
       />

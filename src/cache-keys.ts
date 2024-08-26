@@ -10,4 +10,5 @@ export class CacheKeys {
     GetAll: "get-all-book",
   };
   static User = { Get: "get-user" };
+  static Rent = { GetAll: "get-all-rent" };
 }

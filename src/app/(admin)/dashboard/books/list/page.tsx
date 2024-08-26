@@ -2,8 +2,8 @@ import { BookService } from "@/services/book.service";
 import React, { Suspense } from "react";
 import DataTable from "./data-table";
 import { CategoryService } from "@/services/category.service";
-import { filterParamsSchema } from "@/schemas/filterParams.schema";
-import TableSkeleton from "../components/table-skeleton";
+import { filterBooksParamsSchema } from "@/schemas/filterParams.schema";
+import TableSkeleton from "./components/table-skeleton";
 
 const bookService = new BookService();
 const categoryService = new CategoryService();
@@ -13,7 +13,7 @@ const ListPage = async ({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
-  const queries = filterParamsSchema.parse(searchParams);
+  const queries = filterBooksParamsSchema.parse(searchParams);
 
   const books = bookService.GetAll(queries);
   const categories = categoryService.getAll();

@@ -1,5 +1,6 @@
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
+import { Constants } from "@/constants";
 import { ERentStatus } from "@/enums/ERentStatus";
 import { cn } from "@/lib/utils";
 import { RentService } from "@/services/rent.service";
@@ -7,23 +8,11 @@ import { formatDate } from "@/utils/format-date";
 import { Book } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import colors from "tailwindcss/colors";
 
 const rentService = new RentService();
 
-type ColorRentStatus = {
-  [key in keyof typeof ERentStatus]: string;
-};
-
 const RentPage = async () => {
-  const rents = await rentService.GetAll();
-  const statusColor: ColorRentStatus = {
-    Requested_Awaiting_Pickup: colors.orange[400],
-    Rent_Finished: colors.green[400],
-    Rent_In_Progress: colors.blue[400],
-    Rent_Expired: colors.red[400],
-    Rent_Canceled: colors.red[700],
-  };
+  const rents = await rentService.GetAllOfUser();
 
   return (
     <>
@@ -53,7 +42,7 @@ const RentPage = async () => {
                 </div>
                 <p
                   className="w-[130px] justify-self-start text-xs font-semibold"
-                  style={{ color: statusColor[rent.status] }}
+                  style={{ color: Constants.STATUS_COLOR[rent.status] }}
                 >
                   {ERentStatus[rent.status]}
                 </p>

@@ -21,22 +21,14 @@ import {
 interface DataTableToolbarProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
   table: Table<TData>;
   filterFields?: DataTableFilterField<TData>[];
+  toolbarViewOptionsLabel: { [key: string]: string };
 }
 
-const headerTranslate: { [key: string]: string } = {
-  image: "Imagem",
-  copiesAvaliable: "Cópias",
-  status: "Status",
-  authorName: "Autor",
-  title: "Título",
-  categories: "Categorias",
-  averageRating: "Classificação",
-};
-  
 export function DataTableToolbar<TData>({
   table,
   filterFields = [],
   className,
+  toolbarViewOptionsLabel,
   ...props
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -122,7 +114,7 @@ export function DataTableToolbar<TData>({
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) => column.toggleVisibility(!!value)}
                   >
-                    <span className="truncate">{headerTranslate[column.id]}</span>
+                    <span className="truncate">{toolbarViewOptionsLabel[column.id]}</span>
                   </DropdownMenuCheckboxItem>
                 );
               })}

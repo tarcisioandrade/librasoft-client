@@ -15,7 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Banner from "../../public/banners/initial-banner.png";
 import StarRating from "@/components/star-rating";
-import { FilterParams } from "@/schemas/filterParams.schema";
+import { FilterBooksParams } from "@/schemas/filterParams.schema";
 
 const bookService = new BookService();
 const categoryService = new CategoryService();
@@ -25,7 +25,7 @@ export default async function Home({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) {
-  const queries: FilterParams = {
+  const queries: FilterBooksParams = {
     categories: searchParams.category,
     pageNumber: searchParams.pageNumber || "1",
     title: searchParams.search,
