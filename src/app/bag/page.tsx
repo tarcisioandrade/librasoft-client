@@ -9,7 +9,7 @@ const rentsService = new RentService();
 
 const RentPage = async () => {
   const bags = await bagService.GetAll();
-  const rents = await rentsService.GetAll("pending");
+  const rents = await rentsService.GetAllOfUser("pending");
 
   let booksRented = rents ? rents.data.reduce((acc, rent) => acc + rent.books.length, 0) : 0;
 
