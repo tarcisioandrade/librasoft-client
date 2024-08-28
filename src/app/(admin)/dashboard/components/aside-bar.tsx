@@ -14,13 +14,18 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const AsideBar = () => {
+  const [defaultOpen, setDefaultOpen] = useState(false);
   const pathname = usePathname();
-  const isDefaultCollapsible =
-    pathname.includes("/books/list") || pathname.includes("/books/create");
+  const isDefaultCollapsible = pathname.includes("/books");
 
+  useEffect(() => {
+    if (isDefaultCollapsible) setDefaultOpen(true);
+  }, [isDefaultCollapsible]);
+
+  console.log("defaultOpen", defaultOpen);
   return (
     <aside className="fixed inset-0 flex w-52 flex-col border-r bg-background p-4">
       <div className="mb-6 flex items-center gap-2">
@@ -28,7 +33,7 @@ const AsideBar = () => {
         <span className="text-lg font-semibold">LibraSoft</span>
       </div>
       <nav className="flex flex-col gap-2">
-        <Collapsible className="grid gap-4" defaultOpen={isDefaultCollapsible}>
+        <Collapsible className="grid gap-4" onOpenChange={setDefaultOpen} open={defaultOpen}>
           <CollapsibleTrigger
             className={cn(
               "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground [&[data-state=open]>.svg-to-rotate]:rotate-90",
