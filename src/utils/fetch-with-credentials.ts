@@ -45,7 +45,9 @@ export async function fetchWithCredentials<TData>(
   if (errorResponse) {
     error = {
       ...errorResponse,
-      errors: errorResponse.errors ?? Constants.DEFAULT_ERROR_MESSAGE,
+      errors: Array.isArray(errorResponse.errors)
+        ? errorResponse.errors
+        : [Constants.DEFAULT_ERROR_MESSAGE],
     };
   }
 
