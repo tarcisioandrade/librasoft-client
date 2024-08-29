@@ -15,6 +15,7 @@ import React from "react";
 import { notFound } from "next/navigation";
 import { createBagAction } from "@/actions/bag/create.action";
 import { ECoverType } from "@/enums/ECoverType";
+import SinopseWrapper from "./components/sinopse-wrapper";
 
 const bookService = new BookService();
 const reviewService = new ReviewService();
@@ -33,7 +34,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
     const review = await reviewService.Get(book.data.id);
     if (review?.data) reviewUser = review.data;
   }
-
+  
   return (
     <>
       <Header />
@@ -86,7 +87,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
             </div>
             <StarRating size={12} rating={book.data.averageRating} />
             <Divider />
-            <p className="text-sm leading-relaxed">{book.data.sinopse}</p>
+            <SinopseWrapper text={book.data.sinopse} />
             <Divider />
             <div>
               <p className="mb-6 text-lg">Detalhes do Produto</p>
