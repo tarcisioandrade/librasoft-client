@@ -6,7 +6,7 @@ export class CategoryService {
   private baseURL = `${env.BACKEND_URL}/category`;
 
   async getAll() {
-    const req = await $fetch<Category[]>(this.baseURL, { cache: "force-cache" });
+    const req = await $fetch<Category[]>(this.baseURL);
     return req.data;
   }
 }

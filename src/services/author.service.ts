@@ -22,7 +22,7 @@ export class AuthorService {
       }
     });
 
-    const { data } = await $fetch<Pagination<Author>>(url.href, { cache: "force-cache" });
+    const { data } = await $fetch<Pagination<Author>>(url.href);
 
     return data;
   }
