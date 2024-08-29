@@ -8,7 +8,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { AuthorService } from "@/services/author.service";
 import { useDebounce } from "@/hooks/use-debounce";
 import { Input } from "@/components/ui/input";
-import { CommandLoading } from "cmdk";
 import { Option } from "@/components/ui/multi-select";
 import {
   Command,
@@ -30,17 +29,22 @@ export function AuthorSelect({ onSelected, value }: Props) {
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState<Option | null>(value);
   const [search, setSearch] = React.useState("");
-  const [isLoading, startTransition] = React.useTransition();
 
   const debouncedValue = useDebounce(search);
+  const isMounted = React.useRef(false);
+  const authorsListWithoutFilter = React.useRef<Option[]>([]);
 
-  function getAuthorsFn(search?: string) {
-    startTransition(async () => {
-      const authors = await authorService.getAll(search);
-      const authorsFormated =
-        authors?.data.map((author) => ({ label: author.name, value: author.id })) ?? [];
-      setAuthors(authorsFormated);
-    });
+  async function getAuthorsFn(search?: string) {
+    if (!authorsListWithoutFilter.current.length || debouncedValue) {
+      const response = await authorService.getAll(search);
+      const authors =
+        response?.data.map((author) => ({ label: author.name, value: author.id })) ?? [];
+      setAuthors(authors);
+      if (!isMounted.current) {
+        authorsListWithoutFilter.current = authors;
+        isMounted.current = true;
+      }
+    }
   }
 
   React.useEffect(() => {
@@ -48,8 +52,24 @@ export function AuthorSelect({ onSelected, value }: Props) {
   }, [debouncedValue]);
 
   function handlePopover(open: boolean) {
-    if (open === true) setSearch("");
+    if (open) {
+      setSearch("");
+      setAuthors(authorsListWithoutFilter.current);
+    }
     setOpen(open);
+  }
+
+  function handleSelectAuthor(input: Option) {
+    setSelected(input);
+    onSelected?.(input);
+    setSearch("");
+    setOpen(false);
+  }
+
+  function handleCreateAndSelect() {
+    // Não precisa do value, pois será criado no backend.
+    const newAuthor: Option = { label: search, value: "" };
+    handleSelectAuthor(newAuthor);
   }
 
   return (
@@ -76,33 +96,30 @@ export function AuthorSelect({ onSelected, value }: Props) {
             />
           </div>
           <CommandList>
-            <CommandEmpty>Nenhum autor encontrado</CommandEmpty>
-            {isLoading ? (
-              <CommandLoading className="py-6 text-center text-sm">Proucurando...</CommandLoading>
-            ) : (
-              <CommandGroup>
-                {authors.map((author) => (
-                  <CommandItem
-                    key={author.value}
-                    value={author.value}
-                    onSelect={() => {
-                      setSelected(author);
-                      onSelected?.(author);
-                      setSearch("");
-                      setOpen(false);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        selected?.label === author.label ? "opacity-100" : "opacity-0",
-                      )}
-                    />
-                    {author.label}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
+            <CommandEmpty className="h-6 px-2">
+              <button type="button" className="mt-1 h-full text-sm" onClick={handleCreateAndSelect}>
+                Criar {`"${search}"`}
+              </button>
+            </CommandEmpty>
+            <CommandGroup>
+              {authors.map((author) => (
+                <CommandItem
+                  key={author.value}
+                  value={author.value}
+                  onSelect={() => {
+                    handleSelectAuthor(author);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      selected?.label === author.label ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                  {author.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
             {authors.length >= 10 ? (
               <p className="py-2 text-center text-xs text-muted-foreground">
                 Pesquise para mais opções.

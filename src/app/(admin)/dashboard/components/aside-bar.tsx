@@ -25,7 +25,6 @@ const AsideBar = () => {
     if (isDefaultCollapsible) setDefaultOpen(true);
   }, [isDefaultCollapsible]);
 
-  console.log("defaultOpen", defaultOpen);
   return (
     <aside className="fixed inset-0 flex w-52 flex-col border-r bg-background p-4">
       <div className="mb-6 flex items-center gap-2">

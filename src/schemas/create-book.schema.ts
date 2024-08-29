@@ -21,15 +21,15 @@ export const createBookFormSchema = z.object({
   width: z
     .string()
     .transform((arg) => arg.replace(",", "."))
-    .refine((data) => parseFloat(data) >= 1, { message: "Deve ser maior ou igual a 1." }),
+    .refine((data) => parseFloat(data) > 0, { message: "Deve ser maior que 0." }),
   height: z
     .string()
     .transform((arg) => arg.replace(",", "."))
-    .refine((data) => parseFloat(data) >= 1, { message: "Deve ser maior ou igual a 1." }),
+    .refine((data) => parseFloat(data) > 0, { message: "Deve ser maior que 0." }),
   depth: z
     .string()
     .transform((arg) => arg.replace(",", "."))
-    .refine((data) => parseFloat(data) >= 1, { message: "Deve ser maior ou igual a 1." }),
+    .refine((data) => parseFloat(data) > 0, { message: "Deve ser maior que 0." }),
   pageCount: z
     .string()
     .min(1)
@@ -44,12 +44,13 @@ export const createBookInputSchema = createBookFormSchema
     z.object({
       categories: z.array(
         z.object({
-          id: z.string().uuid(),
           title: z.string(),
         }),
       ),
       copiesAvailable: z.number(),
-      authorId: z.string(),
+      author: z.object({
+        name: z.string(),
+      }),
       dimensions: z.object({
         width: z.number(),
         height: z.number(),

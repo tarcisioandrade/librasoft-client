@@ -70,7 +70,7 @@ const FormCreateBook = ({ categories }: Props) => {
     () =>
       categories.map((categ) => ({
         label: categ.title,
-        value: categ.id,
+        value: categ.title,
       })),
     [],
   );
@@ -91,13 +91,17 @@ const FormCreateBook = ({ categories }: Props) => {
     const formData = new FormData();
     const entries = Object.entries(input);
     entries.forEach(([key, value]) => formData.append(key, String(value)));
-    const categoriesParsed = categoriesSelected?.map(({ value, label }) => ({
-      id: value,
+    const categoriesParsed = categoriesSelected?.map(({ _, label }) => ({
       title: label,
     }));
 
     formData.append("categories", JSON.stringify(categoriesParsed));
-    formData.append("authorId", authorSelected.value);
+    formData.append(
+      "author",
+      JSON.stringify({
+        name: authorSelected.label,
+      }),
+    );
 
     startTransition(async () => {
       const response = await createBookAction(formData);
@@ -175,7 +179,7 @@ const FormCreateBook = ({ categories }: Props) => {
               control={control}
               render={({ field }) => (
                 <div className="space-y-1">
-                  <Label htmlFor="isbn">ISBN</Label>
+                  <Label htmlFor="isbn">ISBN-10</Label>
                   <Input required type="text" id="isbn" {...field} />
                   {errors?.isbn && (
                     <p className="text-xs text-destructive">{errors.isbn.message}</p>
@@ -252,6 +256,7 @@ const FormCreateBook = ({ categories }: Props) => {
             <MultipleSelector
               value={categoriesSelected}
               className="max-w-[350px]"
+              creatable
               inputProps={{
                 required: categoriesSelected.length <= 0,
               }}
@@ -393,7 +398,7 @@ const FormCreateBook = ({ categories }: Props) => {
           />
         </div>
         <Button className="w-full" type="submit" disabled={isLoading}>
-          Submit
+          Enviar
         </Button>
       </div>
     </form>

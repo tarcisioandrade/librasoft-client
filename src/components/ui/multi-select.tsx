@@ -353,7 +353,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
             onChange?.(newOptions);
           }}
         >
-          {`Create "${inputValue}"`}
+          {`Criar "${inputValue}"`}
         </CommandItem>
       );
 
@@ -452,11 +452,6 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                       "ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2",
                       (disabled || option.fixed) && "hidden",
                     )}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        handleUnselect(option);
-                      }
-                    }}
                     onMouseDown={(e) => {
                       e.preventDefault();
                       e.stopPropagation();

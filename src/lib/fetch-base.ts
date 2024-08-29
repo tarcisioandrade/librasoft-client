@@ -6,6 +6,7 @@ const fetchErrorSchema = z.object({
   message: z.string(),
   status: z.number(),
   statusText: z.string(),
+  title: z.string(),
 });
 
 export const $fetch = createFetch({

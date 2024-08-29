@@ -19,7 +19,7 @@ export async function createBookAction(formData: FormData) {
     publicationAt: formData.get("publicationAt"),
     sinopse: formData.get("sinopse"),
     categories: JSON.parse(String(formData.get("categories"))),
-    authorId: formData.get("authorId"),
+    author: JSON.parse(String(formData.get("author"))),
     pageCount: Number(formData.get("pageCount")),
     dimensions: {
       width: parseFloat(String(formData.get("width"))),
@@ -30,7 +30,6 @@ export async function createBookAction(formData: FormData) {
 
   const parsed = createBookInputSchema.parse(input);
   const res = await bookService.Create(parsed);
-  
   revalidateTag(CacheKeys.Book.GetAll);
   return res;
 }

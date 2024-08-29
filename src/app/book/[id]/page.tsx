@@ -107,7 +107,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
                   {book.data.pageCount} páginas
                 </li>
                 <li>
-                  <span className="font-semibold">ISBN-13</span>
+                  <span className="font-semibold">ISBN-10</span>
                   <Barcode />
                   {book.data.isbn}
                 </li>
