@@ -16,6 +16,13 @@ import { notFound } from "next/navigation";
 import { createBagAction } from "@/actions/bag/create.action";
 import { ECoverType } from "@/enums/ECoverType";
 import SinopseWrapper from "./components/sinopse-wrapper";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const bookService = new BookService();
 const reviewService = new ReviewService();
@@ -34,11 +41,34 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
     const review = await reviewService.Get(book.data.id);
     if (review?.data) reviewUser = review.data;
   }
-  
+
   return (
     <>
       <Header />
-      <div className="container-secondary my-6">
+
+      <div className="container-secondary">
+        <Breadcrumb className="my-4">
+          <BreadcrumbList className="sm:gap-1">
+            <>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/" className="text-xs">
+                  Página Inicial
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+            </>
+            {book.data.categories.map((c, i, array) => (
+              <React.Fragment key={c.id}>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={`/?category=${c.title.toLowerCase()}`} className="text-xs">
+                    {c.title}
+                    {i + 1 !== array.length ? ", " : null}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+              </React.Fragment>
+            ))}
+          </BreadcrumbList>
+        </Breadcrumb>
         <div className="flex gap-12">
           <div className="flex-1">
             <div className="h-[414px] w-[292px]">
