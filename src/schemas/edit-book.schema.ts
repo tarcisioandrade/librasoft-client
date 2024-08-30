@@ -15,12 +15,13 @@ export const editBookInputSchema = editBookFormSchema
     z.object({
       categories: z.array(
         z.object({
-          id: z.string().uuid(),
           title: z.string(),
         }),
       ),
       copiesAvailable: z.number(),
-      authorId: z.string(),
+      author: z.object({
+        name: z.string(),
+      }),
       dimensions: z.object({
         width: z.number(),
         height: z.number(),
@@ -29,5 +30,5 @@ export const editBookInputSchema = editBookFormSchema
       pageCount: z.number(),
     }),
   );
-  
-  export type EditBookInputType = z.infer<typeof editBookInputSchema>;
+
+export type EditBookInputType = z.infer<typeof editBookInputSchema>;

@@ -20,7 +20,7 @@ export async function editBookAction(formData: FormData) {
     publicationAt: formData.get("publicationAt"),
     sinopse: formData.get("sinopse"),
     categories: JSON.parse(String(formData.get("categories"))),
-    authorId: formData.get("authorId"),
+    author: JSON.parse(String(formData.get("author"))),
     pageCount: Number(formData.get("pageCount")),
     dimensions: {
       width: parseFloat(String(formData.get("width"))),

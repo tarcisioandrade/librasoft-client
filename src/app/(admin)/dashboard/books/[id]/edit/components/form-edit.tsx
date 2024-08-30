@@ -81,7 +81,7 @@ const FormEditBook = ({ categories, book }: Props) => {
     () =>
       categories.map((categ) => ({
         label: categ.title,
-        value: categ.id,
+        value: categ.title,
       })),
     [],
   );
@@ -102,13 +102,17 @@ const FormEditBook = ({ categories, book }: Props) => {
     const formData = new FormData();
     const entries = Object.entries(input);
     entries.forEach(([key, value]) => formData.append(key, String(value)));
-    const categoriesParsed = categoriesSelected?.map(({ value, label }) => ({
-      id: value,
+    const categoriesParsed = categoriesSelected?.map(({ _, label }) => ({
       title: label,
     }));
 
     formData.append("categories", JSON.stringify(categoriesParsed));
-    formData.append("authorId", authorSelected.value);
+    formData.append(
+      "author",
+      JSON.stringify({
+        name: authorSelected.label,
+      }),
+    );
 
     startTransition(async () => {
       const response = await editBookAction(formData);
@@ -256,6 +260,7 @@ const FormEditBook = ({ categories, book }: Props) => {
             <MultipleSelector
               value={categoriesSelected}
               className="max-w-[350px]"
+              creatable
               inputProps={{
                 required: categoriesSelected.length <= 0,
               }}
