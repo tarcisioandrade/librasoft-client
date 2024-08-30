@@ -8,7 +8,7 @@ export const createBookFormSchema = z.object({
   coverType: z.string(),
   copiesAvailable: z
     .string()
-    .min(1)
+    .min(0)
     .refine((data) => Number.isInteger(Number(data)), { message: "Digite um número inteiro." }),
   publisher: z.string(),
   publicationAt: z

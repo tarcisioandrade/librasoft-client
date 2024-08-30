@@ -306,7 +306,7 @@ const FormCreateBook = ({ categories }: Props) => {
               render={({ field }) => (
                 <>
                   <Label htmlFor="copiesAvailable">Cópias Disponíveis</Label>
-                  <Input required type="number" id="copiesAvailable" min={1} {...field} />
+                  <Input required type="number" id="copiesAvailable" min={0} {...field} />
                   {errors?.copiesAvailable && (
                     <p className="text-xs text-destructive">{errors.copiesAvailable.message}</p>
                   )}
