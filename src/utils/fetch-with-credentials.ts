@@ -42,6 +42,16 @@ export async function fetchWithCredentials<TData>(
     },
   });
 
+  if (process.env.NODE_ENV === "development" && !response.ok) {
+    console.log(">>>>>>>>>>>>>>>>>>LOGGER<<<<<<<<<<<<<<<<<<");
+    console.group();
+    console.log(">>>>>>>>>>RESPONSE<<<<<<<<<<<");
+    console.error(response);
+    console.group(">>>>>>>>>>>>>ERROR<<<<<<<<<<<<");
+    console.error(errorResponse);
+    console.groupEnd();
+  }
+
   if (errorResponse) {
     error = {
       ...errorResponse,
