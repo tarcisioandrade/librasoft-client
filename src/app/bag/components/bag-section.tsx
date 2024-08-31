@@ -29,13 +29,12 @@ type BookAndBagId = {
 const BagSection = ({ bags, booksRented }: Props) => {
   const [booksAndBagsIdSelected, setBooksAndBagsIdSelected] = useState<BookAndBagId[]>([]);
   const [isLoading, startTransition] = useTransition();
-  const [optismisticBags, removeOptimisticBags] = useOptimistic(bags, (state, bookId: string) => {
-    return state?.filter((bag) => bag.id !== bookId) ?? null;
+  const [optismisticBags, removeOptimisticBags] = useOptimistic(bags, (state, bagId: string) => {
+    return state?.filter((bag) => bag.id !== bagId) ?? null;
   });
   const router = useRouter();
 
-  const BOOK_RENT_MAX_LIMIT = 3;
-  const BOOK_SELECTED_LIMIT = BOOK_RENT_MAX_LIMIT - booksRented;
+  const BOOK_SELECTED_LIMIT = Constants.BOOK_RENT_MAX_LIMIT - booksRented;
 
   function isChecked(bookId: string) {
     return booksAndBagsIdSelected.some((item) => item.bookId === bookId);
@@ -62,12 +61,10 @@ const BagSection = ({ bags, booksRented }: Props) => {
 
   async function createRent(_: FormData) {
     startTransition(async () => {
-      const formDataBooks = new FormData();
       const books = booksAndBagsIdSelected.map((id) => ({
         id: id.bookId,
       }));
-      formDataBooks.append("books", JSON.stringify(books));
-      const response = await createRentAction(formDataBooks);
+      const response = await createRentAction(books);
       if (!response.success) {
         toast.error(response.error.message);
         return;
@@ -76,17 +73,15 @@ const BagSection = ({ bags, booksRented }: Props) => {
         id: id.bagId,
       }));
       for (let bag of bags) {
-        const formDataBags = new FormData();
-        formDataBags.append("bagId", bag.id);
-        await deleteBagAction(formDataBags);
+        await deleteBagAction(bag.id);
       }
       router.push("/rent");
     });
   }
 
-  const deleteBag = (bagId: string) => async (formData: FormData) => {
+  const deleteBag = (bagId: string) => async () => {
     removeOptimisticBags(bagId);
-    await deleteBagAction(formData);
+    await deleteBagAction(bagId);
   };
 
   function calculateReturnDate(returnDate: Date) {
@@ -122,8 +117,8 @@ const BagSection = ({ bags, booksRented }: Props) => {
       {booksRented >= 3 ? (
         <div className="mb-2 bg-yellow-200 p-2">
           <p className="text-sm text-green-800">
-            Você já alcançou o limite máximo de livros ({BOOK_RENT_MAX_LIMIT}) em alguel. Faça a
-            devolução para poder efetuar outro aluguél.
+            Você já alcançou o limite máximo de {Constants.BOOK_RENT_MAX_LIMIT} livros em alguel.
+            Faça a devolução para fazer outro pedido.
           </p>
         </div>
       ) : null}
@@ -137,7 +132,7 @@ const BagSection = ({ bags, booksRented }: Props) => {
           <div className="flex flex-col border">
             {optismisticBags?.map((bag, i, array) => (
               <div key={bag.id} className={cn("p-4", array.length !== i + 1 && "border-b")}>
-                <div className="flex items-center gap-6">
+                <div className="flex gap-6">
                   <Checkbox
                     name={`book-${bag.book.id}`}
                     checked={isChecked(bag.book.id)}
@@ -146,6 +141,7 @@ const BagSection = ({ bags, booksRented }: Props) => {
                     onCheckedChange={(checked) =>
                       handleBooksAndBagsIdSelected(checked, { bookId: bag.book.id, bagId: bag.id })
                     }
+                    className="self-center"
                   />
                   <Link href={`/book/${bag.book.id}`} className="h-[150px] w-[110px]">
                     <Image
@@ -156,28 +152,33 @@ const BagSection = ({ bags, booksRented }: Props) => {
                       className="h-full"
                     />
                   </Link>
-                  <div className="space-y-1">
-                    <Link href={`/book/${bag.book.id}`}>
-                      <strong className="font-semibold">
-                        {bag.book.title} -{" "}
-                        <span className="font-normal text-muted-foreground">
-                          {bag.book.publisher}
-                        </span>
-                      </strong>
-                    </Link>
-                    <p className="text-sm">por Trancador de ruas</p>
-                    <StarRating size={12} rating={bag.book.averageRating} />
-                    <p className="text-xs text-muted-foreground">
-                      {ECoverType[bag.book.coverType]}
-                    </p>
-                    {bag.book.copiesAvaliable > 0 ? (
-                      <p className="text-xs text-green-700">Disponivel</p>
-                    ) : (
-                      <p className="text-xs text-red-700">Indisponivel</p>
-                    )}
+                  <div className="flex flex-col justify-between">
+                    <div className="space-y-1">
+                      <Link href={`/book/${bag.book.id}`}>
+                        <strong className="font-semibold">
+                          {bag.book.title} -{" "}
+                          <span className="font-normal text-muted-foreground">
+                            {bag.book.publisher}
+                          </span>
+                        </strong>
+                      </Link>
+                      <p className="text-sm">por Trancador de ruas</p>
+                      <StarRating size={12} rating={bag.book.averageRating} />
+                      <p className="text-xs text-muted-foreground">
+                        {ECoverType[bag.book.coverType]}
+                      </p>
+                      {bag.book.copiesAvaliable > 0 ? (
+                        <p className="text-xs text-green-700">Disponivel</p>
+                      ) : (
+                        <p className="text-xs text-red-700">Indisponivel</p>
+                      )}
+                    </div>
                     <form action={deleteBag(bag.id)}>
                       <input hidden name="bagId" defaultValue={bag.id} />
-                      <Button variant="link" className="pl-0 text-xs text-muted-foreground">
+                      <Button
+                        variant="link"
+                        className="h-fit w-fit p-0 text-xs text-muted-foreground"
+                      >
                         Excluir
                       </Button>
                     </form>
@@ -187,21 +188,23 @@ const BagSection = ({ bags, booksRented }: Props) => {
             ))}
           </div>
         )}
-        <div className="space-y-4 border p-4">
-          <p>
-            Subtotal: <strong>{booksAndBagsIdSelected.length} Livros</strong>
-          </p>
-          <p>
-            Data de Devolução:{" "}
-            <strong>
-              {calculateReturnDate(new Date()).toLocaleDateString("pt-BR", {
-                dateStyle: "long",
-              })}
-            </strong>
-          </p>
-          <div className="space-y-1 text-xs text-muted-foreground">
-            <p>Sujeito a penalidades em caso de atraso.</p>
-            <p>48 horas para a retirada do livro ou o pedido é cancelado automaticamente.</p>
+        <div className="flex h-[370px] flex-col justify-between border p-4">
+          <div className="space-y-4">
+            <p>
+              Subtotal: <strong>{booksAndBagsIdSelected.length} Livros</strong>
+            </p>
+            <p>
+              Data de Devolução:{" "}
+              <strong>
+                {calculateReturnDate(new Date()).toLocaleDateString("pt-BR", {
+                  dateStyle: "long",
+                })}
+              </strong>
+            </p>
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <p>Sujeito a penalidades em caso de atraso.</p>
+              <p>48 horas para a retirada do livro ou o pedido é cancelado automaticamente.</p>
+            </div>
           </div>
           <form action={createRent}>
             <Button

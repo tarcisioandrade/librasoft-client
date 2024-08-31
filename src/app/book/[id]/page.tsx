@@ -13,9 +13,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { notFound } from "next/navigation";
-import { createBagAction } from "@/actions/bag/create.action";
 import { ECoverType } from "@/enums/ECoverType";
 import SinopseWrapper from "./components/sinopse-wrapper";
+import FormRent from "./components/form-rent";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -45,7 +45,6 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
   return (
     <>
       <Header />
-
       <div className="container-secondary">
         <Breadcrumb className="my-4">
           <BreadcrumbList className="sm:gap-1">
@@ -86,12 +85,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
               ) : (
                 <p className="text-red-700">Indisponivel</p>
               )}
-              <form action={createBagAction}>
-                <input hidden name="bookId" defaultValue={book.data.id} />
-                <Button className="w-full" type="submit" disabled={book.data.copiesAvaliable <= 0}>
-                  Alugar
-                </Button>
-              </form>
+              <FormRent book={book.data} />
               <div className="space-y-1 text-xs text-muted-foreground">
                 <p>Devolução 30 dias após a data de aluguel.</p>
                 <p>Sujeito a penalidades em caso de atraso.</p>
