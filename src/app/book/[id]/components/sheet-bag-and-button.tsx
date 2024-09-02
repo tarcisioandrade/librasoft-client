@@ -21,6 +21,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import SheetBagSkeleton from "./sheet-bag-skeleton";
 
 type Props = ButtonProps & {
   bags: Bag[];
@@ -137,11 +138,7 @@ const SheetBagAndButton = ({ bags, rentsCount, ...props }: Props) => {
                 </div>
               </div>
             ))}
-            {isLoading ? (
-              <div className="mx-auto size-6">
-                <Icons.spinner className="animate-spin" />
-              </div>
-            ) : null}
+            {isLoading ? <SheetBagSkeleton /> : null}
           </div>
           <Button onClick={() => router.push("/bag")}>Fazer Pedido</Button>
         </SheetContent>
