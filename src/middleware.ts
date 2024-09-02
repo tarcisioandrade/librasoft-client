@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { validateSession, getSession } from "./services/session";
 import { EUserRole } from "./enums/EUserRole";
 
-const protectedRoutes = ["/review", "/bag", "/rent", "/dashboard"];
+const protectedRoutes = ["/review", "/bag", "/rent", "/dashboard", "/account"];
 
 export async function middleware(request: NextRequest) {
   const headers = new Headers(request.headers);

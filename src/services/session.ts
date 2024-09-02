@@ -3,12 +3,13 @@ import "server-only";
 import { cookies } from "next/headers";
 import { authenticateTokensSchema } from "../schemas/session.schema";
 import env from "../env";
-import { userSchema } from "../schemas/user.schema";
+import { User, userSchema } from "../schemas/user.schema";
 import { decrypt, encrypt } from "@/lib/jwt";
 import { $fetch } from "@/lib/fetch-base";
 import { Constants } from "@/constants";
 import { Err, Ok } from "@/utils/result";
 import { CacheKeys } from "@/cache-keys";
+import { fetchWithCredentials } from "@/utils/fetch-with-credentials";
 
 export async function signin(formData: FormData) {
   const formSignin = {
@@ -79,28 +80,27 @@ export function logout() {
   cookies().delete("session");
 }
 
-async function setSession() {
-  const session = cookies().get("session")?.value;
+export async function setSession(user?: User) {
   const access_token = cookies().get("access_token")?.value;
 
-  if (session || !access_token) {
+  let data = user;
+
+  if (!access_token) {
     return Err({ message: ["Token de acesso não encontrado."] });
   }
 
-  const { data, error } = await $fetch(`${env.BACKEND_URL}/user`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-    cache: "force-cache",
-    output: userSchema,
-    next: {
-      tags: [CacheKeys.User.Get],
-    },
-  });
-
-  if (error) {
-    return Err({ message: [Constants.DEFAULT_ERROR_MESSAGE] });
+  if (!data) {
+    const { data: userInDb, error } = await fetchWithCredentials<User>(`/user`, {
+      method: "GET",
+      cache: "force-cache",
+      next: {
+        tags: [CacheKeys.User.Get],
+      },
+    });
+    if (error) {
+      return Err({ message: error.errors });
+    }
+    data = userInDb!;
   }
 
   const parsed = await encrypt(data);
@@ -127,19 +127,7 @@ export async function getSession() {
 
 export async function validateSession() {
   const access_token = cookies().get("access_token")?.value;
-  let status: boolean = false;
-
-  if (!access_token) return status;
-
-  await $fetch(`${env.BACKEND_URL}/authenticate/check`, {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-    onResponse(context) {
-      status = context.response.ok;
-      return context.response;
-    },
-  });
-
-  return status;
+  if (!access_token) return false;
+  const { response } = await fetchWithCredentials(`/authenticate/check`);
+  return response.ok;
 }

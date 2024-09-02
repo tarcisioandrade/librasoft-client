@@ -84,7 +84,7 @@ const Header = async () => {
                 <li>
                   <Link
                     className="block text-muted-foreground hover:text-primary hover:underline"
-                    href={"/"}
+                    href="/account/personal-data"
                   >
                     Sua conta
                   </Link>
