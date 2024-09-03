@@ -12,7 +12,7 @@ const AccountLayout = async ({
 }>) => {
   const session = await getSession();
   if (!session) redirect("/signin");
-  
+
   return (
     <>
       <Header />
@@ -26,7 +26,7 @@ const AccountLayout = async ({
               <ul>
                 <li>
                   <Link
-                    href="/pesonal-data"
+                    href="/account/pesonal-data"
                     className="flex items-center gap-2 p-2 text-sm text-muted-foreground transition-colors hover:bg-secondary"
                   >
                     <CircleUserRound />
@@ -35,7 +35,7 @@ const AccountLayout = async ({
                 </li>
                 <li>
                   <Link
-                    href="/change-password"
+                    href="/account/change-password"
                     className="flex items-center gap-2 p-2 text-sm text-muted-foreground transition-colors hover:bg-secondary"
                   >
                     <LockKeyhole />
@@ -44,7 +44,7 @@ const AccountLayout = async ({
                 </li>
                 <li>
                   <Link
-                    href="/punishments"
+                    href="/account/punishments"
                     className="flex items-center gap-2 p-2 text-sm text-muted-foreground transition-colors hover:bg-secondary"
                   >
                     <Scale />
@@ -54,7 +54,7 @@ const AccountLayout = async ({
               </ul>
             </nav>
           </aside>
-          <div>{children}</div>
+          <div className="border pb-4">{children}</div>
         </div>
       </section>
     </>

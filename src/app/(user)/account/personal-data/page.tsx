@@ -6,12 +6,12 @@ const AccountPage = async () => {
   const session = await getSession();
 
   return (
-    <div className="border pb-4">
+    <>
       <header className="w-full bg-secondary px-4 py-2">
         <p className="text-sm text-muted-foreground">Dados Pessoais</p>
       </header>
       {session?.user ? <FormUserData user={session.user} /> : null}
-    </div>
+    </>
   );
 };
 
