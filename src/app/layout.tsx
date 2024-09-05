@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,8 +21,8 @@ export default function RootLayout({
       <body className={inter.className}>
         <main className="relative flex min-h-screen flex-col">
           <div className="flex-1">{children}</div>
-          {/* <footer className="mt-12 h-72 bg-secondary" /> */}
         </main>
+        <Footer />
         <Toaster position="top-center" expand theme="light" richColors duration={2000} />
       </body>
     </html>
