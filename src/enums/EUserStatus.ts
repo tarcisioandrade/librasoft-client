@@ -1,6 +1,6 @@
 export enum EUserStatus {
-  Active = "Active",
-  Inactive = "Inactive",
-  Suspense = "Suspense",
-  Banned = "Banned",
+  Active = "Ativo",
+  Inactive = "Inativo",
+  Suspense = "Suspenso",
+  Banned = "Banido",
 }

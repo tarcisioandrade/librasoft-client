@@ -19,6 +19,9 @@ const AccountLayout = async ({
       <section className="container-secondary">
         <p className="my-6 text-sm">
           Olá <strong>{session?.user.name}</strong>! Acompanhe aqui seus dados cadastrais.
+          {session?.user.role === "Admin" ? (
+            <div className="text-red-500">Você está conectado em uma conta de administrador.</div>
+          ) : null}
         </p>
         <div className="grid grid-cols-[400px_1fr] gap-6">
           <aside className="self-start border">
@@ -26,7 +29,7 @@ const AccountLayout = async ({
               <ul>
                 <li>
                   <Link
-                    href="/account/pesonal-data"
+                    href="/account/personal-data"
                     className="flex items-center gap-2 p-2 text-sm text-muted-foreground transition-colors hover:bg-secondary"
                   >
                     <CircleUserRound />

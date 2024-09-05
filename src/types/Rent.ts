@@ -1,6 +1,6 @@
 import { ERentStatus } from "@/enums/ERentStatus";
 import { Book } from "./Book";
-import { User } from "@/schemas/user.schema";
+import { User } from "./User";
 
 export interface Rent {
   id: string;

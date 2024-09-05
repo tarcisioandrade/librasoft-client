@@ -1,5 +1,9 @@
+import { CacheKeys } from "@/cache-keys";
 import { ChangePasswordInput } from "@/schemas/change-password.schema";
-import { User, UserUpdate } from "@/schemas/user.schema";
+import { UserUpdate } from "@/schemas/user.schema";
+import { Punishment } from "@/types/Punishment";
+import { Response } from "@/types/Response";
+import { User } from "@/types/User";
 import { fetchWithCredentials } from "@/utils/fetch-with-credentials";
 import { Err, Ok } from "@/utils/result";
 
@@ -26,5 +30,18 @@ export class UserService {
       return Err({ message: error.errors });
     }
     return Ok({ message: "Sua senha foi atualizada com sucesso!" });
+  }
+
+  async GetAllPunishments() {
+    const { data } = await fetchWithCredentials<Response<Punishment[]>>(
+      this.endpoint + "/punishments",
+      {
+        cache: "force-cache",
+        next: {
+          tags: [CacheKeys.Punishment.GetAll],
+        },
+      },
+    );
+    return data;
   }
 }

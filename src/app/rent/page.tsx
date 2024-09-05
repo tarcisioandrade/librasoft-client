@@ -23,6 +23,11 @@ const RentPage = async () => {
           <p className="text-sm text-muted-foreground">Acompanhe aqui seus pedidos.</p>
         </div>
         <div className="flex flex-col border">
+          {!rents?.data.length ? (
+            <div className="grid h-48 place-items-center border">
+              <p className="text-7xl uppercase text-muted-foreground/50">Vazio</p>
+            </div>
+          ) : null}
           {rents?.data.map((rent, i, array) => (
             <div key={rent.id} className={cn("p-4", array.length !== i + 1 && "border-b")}>
               <div className="flex items-center justify-between">

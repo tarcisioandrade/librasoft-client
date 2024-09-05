@@ -94,7 +94,7 @@ const Header = async () => {
                     className="block text-muted-foreground hover:text-primary hover:underline"
                     href={"/rent"}
                   >
-                    Meus Empréstimos
+                    Meus Alugúeis
                   </Link>
                 </li>
                 {session ? (
