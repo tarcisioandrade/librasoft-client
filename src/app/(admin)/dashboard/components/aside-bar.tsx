@@ -69,17 +69,6 @@ const AsideBar = () => {
           </CollapsibleContent>
         </Collapsible>
         <Link
-          href="#"
-          className={cn(
-            "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground",
-            pathname.includes("/authors") && "bg-muted text-foreground",
-          )}
-          prefetch={false}
-        >
-          <BookUser className="h-5 w-5" />
-          Autores
-        </Link>
-        <Link
           href="/dashboard/rents/requests"
           className={cn(
             "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground",
@@ -93,7 +82,18 @@ const AsideBar = () => {
         <Link
           href="#"
           className={cn(
-            "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground",
+            "pointer-events-none flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+            pathname.includes("/authors") && "bg-muted text-foreground",
+          )}
+          prefetch={false}
+        >
+          <BookUser className="h-5 w-5" />
+          Autores
+        </Link>
+        <Link
+          href="#"
+          className={cn(
+            "pointer-events-none flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
             pathname.includes("/categories") && "bg-muted text-foreground",
           )}
           prefetch={false}
@@ -104,7 +104,7 @@ const AsideBar = () => {
         <Link
           href="#"
           className={cn(
-            "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground",
+            "pointer-events-none flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
             pathname.includes("/users") && "bg-muted text-foreground",
           )}
           prefetch={false}
@@ -113,7 +113,7 @@ const AsideBar = () => {
           Usuários
         </Link>
       </nav>
-      <nav className="mt-auto">
+      {/* <nav className="mt-auto">
         <Link
           href="#"
           className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground"
@@ -122,7 +122,7 @@ const AsideBar = () => {
           <Settings className="h-5 w-5" />
           Settings
         </Link>
-      </nav>
+      </nav> */}
     </aside>
   );
 };
