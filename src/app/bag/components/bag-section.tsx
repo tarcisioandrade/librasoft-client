@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Constants } from "@/constants";
 import { ECoverType } from "@/enums/ECoverType";
+import { EUserStatus } from "@/enums/EUserStatus";
 import { cn } from "@/lib/utils";
 import { Bag } from "@/types/Bag";
 import { CheckedState } from "@radix-ui/react-checkbox";
@@ -18,7 +19,8 @@ import { toast } from "sonner";
 
 type Props = {
   bags: Bag[] | null;
-  booksRented: number;
+  selectedLimit: number;
+  userStatus: keyof typeof EUserStatus;
 };
 
 type BookAndBagId = {
@@ -26,7 +28,7 @@ type BookAndBagId = {
   bagId: string;
 };
 
-const BagSection = ({ bags, booksRented }: Props) => {
+const BagSection = ({ bags, selectedLimit, userStatus }: Props) => {
   const [booksAndBagsIdSelected, setBooksAndBagsIdSelected] = useState<BookAndBagId[]>([]);
   const [isLoading, startTransition] = useTransition();
   const [optismisticBags, removeOptimisticBags] = useOptimistic(bags, (state, bagId: string) => {
@@ -34,15 +36,13 @@ const BagSection = ({ bags, booksRented }: Props) => {
   });
   const router = useRouter();
 
-  const BOOK_SELECTED_LIMIT = Constants.BOOK_RENT_MAX_LIMIT - booksRented;
-
   function isChecked(bookId: string) {
     return booksAndBagsIdSelected.some((item) => item.bookId === bookId);
   }
 
   function isDisabled(bookId: string) {
     return (
-      booksAndBagsIdSelected.length === BOOK_SELECTED_LIMIT &&
+      booksAndBagsIdSelected.length === selectedLimit &&
       !booksAndBagsIdSelected.find((book) => book.bookId === bookId)
     );
   }
@@ -60,6 +60,7 @@ const BagSection = ({ bags, booksRented }: Props) => {
   }
 
   async function createRent(_: FormData) {
+    if (userStatus !== "Active") return;
     startTransition(async () => {
       const books = booksAndBagsIdSelected.map((id) => ({
         id: id.bookId,
@@ -103,26 +104,10 @@ const BagSection = ({ bags, booksRented }: Props) => {
     return returnDate;
   }
 
+  const BUTTON_DISABLED = !booksAndBagsIdSelected.length || userStatus !== "Active" || isLoading;
+
   return (
     <>
-      {booksRented > 0 && booksRented < 3 ? (
-        <div className="mb-2 bg-yellow-200 p-2">
-          <p className="text-sm text-green-800">
-            Você ja tem {booksRented} livro(s) com aluguel em andamento. Você pode alugar só mais{" "}
-            {BOOK_SELECTED_LIMIT} livro(s).
-          </p>
-        </div>
-      ) : null}
-
-      {booksRented >= 3 ? (
-        <div className="mb-2 bg-yellow-200 p-2">
-          <p className="text-sm text-green-800">
-            Você já alcançou o limite máximo de {Constants.BOOK_RENT_MAX_LIMIT} livros em alguel.
-            Faça a devolução para fazer outro pedido.
-          </p>
-        </div>
-      ) : null}
-
       <div className="grid grid-cols-[1fr_400px] gap-4">
         {!optismisticBags?.length ? (
           <div className="grid place-items-center border">
@@ -207,11 +192,7 @@ const BagSection = ({ bags, booksRented }: Props) => {
             </div>
           </div>
           <form action={createRent}>
-            <Button
-              className="w-full"
-              disabled={!booksAndBagsIdSelected.length || isLoading}
-              aria-disabled={!booksAndBagsIdSelected.length || isLoading}
-            >
+            <Button className="w-full" disabled={BUTTON_DISABLED} aria-disabled={BUTTON_DISABLED}>
               {isLoading ? "Fechando..." : "Fechar Pedido"}
             </Button>
           </form>
