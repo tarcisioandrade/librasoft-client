@@ -3,13 +3,13 @@ import "server-only";
 import { cookies } from "next/headers";
 import { authenticateTokensSchema } from "../schemas/session.schema";
 import env from "../env";
-import { User, userSchema } from "../schemas/user.schema";
 import { decrypt, encrypt } from "@/lib/jwt";
 import { $fetch } from "@/lib/fetch-base";
 import { Constants } from "@/constants";
 import { Err, Ok } from "@/utils/result";
 import { CacheKeys } from "@/cache-keys";
 import { fetchWithCredentials } from "@/utils/fetch-with-credentials";
+import { User } from "@/types/User";
 
 export async function signin(formData: FormData) {
   const formSignin = {
@@ -119,10 +119,9 @@ export async function setSession(user?: User) {
 export async function getSession() {
   const sessionEncrypted = cookies().get("session")?.value;
   if (!sessionEncrypted) return null;
-  const sessionDecrypted = await decrypt(sessionEncrypted);
-  const result = userSchema.parse(sessionDecrypted);
+  const sessionDecrypted = (await decrypt(sessionEncrypted)) as User;
 
-  return { user: result };
+  return { user: sessionDecrypted };
 }
 
 export async function validateSession() {

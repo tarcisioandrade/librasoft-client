@@ -27,6 +27,6 @@ export const userSchema = z.object({
   role: z.nativeEnum(EUserRole),
   status: z.nativeEnum(EUserStatus),
 });
-export type User = z.infer<typeof userSchema>;
+
 export const userUpdateSchema = userSchema.omit({ role: true, status: true, id: true });
 export type UserUpdate = z.infer<typeof userUpdateSchema>;

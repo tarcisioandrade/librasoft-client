@@ -1,6 +1,6 @@
 "use client";
 
-import { User, UserUpdate, userUpdateSchema, zipCodeSchema } from "@/schemas/user.schema";
+import {UserUpdate, userUpdateSchema, zipCodeSchema } from "@/schemas/user.schema";
 import React, { useEffect, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
@@ -11,6 +11,7 @@ import { updateUserAction } from "@/actions/user/update.action";
 import { toast } from "sonner";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ViaCepService } from "@/services/via-cep.service";
+import { User } from "@/types/User";
 
 type Props = {
   user: User;
