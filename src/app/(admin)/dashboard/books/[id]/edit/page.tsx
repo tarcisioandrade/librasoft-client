@@ -10,7 +10,7 @@ const categoryService = new CategoryService();
 const EditBookPage = async ({ params }: { params: { id: string } }) => {
   const book = await bookService.GetById(params.id);
   if (!book) notFound();
-  const categories = (await categoryService.getAll()) ?? [];
+  const categories = (await categoryService.getAll())?.data ?? [];
 
   return <FormEditBook book={book.data} categories={categories} />;
 };

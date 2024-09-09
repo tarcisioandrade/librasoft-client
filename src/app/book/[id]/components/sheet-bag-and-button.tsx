@@ -11,7 +11,6 @@ import StarRating from "@/components/star-rating";
 import { createBagAction } from "@/actions/bag/create.action";
 import { useParams, useRouter } from "next/navigation";
 import { deleteBagAction } from "@/actions/bag/delete.action";
-import { Icons } from "@/components/ui/icons";
 import { Constants } from "@/constants";
 import {
   Sheet,
@@ -22,13 +21,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import SheetBagSkeleton from "./sheet-bag-skeleton";
+import { User } from "@/types/User";
 
 type Props = ButtonProps & {
   bags: Bag[];
   rentsCount: number;
+  session?: User;
 };
 
-const SheetBagAndButton = ({ bags, rentsCount, ...props }: Props) => {
+const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
   const [open, setOpen] = useState(false);
   const [optismisticBags, removeOptimisticBags] = useOptimistic(
     bags,
@@ -50,6 +51,10 @@ const SheetBagAndButton = ({ bags, rentsCount, ...props }: Props) => {
   }
 
   function handleSheet(state: boolean) {
+    if (!session) {
+      router.push("/signin");
+      return;
+    }
     setOpen(state);
     const BOOK_ALREADY_IN_BAG = bags.some((b) => b.book.id === params.id);
     if (BOOK_ALREADY_IN_BAG || !state) return;

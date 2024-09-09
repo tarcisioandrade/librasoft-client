@@ -1,5 +1,5 @@
 import Header from "@/components/header";
-import ReviewCard from "@/app/book/components/review-card";
+import ReviewCard from "@/app/book/[id]/components/review-card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LikeService } from "@/services/like.service";

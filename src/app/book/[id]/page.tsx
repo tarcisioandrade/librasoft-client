@@ -1,6 +1,6 @@
 import Divider from "@/components/divider";
 import Header from "@/components/header";
-import ReviewCard from "@/app/book/components/review-card";
+import ReviewCard from "@/app/book/[id]/components/review-card";
 import StarRating from "@/components/star-rating";
 import { Button } from "@/components/ui/button";
 import { BookService } from "@/services/book.service";

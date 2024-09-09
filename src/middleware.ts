@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { validateSession, getSession } from "./services/session";
 import { EUserRole } from "./enums/EUserRole";
-
-const protectedRoutes = ["/review", "/bag", "/rent", "/dashboard", "/account"];
+import { Constants } from "./constants";
 
 export async function middleware(request: NextRequest) {
   const headers = new Headers(request.headers);
@@ -23,7 +22,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
+  const isProtectedRoute = Constants.PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
 
   if (isProtectedRoute && !session) {
     return NextResponse.redirect(new URL("/signin", currentUrl.href));

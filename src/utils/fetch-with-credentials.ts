@@ -21,7 +21,7 @@ export async function fetchWithCredentials<TData>(
 
   if (!access_token) {
     console.error(`Access token not found. Path=${path}`);
-    redirect("/signin");
+    // redirect("/signin");
   }
 
   let response = new Response();

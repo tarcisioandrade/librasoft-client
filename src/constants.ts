@@ -12,4 +12,5 @@ export class Constants {
     Rent_Expired: colors.red[400],
     Rent_Canceled: colors.red[700],
   };
+  static PROTECTED_ROUTES = ["/review", "/bag", "/rent", "/dashboard", "/account"];
 }

@@ -18,10 +18,11 @@ import {
 import getColumns, { BookColumns } from "./colums";
 import { DataTableToolbar } from "../../components/table/table-toolbar";
 import { DataTablePagination } from "../../components/table/table-pagination";
+import { Response } from "@/types/Response";
 
 type Props = {
   booksPromise: Promise<Pagination<Book>>;
-  categoriesPromise: Promise<Category[] | null>;
+  categoriesPromise: Promise<Response<Category[]> | null>;
 };
 
 const statusFilterOptions = [
@@ -48,7 +49,7 @@ const DataTable = ({ booksPromise, categoriesPromise }: Props) => {
     {
       label: "Categorias",
       value: "categories",
-      options: categories?.map((categ) => ({
+      options: categories?.data.map((categ) => ({
         label: categ.title[0]?.toUpperCase() + categ.title.slice(1),
         value: categ.title,
       })),
