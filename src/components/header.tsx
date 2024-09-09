@@ -26,7 +26,7 @@ const Header = async () => {
   return (
     <header className="border-b">
       <div className="container flex h-14 items-center justify-between gap-10">
-        <Link href="/" className="text-2xl font-bold">
+        <Link href="/?pageNumber=1" className="text-2xl font-bold">
           LibraSoft
         </Link>
         <SearchHomePage />

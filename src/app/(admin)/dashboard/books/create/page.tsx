@@ -4,7 +4,7 @@ import FormCreateBook from "./components/form-create";
 const categoryService = new CategoryService();
 
 const CreateBookPage = async () => {
-  const categories = (await categoryService.getAll()) ?? [];
+  const categories = (await categoryService.getAll())?.data ?? [];
 
   return <FormCreateBook categories={categories} />;
 };

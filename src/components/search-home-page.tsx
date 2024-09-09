@@ -19,7 +19,9 @@ const SearchHomePage = () => {
     if (!value || currentURL.searchParams.has("search")) {
       currentURL.searchParams.delete("search");
     }
-
+    if (currentURL.searchParams.has("category")) {
+      currentURL.searchParams.delete("category");
+    }
     if (value) {
       currentURL.searchParams.append("search", value);
     }
