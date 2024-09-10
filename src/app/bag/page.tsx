@@ -7,7 +7,11 @@ import { Constants } from "@/constants";
 import { UserService } from "@/services/user.service";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getSession } from "@/services/session";
+import { getSession } from "@/services/session.service";
+import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
+import { Metadata } from "next";
+
+export const metadata: Metadata = generateCustomMetadata("Bolsa");
 
 const bagService = new BagService();
 const rentsService = new RentService();

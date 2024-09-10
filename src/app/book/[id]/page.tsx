@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { BookService } from "@/services/book.service";
 import { LikeService } from "@/services/like.service";
 import { ReviewService } from "@/services/review.service";
-import { getSession } from "@/services/session";
+import { getSession } from "@/services/session.service";
 import { Review } from "@/types/Review";
 import { Barcode, BookA, BookOpenText, CalendarDays, Hotel, Ruler, Star } from "lucide-react";
 import Image from "next/image";
@@ -23,10 +23,22 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Metadata } from "next";
+import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
+import Head from "next/head";
 
 const bookService = new BookService();
 const reviewService = new ReviewService();
 const likeService = new LikeService();
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> => {
+  const book = await bookService.GetById(params.id);
+  return generateCustomMetadata(book?.data.title);
+};
 
 const BookPage = async ({ params }: { params: { id: string } }) => {
   const session = await getSession();
@@ -45,6 +57,9 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
   return (
     <>
       <Header />
+      <Head>
+        <title>{book.data.title}</title>
+      </Head>
       <div className="container-secondary">
         <Breadcrumb className="my-4">
           <BreadcrumbList className="sm:gap-1">

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { validateSession, getSession } from "./services/session";
+import { validateSession, getSession } from "./services/session.service";
 import { EUserRole } from "./enums/EUserRole";
 import { Constants } from "./constants";
 

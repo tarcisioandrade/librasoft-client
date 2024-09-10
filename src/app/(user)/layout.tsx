@@ -1,5 +1,5 @@
 import Header from "@/components/header";
-import { getSession } from "@/services/session";
+import { getSession } from "@/services/session.service";
 import { CircleUserRound, LockKeyhole, Scale } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";

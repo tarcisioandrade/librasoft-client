@@ -2,7 +2,7 @@
 
 import { CacheKeys } from "@/cache-keys";
 import { BagService } from "@/services/bag.service";
-import { getSession } from "@/services/session";
+import { getSession } from "@/services/session.service";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { signin } from "@/services/session";
+import { signin } from "@/services/session.service";
 import { redirect } from "next/navigation";
 
 export async function signinAction(formData: FormData) {

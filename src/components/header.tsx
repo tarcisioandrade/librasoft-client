@@ -7,7 +7,7 @@ import {
 import SearchHomePage from "./search-home-page";
 import { ChevronDown, CircleAlert, Database, LibraryBig } from "lucide-react";
 import { headers } from "next/headers";
-import { getSession, logout } from "@/services/session";
+import { getSession, logout } from "@/services/session.service";
 import { Button } from "./ui/button";
 import { BagService } from "@/services/bag.service";
 import { EUserRole } from "@/enums/EUserRole";

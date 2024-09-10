@@ -2,7 +2,7 @@ import { UserService } from "@/services/user.service";
 import React from "react";
 import { formatDate } from "@/utils/format-date";
 import { EStatusType } from "@/enums/EStatusType";
-import { getSession } from "@/services/session";
+import { getSession } from "@/services/session.service";
 import { EUserStatus } from "@/enums/EUserStatus";
 import { cn } from "@/lib/utils";
 import {
@@ -14,6 +14,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
+import { Metadata } from "next";
+
+export const metadata: Metadata = generateCustomMetadata("Histórico de Punições");
 
 const userService = new UserService();
 

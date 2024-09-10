@@ -1,5 +1,9 @@
 import React from "react";
 import ChangePasswordForm from "./components/change-password-form";
+import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
+import { Metadata } from "next";
+
+export const metadata: Metadata = generateCustomMetadata("Alterar Senha");
 
 const ChangePasswordPage = () => {
   return (

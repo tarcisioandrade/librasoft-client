@@ -5,9 +5,13 @@ import { ERentStatus } from "@/enums/ERentStatus";
 import { cn } from "@/lib/utils";
 import { RentService } from "@/services/rent.service";
 import { formatDate } from "@/utils/format-date";
+import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
 import { Book } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
+
+export const metadata: Metadata = generateCustomMetadata("Aluguéis");
 
 const rentService = new RentService();
 

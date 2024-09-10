@@ -1,7 +1,11 @@
 import FormSignup from "@/app/(auth)/signup/components/form-signup";
 import { Button } from "@/components/ui/button";
+import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
+import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
+
+export const metadata: Metadata = generateCustomMetadata("Signup");
 
 const Page = () => {
   return (

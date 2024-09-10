@@ -1,7 +1,11 @@
 import FormSignin from "@/app/(auth)/signin/components/form-signin";
 import { Button } from "@/components/ui/button";
+import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
+import { Metadata } from "next";
 import Link from "next/link";
 import React, { Suspense } from "react";
+
+export const metadata: Metadata = generateCustomMetadata("Signin");
 
 const Page = () => {
   return (

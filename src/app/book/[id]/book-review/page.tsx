@@ -4,9 +4,13 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LikeService } from "@/services/like.service";
 import { ReviewService } from "@/services/review.service";
-import { getSession } from "@/services/session";
+import { getSession } from "@/services/session.service";
 import Link from "next/link";
 import React from "react";
+import { Metadata } from "next";
+import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
+
+export const metadata: Metadata = generateCustomMetadata("Avaliações");
 
 const reviewService = new ReviewService();
 const likeService = new LikeService();

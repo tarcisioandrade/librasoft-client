@@ -1,17 +1,12 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-
 import AsideBar from "./components/aside-bar";
 import BreadcrumbToDashboard from "./components/breadcrumb-to-dashboard";
 import Link from "next/link";
+import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
+import { Metadata } from "next";
+
+export const metadata: Metadata = generateCustomMetadata("Dashboard");
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (

@@ -6,6 +6,10 @@ import { ReviewService } from "@/services/review.service";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import React from "react";
+import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
+import { Metadata } from "next";
+
+export const metadata: Metadata = generateCustomMetadata("Avaliação");
 
 const bookService = new BookService();
 const reviewService = new ReviewService();

@@ -2,7 +2,7 @@
 
 import { CacheKeys } from "@/cache-keys";
 import { UserUpdate } from "@/schemas/user.schema";
-import { setSession } from "@/services/session";
+import { setSession } from "@/services/session.service";
 import { UserService } from "@/services/user.service";
 import { revalidateTag } from "next/cache";
 

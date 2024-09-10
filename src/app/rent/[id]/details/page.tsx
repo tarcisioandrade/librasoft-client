@@ -12,6 +12,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 import AlertCancelRent from "../../components/alert-cancel-rent";
+import { Metadata } from "next";
+import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
+
+export const metadata: Metadata = generateCustomMetadata("Detalhes");
 
 const rentService = new RentService();
 
