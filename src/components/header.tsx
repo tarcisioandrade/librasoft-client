@@ -6,21 +6,24 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import SearchHomePage from "./search-home-page";
-import { ChevronDown, Database, LibraryBig } from "lucide-react";
+import { ChevronDown, CircleAlert, Database, LibraryBig } from "lucide-react";
 import { headers } from "next/headers";
 import { getSession, logout } from "@/services/session";
 import { Button } from "./ui/button";
 import { BagService } from "@/services/bag.service";
 import { EUserRole } from "@/enums/EUserRole";
+import colors from "tailwindcss/colors";
+import { cn } from "@/lib/utils";
 
 const Header = async () => {
   const session = await getSession();
   const callbackUrl = headers().get("x-current-path");
   let bagCount: number | null = null;
-
+  let IS_PROFILE_COMPLETE: boolean | null = null;
   if (session) {
     const bagService = new BagService();
     bagCount = (await bagService.GetAll())?.data.length ?? 0;
+    IS_PROFILE_COMPLETE = !!session.user.address;
   }
 
   return (
@@ -53,10 +56,23 @@ const Header = async () => {
           <LibraryBig />
         </Link>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger
+            asChild
+            className="group [&[data-state=open]>.svg-to-rotate]:rotate-180"
+          >
             <Button className="flex border-none text-sm outline-none" variant="link">
-              <span>{session ? `Olá, ${session.user.name}` : "Olá, faça seu login."}</span>
-              <ChevronDown size={12} />
+              <strong className="relative pr-2">
+                {session ? `Olá, ${session.user.name}` : "Olá, faça seu login."}
+                {session && !IS_PROFILE_COMPLETE ? (
+                  <CircleAlert
+                    className="absolute -top-2 right-0 group-[&[data-state=open]]:hidden"
+                    color="#fff"
+                    fill={colors.red[500]}
+                    size={14}
+                  />
+                ) : null}
+              </strong>
+              <ChevronDown className="svg-to-rotate transition-all" size={14} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-80 text-sm">
@@ -83,10 +99,16 @@ const Header = async () => {
               <ul className="mt-2 flex flex-col gap-2 text-xs">
                 <li>
                   <Link
-                    className="block text-muted-foreground hover:text-primary hover:underline"
+                    className={cn(
+                      "block text-muted-foreground hover:text-primary hover:underline",
+                      !IS_PROFILE_COMPLETE && "flex justify-between",
+                    )}
                     href="/account/personal-data"
                   >
-                    Sua conta
+                    <span>Sua conta</span>
+                    {!IS_PROFILE_COMPLETE ? (
+                      <CircleAlert fill={colors.red[500]} color="#fff" size={14} />
+                    ) : null}
                   </Link>
                 </li>
                 <li>

@@ -27,65 +27,78 @@ const RentPage = async () => {
     <>
       <Header />
       <div className="container my-6">
-        {booksRented > 0 && booksRented < 3 ? (
-          <div className="mb-2 bg-yellow-200 p-2">
-            <strong className="text-sm text-green-800">
-              Você ja tem {booksRented} livro(s) com aluguel em andamento. Você pode alugar só mais{" "}
-              {BOOK_SELECTED_LIMIT} livro(s).
-            </strong>
-          </div>
-        ) : null}
+        <div className="flex flex-col gap-0.5">
+          {booksRented > 0 && booksRented < 3 ? (
+            <div className="mb-2 bg-yellow-200 p-2">
+              <strong className="text-sm text-green-800">
+                Você ja tem {booksRented} livro(s) com aluguel em andamento. Você pode alugar só
+                mais {BOOK_SELECTED_LIMIT} livro(s).
+              </strong>
+            </div>
+          ) : null}
 
-        {booksRented >= 3 ? (
-          <div className="mb-2 bg-yellow-200 p-2">
-            <strong className="text-sm text-green-800">
-              Você já alcançou o limite máximo de {Constants.BOOK_RENT_MAX_LIMIT} livros em alguel.
-              Faça a devolução para fazer outro pedido. Verifique{" "}
-              <Button className="h-fit p-0 text-blue-500" variant="link" asChild>
-                <Link href="/rent">Meus Aluguéis.</Link>
-              </Button>
-            </strong>
-          </div>
-        ) : null}
+          {booksRented >= 3 ? (
+            <div className="mb-2 bg-yellow-200 p-2">
+              <strong className="text-sm text-green-800">
+                Você já alcançou o limite máximo de {Constants.BOOK_RENT_MAX_LIMIT} livros em
+                alguel. Faça a devolução para fazer outro pedido. Verifique{" "}
+                <Button className="h-fit p-0 text-blue-500" variant="link" asChild>
+                  <Link href="/rent">Meus Aluguéis.</Link>
+                </Button>
+              </strong>
+            </div>
+          ) : null}
 
-        {NEXT_PUNISH_IS_PERMANENT_BAN ? (
-          <div className="mb-2 bg-red-200 p-2">
-            <strong className="text-sm">
-              CUIDADO! Sua conta está em risco de banimento permanente. Verifique seu{" "}
-              <Button className="h-fit p-0 text-blue-500" variant="link" asChild>
-                <Link href="/account/punishments">Histórico de Punições.</Link>
-              </Button>
-            </strong>
-          </div>
-        ) : null}
+          {NEXT_PUNISH_IS_PERMANENT_BAN ? (
+            <div className="mb-2 bg-red-200 p-2">
+              <strong className="text-sm">
+                CUIDADO! Sua conta está em risco de banimento permanente. Verifique seu{" "}
+                <Button className="h-fit p-0 text-blue-500" variant="link" asChild>
+                  <Link href="/account/punishments">Histórico de Punições.</Link>
+                </Button>
+              </strong>
+            </div>
+          ) : null}
 
-        {session?.user.status === "Inactive" ? (
-          <div className="mb-2 bg-red-200 p-2">
-            <strong className="text-sm">
-              AVISO! Sua conta está suspensa no momento, por esse motivo você não pode efetuar novos
-              aluguéis. Verifique seu
-              <Button className="h-fit p-0 text-blue-500" variant="link" asChild>
-                <Link href="/account/punishments"> Histórico de Punições.</Link>
-              </Button>
-            </strong>
-          </div>
-        ) : null}
+          {session?.user.status === "Inactive" ? (
+            <div className="mb-2 bg-red-200 p-2">
+              <strong className="text-sm">
+                AVISO! Sua conta está suspensa no momento, por esse motivo você não pode efetuar
+                novos aluguéis. Verifique seu{" "}
+                <Button className="h-fit p-0 text-blue-500" variant="link" asChild>
+                  <Link href="/account/punishments"> Histórico de Punições.</Link>
+                </Button>
+              </strong>
+            </div>
+          ) : null}
 
-        {session?.user.status === "Banned" ? (
-          <div className="mb-2 bg-red-200 p-2">
-            <strong className="text-sm">
-              AVISO! Sua conta está banida, você não pode efetuar novos aluguéis. Verifique seu{" "}
-              <Button className="h-fit p-0 text-blue-500" variant="link" asChild>
-                <Link href="/account/punishments">Histórico de Punições.</Link>
-              </Button>
-            </strong>
-          </div>
-        ) : null}
-        
+          {session?.user.status === "Banned" ? (
+            <div className="mb-2 bg-red-200 p-2">
+              <strong className="text-sm">
+                AVISO! Sua conta está banida, você não pode efetuar novos aluguéis. Verifique seu{" "}
+                <Button className="h-fit p-0 text-blue-500" variant="link" asChild>
+                  <Link href="/account/punishments">Histórico de Punições.</Link>
+                </Button>
+              </strong>
+            </div>
+          ) : null}
+
+          {!session?.user.address ? (
+            <div className="mb-2 bg-yellow-200 p-2">
+              <strong className="text-sm">
+                Complete as informações de sua conta para solicitar um alugúel. Acesse{" "}
+                <Button className="h-fit p-0 text-blue-500" variant="link" asChild>
+                  <Link href="/account/personal-data">sua conta.</Link>
+                </Button>
+              </strong>
+            </div>
+          ) : null}
+        </div>
+
         <BagSection
           bags={bags ? bags.data : null}
           selectedLimit={BOOK_SELECTED_LIMIT}
-          userStatus={session!.user.status}
+          user={session!.user}
         />
       </div>
     </>

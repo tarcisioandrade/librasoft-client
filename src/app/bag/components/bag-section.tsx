@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Constants } from "@/constants";
 import { ECoverType } from "@/enums/ECoverType";
-import { EUserStatus } from "@/enums/EUserStatus";
 import { cn } from "@/lib/utils";
 import { Bag } from "@/types/Bag";
+import { User } from "@/types/User";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,7 +20,7 @@ import { toast } from "sonner";
 type Props = {
   bags: Bag[] | null;
   selectedLimit: number;
-  userStatus: keyof typeof EUserStatus;
+  user: User;
 };
 
 type BookAndBagId = {
@@ -28,7 +28,7 @@ type BookAndBagId = {
   bagId: string;
 };
 
-const BagSection = ({ bags, selectedLimit, userStatus }: Props) => {
+const BagSection = ({ bags, selectedLimit, user }: Props) => {
   const [booksAndBagsIdSelected, setBooksAndBagsIdSelected] = useState<BookAndBagId[]>([]);
   const [isLoading, startTransition] = useTransition();
   const [optismisticBags, removeOptimisticBags] = useOptimistic(bags, (state, bagId: string) => {
@@ -60,7 +60,7 @@ const BagSection = ({ bags, selectedLimit, userStatus }: Props) => {
   }
 
   async function createRent(_: FormData) {
-    if (userStatus !== "Active") return;
+    if (user.status !== "Active" || !user.address) return;
     startTransition(async () => {
       const books = booksAndBagsIdSelected.map((id) => ({
         id: id.bookId,
@@ -104,7 +104,8 @@ const BagSection = ({ bags, selectedLimit, userStatus }: Props) => {
     return returnDate;
   }
 
-  const BUTTON_DISABLED = !booksAndBagsIdSelected.length || userStatus !== "Active" || isLoading;
+  const BUTTON_DISABLED =
+    !user.address || !booksAndBagsIdSelected.length || user.status !== "Active" || isLoading;
 
   return (
     <>
