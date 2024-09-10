@@ -310,7 +310,7 @@ const FormEditBook = ({ categories, book }: Props) => {
               render={({ field }) => (
                 <>
                   <Label htmlFor="copiesAvailable">Cópias Disponíveis</Label>
-                  <Input required type="number" id="copiesAvailable" min={0} {...field} />
+                  <Input required type="number" id="copiesAvailable" autoComplete="off" min={0} {...field} />
                   {errors?.copiesAvailable && (
                     <p className="text-xs text-destructive">{errors.copiesAvailable.message}</p>
                   )}
@@ -325,7 +325,7 @@ const FormEditBook = ({ categories, book }: Props) => {
               render={({ field }) => (
                 <>
                   <Label htmlFor="pageCount">Número de Páginas</Label>
-                  <Input required type="number" id="pageCount" {...field} />
+                  <Input required type="number" id="pageCount" autoComplete="off" {...field} />
                   {errors?.pageCount && (
                     <p className="text-xs text-destructive">{errors.pageCount.message}</p>
                   )}
@@ -344,7 +344,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                 render={({ field }) => (
                   <>
                     <Label htmlFor="width">Largura</Label>
-                    <Input required id="width" type="number" {...field} />
+                    <Input required id="width" type="number" autoComplete="off" {...field} />
                     {errors?.width && (
                       <p className="text-xs text-destructive">{errors.width.message}</p>
                     )}
@@ -360,7 +360,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                 render={({ field }) => (
                   <>
                     <Label htmlFor="height">Altura</Label>
-                    <Input required id="height" type="number" {...field} />
+                    <Input required id="height" autoComplete="off" type="number" {...field} />
                     {errors?.height && (
                       <p className="text-xs text-destructive">{errors.height.message}</p>
                     )}
@@ -376,7 +376,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                 render={({ field }) => (
                   <>
                     <Label htmlFor="depth">Profundidade</Label>
-                    <Input required id="depth" type="number" {...field} />
+                    <Input required id="depth" autoComplete="off" type="number" {...field} />
                     {errors?.depth && (
                       <p className="text-xs text-destructive">{errors.depth.message}</p>
                     )}
@@ -393,7 +393,7 @@ const FormEditBook = ({ categories, book }: Props) => {
             render={({ field }) => (
               <>
                 <Label htmlFor="sinopse">Sinopse</Label>
-                <Textarea required rows={25} id="sinopse" {...field} />
+                <Textarea required rows={25} id="sinopse" autoComplete="off" {...field} />
                 {errors?.sinopse && (
                   <p className="text-xs text-destructive">{errors.sinopse.message}</p>
                 )}

@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 import { BookService } from "@/services/book.service";
 import { CategoryService } from "@/services/category.service";
 import Image from "next/image";
-import Link from "next/link";
 import Banner from "../../public/banners/initial-banner.png";
 import StarRating from "@/components/star-rating";
 import { FilterBooksParams } from "@/schemas/filterParams.schema";
@@ -86,7 +85,7 @@ export default async function Home({
                     key={book.id}
                     className="h-min-[460px] flex w-[calc(20%-13px)] flex-col justify-between rounded bg-secondary/30 p-2"
                   >
-                    <Link href={`/book/${book.id}`}>
+                    <a href={`/book/${book.id}`}>
                       <div className="mx-auto h-[260px] w-[180px]">
                         <Image
                           src={book.image}
@@ -108,7 +107,7 @@ export default async function Home({
                         </p>
                       </div>
                       <StarRating rating={book.averageRating} size={12} />
-                    </Link>
+                    </a>
                   </div>
                 ))}
               </div>

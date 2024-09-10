@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { ECoverType } from "@/enums/ECoverType";
 import StarRating from "@/components/star-rating";
 import { createBagAction } from "@/actions/bag/create.action";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { deleteBagAction } from "@/actions/bag/delete.action";
 import { Constants } from "@/constants";
 import {
@@ -37,8 +37,9 @@ const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
   );
   const params = useParams();
   const router = useRouter();
+  const pathname = usePathname();
   const [isLoading, startTransition] = useTransition();
-
+  
   const CURRENT_BOOK_ID = String(params.id);
   const BOOK_SELECTED_LIMIT = Constants.BOOK_RENT_MAX_LIMIT - rentsCount;
   const RENTS_REACHED_LIMIT = rentsCount >= 3;
@@ -52,7 +53,7 @@ const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
 
   function handleSheet(state: boolean) {
     if (!session) {
-      router.push("/signin");
+      router.push(`/signin?callbackUrl=${pathname}`);
       return;
     }
     setOpen(state);

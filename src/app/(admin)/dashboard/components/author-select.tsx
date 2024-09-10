@@ -97,9 +97,15 @@ export function AuthorSelect({ onSelected, value }: Props) {
           </div>
           <CommandList>
             <CommandEmpty className="h-6 px-2">
-              <button type="button" className="mt-1 h-full text-sm" onClick={handleCreateAndSelect}>
-                Criar {`"${search}"`}
-              </button>
+              {search ? (
+                <button
+                  type="button"
+                  className="mt-1 h-full text-sm"
+                  onClick={handleCreateAndSelect}
+                >
+                  Criar {`"${search}"`}
+                </button>
+              ) : null}
             </CommandEmpty>
             <CommandGroup>
               {authors.map((author) => (

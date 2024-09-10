@@ -4,7 +4,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
 import SearchHomePage from "./search-home-page";
 import { ChevronDown, CircleAlert, Database, LibraryBig } from "lucide-react";
 import { headers } from "next/headers";
@@ -29,21 +28,20 @@ const Header = async () => {
   return (
     <header className="border-b">
       <div className="container flex h-14 items-center justify-between gap-10">
-        <Link href="/?pageNumber=1" className="text-2xl font-bold">
+        <a href="/?pageNumber=1" className="text-2xl font-bold">
           LibraSoft
-        </Link>
+        </a>
         <SearchHomePage />
         {session?.user.role === EUserRole.Admin ? (
-          <Link
+          <a
             href="/dashboard"
             className="group relative flex items-center gap-1 rounded border p-1 hover:bg-secondary/50"
           >
             <p className="sr-only">Dashboard</p>
-
             <Database />
-          </Link>
+          </a>
         ) : null}
-        <Link
+        <a
           href="/bag"
           className="group relative flex items-center gap-1 rounded border p-1 hover:bg-secondary/50"
         >
@@ -54,7 +52,7 @@ const Header = async () => {
             </span>
           ) : null}
           <LibraryBig />
-        </Link>
+        </a>
         <DropdownMenu>
           <DropdownMenuTrigger
             asChild
@@ -79,17 +77,17 @@ const Header = async () => {
             {!session ? (
               <header className="border-b">
                 <div className="p-4">
-                  <Link
+                  <a
                     href={`/signin?callbackUrl=${callbackUrl}`}
                     className="mx-auto block w-[80%] rounded bg-primary p-2 text-center text-white hover:bg-primary/90"
                   >
                     Faça seu Login
-                  </Link>
+                  </a>
                   <div className="mt-2 text-center text-xs">
                     Novo aqui?{" "}
-                    <Link href="/signup" className="text-blue-500 hover:underline">
+                    <a href="/signup" className="text-blue-500 hover:underline">
                       Cadastre-se
-                    </Link>
+                    </a>
                   </div>
                 </div>
               </header>
@@ -98,7 +96,7 @@ const Header = async () => {
               <span className="font-semibold">Sua Conta</span>
               <ul className="mt-2 flex flex-col gap-2 text-xs">
                 <li>
-                  <Link
+                  <a
                     className={cn(
                       "block text-muted-foreground hover:text-primary hover:underline",
                       !IS_PROFILE_COMPLETE && "flex justify-between",
@@ -109,15 +107,15 @@ const Header = async () => {
                     {session && !IS_PROFILE_COMPLETE ? (
                       <CircleAlert fill={colors.red[500]} color="#fff" size={14} />
                     ) : null}
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
+                  <a
                     className="block text-muted-foreground hover:text-primary hover:underline"
                     href={"/rent"}
                   >
                     Meus Alugúeis
-                  </Link>
+                  </a>
                 </li>
                 {session ? (
                   <li>
