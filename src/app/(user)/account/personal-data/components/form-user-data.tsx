@@ -1,6 +1,6 @@
 "use client";
 
-import {UserUpdate, userUpdateSchema, zipCodeSchema } from "@/schemas/user.schema";
+import { UserUpdate, userUpdateSchema, zipCodeSchema } from "@/schemas/user.schema";
 import React, { useEffect, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
@@ -36,7 +36,7 @@ const FormUserData = ({ user }: Props) => {
       email: user.email,
       address: {
         city: user.address?.city || "",
-        country: user.address?.country || "",
+        district: user.address?.district || "",
         state: user.address?.state || "",
         street: user.address?.street || "",
         zipCode: user.address?.zipCode || "",
@@ -60,6 +60,7 @@ const FormUserData = ({ user }: Props) => {
   const debouncedValue = useDebounce(cepValue, 1000);
 
   async function handlerCep(cep: string) {
+    if (!cep) return;
     const parsed = zipCodeSchema.safeParse(cep);
     if (!parsed.success) {
       setError("address.zipCode", {
@@ -83,10 +84,10 @@ const FormUserData = ({ user }: Props) => {
       setValue("address.street", response.logradouro);
     }
     if (response?.uf) {
-      setValue("address.country", response.uf);
+      setValue("address.district", response.bairro);
     }
   }
-  
+
   useEffect(() => {
     handlerCep(debouncedValue);
   }, [debouncedValue]);
@@ -135,8 +136,13 @@ const FormUserData = ({ user }: Props) => {
         />
 
         <div className="border">
-          <header className="w-full bg-secondary px-4 py-2">
-            <p className="text-sm text-muted-foreground">Endereço</p>
+          <header className="w-full items-center gap-2 bg-secondary px-4 py-2">
+            <p className="text-sm text-muted-foreground">Endereço</p>{" "}
+            {!user.address ? (
+              <span className="text-xs text-red-500">
+                Preencha seu endereço para começar a alugar livros.
+              </span>
+            ) : null}
           </header>
           <div className="space-y-4 p-4">
             <Controller
@@ -145,24 +151,17 @@ const FormUserData = ({ user }: Props) => {
               render={({ field }) => (
                 <div>
                   <Label htmlFor="zipCode">CEP</Label>
-                  <Input id="zipCode" type="number" maxLength={8} {...field} />
+                  <Input
+                    id="zipCode"
+                    type="number"
+                    maxLength={8}
+                    placeholder="Ex. 12345000"
+                    {...field}
+                  />
                   {errors?.address?.zipCode && (
                     <p className="mt-1 text-xs text-destructive">
                       {errors.address?.zipCode.message}
                     </p>
-                  )}
-                </div>
-              )}
-            />
-            <Controller
-              control={control}
-              name="address.city"
-              render={({ field }) => (
-                <div>
-                  <Label htmlFor="city">Cidade</Label>
-                  <Input id="city" {...field} />
-                  {errors?.address?.city && (
-                    <p className="mt-1 text-xs text-destructive">{errors.address?.city.message}</p>
                   )}
                 </div>
               )}
@@ -184,28 +183,53 @@ const FormUserData = ({ user }: Props) => {
             />
             <Controller
               control={control}
-              name="address.state"
+              name="address.district"
               render={({ field }) => (
                 <div>
-                  <Label htmlFor="state">Estado</Label>
-                  <Input id="state" {...field} />
-                  {errors?.address?.state && (
-                    <p className="mt-1 text-xs text-destructive">{errors.address?.state.message}</p>
+                  <Label htmlFor="district">Bairro</Label>
+                  <Input id="district" {...field} />
+                  {errors?.address?.district && (
+                    <p className="mt-1 text-xs text-destructive">
+                      {errors.address?.district.message}
+                    </p>
                   )}
                 </div>
               )}
             />
             <Controller
               control={control}
-              name="address.country"
+              name="address.city"
               render={({ field }) => (
                 <div>
-                  <Label htmlFor="country">País</Label>
-                  <Input id="country" {...field} />
-                  {errors?.address?.country && (
-                    <p className="mt-1 text-xs text-destructive">
-                      {errors.address?.country.message}
-                    </p>
+                  <Label htmlFor="city">Cidade</Label>
+                  <Input
+                    id="city"
+                    className="placeholder:text-muted-foreground disabled:bg-muted"
+                    disabled
+                    placeholder="Insira o CEP acima para preencher a cidade"
+                    {...field}
+                  />
+                  {errors?.address?.city && (
+                    <p className="mt-1 text-xs text-destructive">{errors.address?.city.message}</p>
+                  )}
+                </div>
+              )}
+            />
+            <Controller
+              control={control}
+              name="address.state"
+              render={({ field }) => (
+                <div>
+                  <Label htmlFor="state">Estado</Label>
+                  <Input
+                    id="state"
+                    className="placeholder:text-muted-foreground disabled:bg-muted"
+                    disabled
+                    placeholder="Insira o CEP acima para preencher o estado"
+                    {...field}
+                  />
+                  {errors?.address?.state && (
+                    <p className="mt-1 text-xs text-destructive">{errors.address?.state.message}</p>
                   )}
                 </div>
               )}

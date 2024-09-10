@@ -8,7 +8,10 @@ const TELEPHONE_REGEXP =
 export const zipCodeSchema = z
   .string()
   .max(8)
-  .regex(/^\d{2}\d{3}\d{3}$/, "Digite um CEP válido.");
+  .regex(
+    /^\d{2}\d{3}\d{3}$/,
+    "Forneça um CEP válido (somente números, sem hífen) no campo indicado. Se necessário, consulte seu CEP em uma fatura recente e tente novamente.",
+  );
 
 export const userSchema = z.object({
   id: z.string(),
@@ -20,7 +23,7 @@ export const userSchema = z.object({
       street: z.string(),
       city: z.string(),
       state: z.string(),
-      country: z.string(),
+      district: z.string(),
       zipCode: zipCodeSchema,
     })
     .nullish(),

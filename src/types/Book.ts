@@ -25,6 +25,7 @@ export type Book = {
   categories: Array<Category>;
   author: Author;
   status: keyof typeof EStatusType;
+  created_At: string;
 };
 
 export type BookRelated = {

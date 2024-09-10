@@ -10,7 +10,7 @@ export type User = {
     street: string;
     city: string;
     state: string;
-    country: string;
+    district: string;
     zipCode: string;
   };
   role: keyof typeof EUserRole;
