@@ -106,7 +106,7 @@ const Header = async () => {
                     href="/account/personal-data"
                   >
                     <span>Sua conta</span>
-                    {!IS_PROFILE_COMPLETE ? (
+                    {session && !IS_PROFILE_COMPLETE ? (
                       <CircleAlert fill={colors.red[500]} color="#fff" size={14} />
                     ) : null}
                   </Link>
