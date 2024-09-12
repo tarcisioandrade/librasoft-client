@@ -246,8 +246,8 @@ const FormEditBook = ({ categories, book }: Props) => {
             <Label>Autor</Label>
             <AuthorSelect
               value={authorSelected}
-              onSelected={(option) => {
-                setAuthorSelected(option);
+              onSelect={setAuthorSelected}
+              onSelected={() => {
                 setAuthorError(null);
               }}
             />
@@ -310,7 +310,14 @@ const FormEditBook = ({ categories, book }: Props) => {
               render={({ field }) => (
                 <>
                   <Label htmlFor="copiesAvailable">Cópias Disponíveis</Label>
-                  <Input required type="number" id="copiesAvailable" autoComplete="off" min={0} {...field} />
+                  <Input
+                    required
+                    type="number"
+                    id="copiesAvailable"
+                    autoComplete="off"
+                    min={0}
+                    {...field}
+                  />
                   {errors?.copiesAvailable && (
                     <p className="text-xs text-destructive">{errors.copiesAvailable.message}</p>
                   )}
