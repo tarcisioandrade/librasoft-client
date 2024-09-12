@@ -61,8 +61,10 @@ const FormCreateBook = ({ categories }: Props) => {
       sinopse: "",
       title: "",
       width: "",
-      copiesAvailable: "1",
-      pageCount: "1",
+      copiesAvailable: "",
+      pageCount: "",
+      coverType: "",
+      language: "",
     },
   });
 
@@ -242,8 +244,8 @@ const FormCreateBook = ({ categories }: Props) => {
             <Label>Autor</Label>
             <AuthorSelect
               value={authorSelected}
-              onSelected={(option) => {
-                setAuthorSelected(option);
+              onSelect={setAuthorSelected}
+              onSelected={() => {
                 setAuthorError(null);
               }}
             />

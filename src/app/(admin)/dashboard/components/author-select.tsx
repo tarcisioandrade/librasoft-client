@@ -20,14 +20,14 @@ import {
 const authorService = new AuthorService();
 
 type Props = {
-  onSelected?: (option: Option) => void;
   value: Option | null;
+  onSelect: (value: Option | null) => void;
+  onSelected?: (option: Option) => void;
 };
 
-export function AuthorSelect({ onSelected, value }: Props) {
+export function AuthorSelect({ onSelected, value, onSelect }: Props) {
   const [authors, setAuthors] = React.useState<Option[]>([]);
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<Option | null>(value);
   const [search, setSearch] = React.useState("");
 
   const debouncedValue = useDebounce(search);
@@ -35,7 +35,10 @@ export function AuthorSelect({ onSelected, value }: Props) {
   const authorsListWithoutFilter = React.useRef<Option[]>([]);
 
   async function getAuthorsFn(search?: string) {
-    if (!authorsListWithoutFilter.current.length || debouncedValue) {
+    const GET_FROM_API = !authorsListWithoutFilter.current.length || debouncedValue;
+    const GET_FROM_REF = authorsListWithoutFilter.current.length && !debouncedValue;
+
+    if (GET_FROM_API) {
       const response = await authorService.getAll(search);
       const authors =
         response?.data.map((author) => ({ label: author.name, value: author.id })) ?? [];
@@ -45,6 +48,9 @@ export function AuthorSelect({ onSelected, value }: Props) {
         isMounted.current = true;
       }
     }
+    if (GET_FROM_REF) {
+      setAuthors(authorsListWithoutFilter.current);
+    }
   }
 
   React.useEffect(() => {
@@ -52,15 +58,14 @@ export function AuthorSelect({ onSelected, value }: Props) {
   }, [debouncedValue]);
 
   function handlePopover(open: boolean) {
-    if (open) {
+    if (!open) {
       setSearch("");
-      setAuthors(authorsListWithoutFilter.current);
     }
     setOpen(open);
   }
 
   function handleSelectAuthor(input: Option) {
-    setSelected(input);
+    onSelect(input);
     onSelected?.(input);
     setSearch("");
     setOpen(false);
@@ -81,7 +86,7 @@ export function AuthorSelect({ onSelected, value }: Props) {
           aria-expanded={open}
           className="w-full justify-between font-normal"
         >
-          {selected ? selected.label : null}
+          {value?.label}
           <ChevronDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -95,9 +100,9 @@ export function AuthorSelect({ onSelected, value }: Props) {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <CommandList>
-            <CommandEmpty className="h-6 px-2">
-              {search ? (
+          <CommandList className={cn({ hidden: !search && !authors.length })}>
+            {search ? (
+              <CommandEmpty className="h-6 px-2">
                 <button
                   type="button"
                   className="mt-1 h-full text-sm"
@@ -105,8 +110,8 @@ export function AuthorSelect({ onSelected, value }: Props) {
                 >
                   Criar {`"${search}"`}
                 </button>
-              ) : null}
-            </CommandEmpty>
+              </CommandEmpty>
+            ) : null}
             <CommandGroup>
               {authors.map((author) => (
                 <CommandItem
@@ -119,7 +124,7 @@ export function AuthorSelect({ onSelected, value }: Props) {
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      selected?.label === author.label ? "opacity-100" : "opacity-0",
+                      value?.label === author.label ? "opacity-100" : "opacity-0",
                     )}
                   />
                   {author.label}
