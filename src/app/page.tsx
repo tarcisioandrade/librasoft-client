@@ -1,4 +1,14 @@
 import Header from "@/components/header";
+import { ECoverType } from "@/enums/ECoverType";
+import { cn } from "@/lib/utils";
+import { BookService } from "@/services/book.service";
+import { CategoryService } from "@/services/category.service";
+import Image from "next/image";
+import StarRating from "@/components/star-rating";
+import { FilterBooksParams } from "@/schemas/filterParams.schema";
+import LibraryRules from "@/components/library-rules";
+import MenuCategories from "@/components/menu-categories";
+import CarouselBanners from "@/components/carousel-banners";
 import {
   Pagination as PaginationComponent,
   PaginationContent,
@@ -7,15 +17,6 @@ import {
   PaginationLink,
   PaginationNext,
 } from "@/components/ui/pagination";
-import { ECoverType } from "@/enums/ECoverType";
-import { cn } from "@/lib/utils";
-import { BookService } from "@/services/book.service";
-import { CategoryService } from "@/services/category.service";
-import Image from "next/image";
-import Banner from "../../public/banners/initial-banner.png";
-import StarRating from "@/components/star-rating";
-import { FilterBooksParams } from "@/schemas/filterParams.schema";
-import LibraryRules from "@/components/library-rules";
 
 const bookService = new BookService();
 const categoryService = new CategoryService();
@@ -43,28 +44,22 @@ export default async function Home({
 
   return (
     <>
-      <Header />
-      <div className="container">
-        <div className="relative my-8 grid h-64 w-full place-items-center">
-          <Image src={Banner} alt="banner" className="object-cover" fill />
+      <div className="bg-primary text-white">
+        <div className="container flex h-9 items-center justify-between text-xs">
+          <p>Alugue aqui livros de milhares de sebos e livrarias.</p>
+          <ul>
+            <li>
+              <a href="/">Central de Ajuda</a>
+            </li>
+          </ul>
         </div>
+      </div>
+      <Header />
+      <MenuCategories categories={categories?.data || []} />
+      <div className="container">
+        {!queries.categories ? <CarouselBanners /> : null}
         <section className="flex gap-4">
-          <aside className="p4 h-fit w-56 border p-4">
-            <p className="font-semibold uppercase">Categorias</p>
-            <ul className="mt-4">
-              {categories?.data.map((categ) => (
-                <li key={categ.id}>
-                  <a
-                    href={`/?category=${categ.title.toLowerCase()}`}
-                    className="text-sm text-muted-foreground hover:underline"
-                  >
-                    {categ.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </aside>
-          <div className="w-full">
+          <div className={cn({ "mt-8": queries.categories })}>
             {queries.categories ? (
               <p className="-mt-5 h-5 text-sm">
                 {books.totalCount}-10 de mais de {books.totalCount} resultados para{" "}
@@ -77,7 +72,7 @@ export default async function Home({
                 <span className="text-green-500">{queries.title}</span>
               </p>
             ) : null}
-            <div className="min-h-[942px] border p-4">
+            <div className="border p-4">
               {!books?.data.length ? <p>Nada encontrado.</p> : null}
               <div className="flex flex-wrap gap-4">
                 {books?.data.map((book) => (
@@ -137,7 +132,7 @@ export default async function Home({
                           className={cn(
                             books &&
                               books.currentPage === index + 1 &&
-                              "pointer-events-none bg-muted-foreground text-white",
+                              "pointer-events-none bg-primary text-white",
                           )}
                         >
                           {index + 1}

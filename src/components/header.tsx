@@ -58,7 +58,7 @@ const Header = async () => {
             asChild
             className="group [&[data-state=open]>.svg-to-rotate]:rotate-180"
           >
-            <Button className="flex border-none text-sm outline-none" variant="link">
+            <Button className="-ml-4 flex border-none text-sm outline-none" variant="link">
               <strong className="relative pr-2">
                 {session ? `Olá, ${session.user.name}` : "Olá, faça seu login."}
                 {session && !IS_PROFILE_COMPLETE ? (
