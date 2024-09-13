@@ -10,6 +10,9 @@ const envSchema = z.object({
   JWT_SECRET: z.string({
     message: "JWT_SECRET enviroment variable is required",
   }),
+  NEXT_PUBLIC_BACKEND_URL: z.string({
+    message: "NEXT_PUBLIC_BACKEND_URL enviroment variable is required",
+  }),
 });
 
 const env = envSchema.parse(process.env);
