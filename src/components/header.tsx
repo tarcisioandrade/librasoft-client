@@ -7,12 +7,13 @@ import {
 import SearchHomePage from "./search-home-page";
 import { ChevronDown, CircleAlert, Database, LibraryBig } from "lucide-react";
 import { headers } from "next/headers";
-import { getSession, logout } from "@/services/session.service";
+import { getSession } from "@/services/session.service";
 import { Button } from "./ui/button";
 import { BagService } from "@/services/bag.service";
 import { EUserRole } from "@/enums/EUserRole";
 import colors from "tailwindcss/colors";
 import { cn } from "@/lib/utils";
+import { logouAction } from "@/actions/auth/logout.action";
 
 const Header = async () => {
   const session = await getSession();
@@ -119,12 +120,7 @@ const Header = async () => {
                 </li>
                 {session ? (
                   <li>
-                    <form
-                      action={async () => {
-                        "use server";
-                        logout();
-                      }}
-                    >
+                    <form action={logouAction}>
                       <input
                         type="submit"
                         className="block cursor-pointer text-muted-foreground hover:text-primary hover:underline"

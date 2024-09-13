@@ -25,7 +25,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Metadata } from "next";
 import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
-import Head from "next/head";
 
 const bookService = new BookService();
 const reviewService = new ReviewService();
@@ -57,9 +56,6 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
   return (
     <>
       <Header />
-      <Head>
-        <title>{book.data.title}</title>
-      </Head>
       <div className="container-secondary">
         <Breadcrumb className="my-4">
           <BreadcrumbList className="sm:gap-1">
