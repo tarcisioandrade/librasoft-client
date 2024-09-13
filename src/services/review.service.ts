@@ -19,9 +19,7 @@ export class ReviewService {
     return res.data;
   }
 
-  async Create(
-    review: Omit<Review, "id" | "createdAt" | "author" | "likesCount">,
-  ) {
+  async Create(review: Omit<Review, "id" | "createdAt" | "author" | "likesCount">) {
     const { response } = await fetchWithCredentials("/review", {
       method: "POST",
       body: JSON.stringify(review),
@@ -34,9 +32,9 @@ export class ReviewService {
   }
 
   async Get(bookId: string) {
-    const { data } = await fetchWithCredentials<Response<Review>>(
-      `/review/${bookId}/user`,
-    );
+    const { data } = await fetchWithCredentials<Response<Review>>(`/review/${bookId}/user`, {
+      cache: "no-cache",
+    });
 
     return data;
   }
