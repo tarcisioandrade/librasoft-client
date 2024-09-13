@@ -68,17 +68,25 @@ const PunishmentsPage = async () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {punishments?.data.map((punish, i) => (
-            <TableRow
-              key={i}
-              className={cn(i === PUNISHMENT_IN_PROGRESS_INDEX && "font-semibold text-red-500")}
-            >
-              <TableCell>{formatDate(punish.punishInitDate, { dateStyle: "short" })}</TableCell>
-              <TableCell>{formatDate(punish.punishEndDate, { dateStyle: "short" })}</TableCell>
-              <TableCell>Atraso no retorno do aluguél.</TableCell>
-              <TableCell className="text-right">{EStatusType[punish.status]}</TableCell>
+          {punishments?.data.length ? (
+            punishments?.data.map((punish, i) => (
+              <TableRow
+                key={i}
+                className={cn(i === PUNISHMENT_IN_PROGRESS_INDEX && "font-semibold text-red-500")}
+              >
+                <TableCell>{formatDate(punish.punishInitDate, { dateStyle: "short" })}</TableCell>
+                <TableCell>{formatDate(punish.punishEndDate, { dateStyle: "short" })}</TableCell>
+                <TableCell>Atraso no retorno do aluguél.</TableCell>
+                <TableCell className="text-right">{EStatusType[punish.status]}</TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={4} className="text-center">
+                Sem resultados.
+              </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </>
