@@ -157,7 +157,7 @@ const RentDetailsPage = async ({ params }: { params: { id: string } }) => {
                       </Link>
                     </li>
                     <li>
-                      <StarRating rating={5} size={12} />
+                      <StarRating rating={book.averageRating} size={12} />
                     </li>
                     <li className="text-xs text-muted-foreground">por {book.author.name}</li>
                     <li className="text-xs text-muted-foreground">{ECoverType[book.coverType]}</li>
