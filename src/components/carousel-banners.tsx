@@ -10,7 +10,11 @@ import Autoplay from "embla-carousel-autoplay";
 
 const CarouselBanners = () => {
   return (
-    <Carousel opts={{ loop: true }} plugins={[Autoplay({ delay: 5000 })]} className="my-8">
+    <Carousel
+      opts={{ loop: true }}
+      plugins={[Autoplay({ delay: 5000 })]}
+      className="my-8 hidden lg:block"
+    >
       <CarouselContent className="h-[300px]">
         <CarouselItem className="relative">
           <a href="/?category=programação">

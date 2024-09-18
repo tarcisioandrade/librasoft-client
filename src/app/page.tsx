@@ -7,7 +7,6 @@ import Image from "next/image";
 import StarRating from "@/components/star-rating";
 import { FilterBooksParams } from "@/schemas/filterParams.schema";
 import LibraryRules from "@/components/library-rules";
-import MenuCategories from "@/components/menu-categories";
 import CarouselBanners from "@/components/carousel-banners";
 import {
   Pagination as PaginationComponent,
@@ -44,7 +43,7 @@ export default async function Home({
 
   return (
     <>
-      <div className="bg-primary text-white">
+      <div className="hidden bg-primary text-white md:block">
         <div className="container flex h-9 items-center justify-between text-xs">
           <p>Alugue aqui livros de milhares de sebos e livrarias.</p>
           <ul>
@@ -55,33 +54,32 @@ export default async function Home({
         </div>
       </div>
       <Header />
-      <MenuCategories categories={categories?.data || []} />
-      <div className="container">
+      <div className="container mt-[105px] lg:mt-0">
         {!queries.categories ? <CarouselBanners /> : null}
-        <section className="flex gap-4">
-          <div className={cn({ "mt-8": queries.categories })}>
+        <section className="mt-8 flex gap-4 lg:mt-0">
+          <div className={cn({ "lg:mt-8": queries.categories })}>
             {queries.categories ? (
-              <p className="-mt-5 h-5 text-sm">
+              <p className="mb-4 h-5 text-sm lg:-mt-5 lg:mb-0">
                 {books.totalCount}-10 de mais de {books.totalCount} resultados para{" "}
                 <span className="text-green-500">{CATEGORY_FILTERED?.title}</span>
               </p>
             ) : null}
             {queries.title ? (
-              <p className="-mt-5 h-5 text-sm">
+              <p className="mb-4 h-5 text-sm lg:-mt-5 lg:mb-0">
                 {books.totalCount}-10 de mais de {books.totalCount} resultados para{" "}
                 <span className="text-green-500">{queries.title}</span>
               </p>
             ) : null}
-            <div className="border p-4">
+            <div className="lg:border lg:p-4">
               {!books?.data.length ? <p>Nada encontrado.</p> : null}
               <div className="flex flex-wrap gap-4">
                 {books?.data.map((book) => (
                   <div
                     key={book.id}
-                    className="h-min-[460px] flex w-[calc(20%-13px)] flex-col justify-between rounded bg-secondary/30 p-2"
+                    className="flex w-[calc(50%-8px)] flex-col justify-between rounded bg-secondary/30 md:w-[calc(25%-13px)] lg:w-[calc(20%-13px)] lg:p-2"
                   >
                     <a href={`/book/${book.id}`}>
-                      <div className="mx-auto h-[260px] w-[180px]">
+                      <div className="mx-auto h-[250px] lg:w-[180px]">
                         <Image
                           src={book.image}
                           alt={book.title}
@@ -90,7 +88,7 @@ export default async function Home({
                           className="h-full"
                         />
                       </div>
-                      <h3 className="mt-2 truncate text-sm font-semibold tracking-tighter">
+                      <h3 className="mt-2 line-clamp-2 text-sm font-semibold tracking-tighter">
                         {book.title}
                       </h3>
                       <div className="space-y-1 py-2">
