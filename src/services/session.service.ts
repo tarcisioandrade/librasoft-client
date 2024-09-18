@@ -11,6 +11,8 @@ import { CacheKeys } from "@/cache-keys";
 import { fetchWithCredentials } from "@/utils/fetch-with-credentials";
 import { User } from "@/types/User";
 
+export type Session = { user: User } | null;
+
 export async function signin(formData: FormData) {
   const formSignin = {
     email: formData.get("email"),
@@ -116,7 +118,7 @@ export async function setSession(user?: User) {
   return Ok(parsed);
 }
 
-export async function getSession() {
+export async function getSession(): Promise<Session> {
   const sessionEncrypted = cookies().get("session")?.value;
   if (!sessionEncrypted) return null;
   const sessionDecrypted = (await decrypt(sessionEncrypted)) as User;
