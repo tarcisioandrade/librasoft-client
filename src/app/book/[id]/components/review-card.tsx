@@ -51,7 +51,7 @@ const ReviewCard = ({
   }
 
   return (
-    <div key={review.id} {...rest} className={cn(className, "p-4")}>
+    <div key={review.id} {...rest} className={cn(className, "py-4 lg:p-4")}>
       <header className="space-y-2 text-sm">
         <span className="flex items-center gap-2 text-xs">
           <div className="grid h-8 w-8 place-content-center rounded-full bg-secondary">

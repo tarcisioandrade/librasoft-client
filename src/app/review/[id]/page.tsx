@@ -8,6 +8,7 @@ import { notFound, redirect } from "next/navigation";
 import React from "react";
 import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
 import { Metadata } from "next";
+import Page from "@/components/page";
 
 export const metadata: Metadata = generateCustomMetadata("Avaliação");
 
@@ -23,17 +24,19 @@ const ReviewPage = async ({ params }: { params: { id: string } }) => {
   return (
     <>
       <Header />
-      <section className="container-third my-6 space-y-6">
-        <div className="space-y-12">
-          <strong className="text-3xl">Deixe uma avaliação</strong>
-          <div className="flex items-center gap-6">
-            <Image alt={book.data.title} src={book.data.image} width={40} height={60} />
-            <span>{book.data.title}</span>
+      <Page className="space-y-6 lg:my-6" container="container-third" asChild>
+        <section>
+          <div className="space-y-12">
+            <strong className="text-3xl">Deixe uma avaliação</strong>
+            <div className="flex items-center gap-6">
+              <Image alt={book.data.title} src={book.data.image} width={40} height={60} />
+              <span>{book.data.title}</span>
+            </div>
           </div>
-        </div>
-        <Divider />
-        <FormReview />
-      </section>
+          <Divider />
+          <FormReview />
+        </section>
+      </Page>
     </>
   );
 };

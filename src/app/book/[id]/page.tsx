@@ -15,7 +15,6 @@ import React from "react";
 import { notFound } from "next/navigation";
 import { ECoverType } from "@/enums/ECoverType";
 import SinopseWrapper from "./components/sinopse-wrapper";
-import FormRent from "./components/form-rent";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -25,6 +24,10 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Metadata } from "next";
 import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
+import dynamic from "next/dynamic";
+import Page from "@/components/page";
+
+const FormRentDynamic = dynamic(() => import("./components/form-rent"));
 
 const bookService = new BookService();
 const reviewService = new ReviewService();
@@ -56,7 +59,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
   return (
     <>
       <Header />
-      <div className="container-secondary">
+      <Page container="container-secondary">
         <Breadcrumb className="my-4">
           <BreadcrumbList className="sm:gap-1">
             <>
@@ -79,9 +82,9 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
             ))}
           </BreadcrumbList>
         </Breadcrumb>
-        <div className="flex gap-12">
+        <div className="flex flex-col gap-12 lg:flex-row">
           <div className="flex-1">
-            <div className="h-[414px] w-[292px]">
+            <div className="mx-auto h-[414px] w-[292px]">
               <Image
                 src={book.data.image}
                 alt={book.data.title}
@@ -96,7 +99,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
               ) : (
                 <p className="text-red-700">Indisponivel</p>
               )}
-              <FormRent book={book.data} />
+              <FormRentDynamic book={book.data} />
               <div className="space-y-1 text-xs text-muted-foreground">
                 <p>Devolução 30 dias após a data de aluguel.</p>
                 <p>Sujeito a penalidades em caso de atraso.</p>
@@ -105,7 +108,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
             </div>
           </div>
           <div className="flex-shrink-[3] flex-grow-[3] basis-0">
-            <h1 className="text-2xl font-semibold">
+            <h1 className="font-semibold md:text-2xl">
               {book.data.title}{" "}
               <span className="font-normal text-muted-foreground">
                 {ECoverType[book.data.coverType]} -{" "}
@@ -126,55 +129,57 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
             <Divider />
             <div>
               <p className="mb-6 text-lg">Detalhes do Produto</p>
-              <ul className="flex flex-wrap gap-14 text-xs [&>li]:flex [&>li]:flex-col [&>li]:items-center [&>li]:gap-2">
-                <li>
-                  <span className="font-semibold">Editora</span>
-                  <Hotel />
-                  {book.data.publisher}
-                </li>
-                <li className="capitalize">
-                  <span className="font-semibold">Idioma</span>
-                  <BookA />
-                  {book.data.language}
-                </li>
-                <li>
-                  <span className="font-semibold">Numero de Páginas</span>
-                  <BookOpenText />
-                  {book.data.pageCount} páginas
-                </li>
-                <li>
-                  <span className="font-semibold">ISBN-10</span>
-                  <Barcode />
-                  {book.data.isbn}
-                </li>
-                <li>
-                  <span className="font-semibold">Dimensões</span>
-                  <Ruler />
-                  {`${book.data.dimensions.width} x ${book.data.dimensions.height} x ${book.data.dimensions.depth} cm`}
-                </li>
-                <li>
-                  <span className="font-semibold">Avaliação</span>
-                  <Star color="#fb5" fill="#fb5" />
-                  {book.data.averageRating.toFixed(1)}
-                </li>
-                <li>
-                  <span className="font-semibold">Data da Publicação</span>
-                  <CalendarDays />
-                  {new Date(book.data.publicationAt).toLocaleDateString("pt-BR", {
-                    dateStyle: "long",
-                  })}
-                </li>
-              </ul>
+              <div className="overflow-x-auto">
+                <ul className="flex w-[700px] text-xs lg:w-full lg:flex-wrap lg:gap-12 [&>li:nth-child(odd)]:border-x lg:[&>li:nth-child(odd)]:border-none [&>li]:flex [&>li]:w-[14.28%] [&>li]:flex-col [&>li]:items-center [&>li]:gap-2 [&>li]:text-center lg:[&>li]:w-fit">
+                  <li>
+                    <span className="font-semibold">Editora</span>
+                    <Hotel />
+                    {book.data.publisher}
+                  </li>
+                  <li className="capitalize">
+                    <span className="font-semibold">Idioma</span>
+                    <BookA />
+                    {book.data.language}
+                  </li>
+                  <li>
+                    <span className="font-semibold">Numero de Páginas</span>
+                    <BookOpenText />
+                    {book.data.pageCount} páginas
+                  </li>
+                  <li>
+                    <span className="font-semibold">ISBN-10</span>
+                    <Barcode />
+                    {book.data.isbn}
+                  </li>
+                  <li>
+                    <span className="font-semibold">Dimensões</span>
+                    <Ruler />
+                    {`${book.data.dimensions.width} x ${book.data.dimensions.height} x ${book.data.dimensions.depth} cm`}
+                  </li>
+                  <li>
+                    <span className="font-semibold">Avaliação</span>
+                    <Star color="#fb5" fill="#fb5" />
+                    {book.data.averageRating.toFixed(1)}
+                  </li>
+                  <li>
+                    <span className="font-semibold">Data da Publicação</span>
+                    <CalendarDays />
+                    {new Date(book.data.publicationAt).toLocaleDateString("pt-BR", {
+                      dateStyle: "long",
+                    })}
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
         <div className="my-12 h-px bg-slate-300" />
         <section>
           <p className="text-2xl">Livros Relacionados</p>
-          <div className="mt-4 flex gap-4">
+          <div className="mt-4 flex gap-4 overflow-x-auto">
             {relatedBooks?.data.map((related) => (
               <Link
-                className="w-[calc(20%-13px)] space-y-1 rounded"
+                className="space-y-1 rounded lg:w-[calc(20%-13px)]"
                 href={`/book/${related.id}`}
                 key={related.id}
               >
@@ -197,7 +202,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
           </div>
         </section>
         <div className="my-12 h-px bg-slate-300" />
-        <section className="grid grid-cols-[300px_1fr] gap-10">
+        <section className="grid gap-10 lg:grid-cols-[300px_1fr]">
           <div>
             <p className="text-2xl">Avaliações dos usuários</p>
             <div className="mt-6 space-y-2 text-sm">
@@ -229,10 +234,10 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
                 className="mb-4 rounded bg-muted"
               />
             )}
-            <p className="pl-4 text-2xl">Principais Avaliações dos usuários</p>
-            <div className="mt-6 space-y-6">
+            <p className="text-2xl lg:pl-4">Principais Avaliações dos usuários</p>
+            <div className="mt-4 lg:mt-6 lg:space-y-6">
               {!reviews?.data.length ? (
-                <p className="pl-4">Não há comentários disponíveis.</p>
+                <p className="lg:pl-4">Não há comentários disponíveis.</p>
               ) : (
                 reviews.data
                   .filter((review) => (reviewUser ? reviewUser.id !== review.id : review))
@@ -266,7 +271,7 @@ const BookPage = async ({ params }: { params: { id: string } }) => {
             )}
           </div>
         </section>
-      </div>
+      </Page>
     </>
   );
 };

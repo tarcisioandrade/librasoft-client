@@ -23,7 +23,9 @@ const SinopseWrapper = ({ text }: Props) => {
   ));
 
   return (
-    <div className={cn("relative max-h-60 overflow-hidden", collapse && "max-h-full")}>
+    <div
+      className={cn("relative max-h-[500px] overflow-hidden lg:max-h-60", collapse && "max-h-full")}
+    >
       <div className={cn("space-y-2", needColapseButton && "pb-8")}>{paragraphElements}</div>
       {needColapseButton && (
         <div className="absolute bottom-0 left-0 right-0 z-10 bg-white shadow-[0px_-8px_10px_0px_rgba(255,255,255)]">
