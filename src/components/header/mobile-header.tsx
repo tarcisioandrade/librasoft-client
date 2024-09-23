@@ -16,7 +16,7 @@ const MobileHeader = ({
   profileStatus,
 }: HeaderProps) => {
   return (
-    <div className="container fixed left-0 right-0 top-0 z-10 h-[105px] bg-background pb-2 lg:hidden">
+    <div className="container fixed left-0 right-0 top-0 z-50 h-[105px] bg-background pb-2 lg:hidden">
       <div className="flex h-14 items-center justify-between gap-2">
         <Sheet>
           <SheetTrigger>

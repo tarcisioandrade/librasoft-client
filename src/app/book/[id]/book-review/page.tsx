@@ -9,6 +9,7 @@ import Link from "next/link";
 import React from "react";
 import { Metadata } from "next";
 import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
+import Page from "@/components/page";
 
 export const metadata: Metadata = generateCustomMetadata("Avaliações");
 
@@ -28,7 +29,7 @@ const ReviewBookPage = async ({
   return (
     <>
       <Header />
-      <div className="container-secondary">
+      <Page container="container-secondary">
         {reviews?.data.map(async (review) => {
           const isLiked = session ? await likeService.Get(review.id) : false;
           return (
@@ -61,7 +62,7 @@ const ReviewBookPage = async ({
             </Button>
           </div>
         )}
-      </div>
+      </Page>
     </>
   );
 };

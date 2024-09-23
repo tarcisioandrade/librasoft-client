@@ -99,7 +99,12 @@ const FormReview = () => {
 function Submit() {
   const { pending } = useFormStatus();
   return (
-    <Button className="ml-auto block" type="submit" disabled={pending} aria-disabled={pending}>
+    <Button
+      className="ml-auto block w-full sm:w-fit"
+      type="submit"
+      disabled={pending}
+      aria-disabled={pending}
+    >
       {pending ? "Enviando" : "Enviar"}
     </Button>
   );

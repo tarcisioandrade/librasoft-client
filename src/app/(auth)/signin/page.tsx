@@ -1,4 +1,5 @@
 import FormSignin from "@/app/(auth)/signin/components/form-signin";
+import Page from "@/components/page";
 import { Button } from "@/components/ui/button";
 import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
 import { Metadata } from "next";
@@ -7,9 +8,9 @@ import React, { Suspense } from "react";
 
 export const metadata: Metadata = generateCustomMetadata("Signin");
 
-const Page = () => {
+const SigninPage = () => {
   return (
-    <div className="mx-auto mt-12 w-[500px]">
+    <Page container="container" withHeader={false} className="mt-12 md:w-[500px]">
       <Link href="/" className="block text-center text-2xl font-bold">
         LibraSoft
       </Link>
@@ -22,8 +23,8 @@ const Page = () => {
           <Link href="/signup">Criar Conta</Link>
         </Button>
       </div>
-    </div>
+    </Page>
   );
 };
 
-export default Page;
+export default SigninPage;

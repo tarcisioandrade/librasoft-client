@@ -1,4 +1,5 @@
 import FormSignup from "@/app/(auth)/signup/components/form-signup";
+import Page from "@/components/page";
 import { Button } from "@/components/ui/button";
 import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
 import { Metadata } from "next";
@@ -7,9 +8,9 @@ import React from "react";
 
 export const metadata: Metadata = generateCustomMetadata("Signup");
 
-const Page = () => {
+const SignupPage = () => {
   return (
-    <div className="mx-auto mt-12 w-[500px]">
+    <Page container="container" withHeader={false} className="mt-12 md:w-[500px]">
       <Link href="/" className="block text-center text-2xl font-bold">
         LibraSoft
       </Link>
@@ -20,8 +21,8 @@ const Page = () => {
           <Link href="/signin">Faça Login</Link>
         </Button>
       </div>
-    </div>
+    </Page>
   );
 };
 
-export default Page;
+export default SignupPage;
