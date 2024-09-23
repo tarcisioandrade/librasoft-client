@@ -24,4 +24,6 @@ const Page = forwardRef<HTMLDivElement, Props>(
   },
 );
 
+Page.displayName = "Page";
+
 export default Page;
