@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { getSession } from "@/services/session.service";
 import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
 import { Metadata } from "next";
+import Page from "@/components/page";
 
 export const metadata: Metadata = generateCustomMetadata("Bolsa");
 
@@ -25,13 +26,14 @@ const RentPage = async () => {
 
   let booksRented = rents ? rents.data.reduce((acc, rent) => acc + rent.books.length, 0) : 0;
   const BOOK_SELECTED_LIMIT = Constants.BOOK_RENT_MAX_LIMIT - booksRented;
-  const NEXT_PUNISH_IS_PERMANENT_BAN = punishments?.data.length === 2;
+  const NEXT_PUNISH_IS_PERMANENT_BAN =
+    session?.user.status === "Active" && punishments?.data.length === 2;
 
   return (
     <>
       <Header />
-      <div className="container my-6">
-        <div className="flex flex-col gap-0.5">
+      <Page container="container">
+        <div className="mt-2 flex flex-col gap-0.5">
           {booksRented > 0 && booksRented < 3 ? (
             <div className="mb-2 bg-yellow-200 p-2">
               <strong className="text-sm text-green-800">
@@ -64,7 +66,7 @@ const RentPage = async () => {
             </div>
           ) : null}
 
-          {session?.user.status === "Inactive" ? (
+          {session?.user.status === "Suspense" ? (
             <div className="mb-2 bg-red-200 p-2">
               <strong className="text-sm">
                 AVISO! Sua conta está suspensa no momento, por esse motivo você não pode efetuar
@@ -104,7 +106,7 @@ const RentPage = async () => {
           selectedLimit={BOOK_SELECTED_LIMIT}
           user={session!.user}
         />
-      </div>
+      </Page>
     </>
   );
 };

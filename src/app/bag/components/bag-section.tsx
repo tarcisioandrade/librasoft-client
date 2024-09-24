@@ -109,7 +109,7 @@ const BagSection = ({ bags, selectedLimit, user }: Props) => {
 
   return (
     <>
-      <div className="grid grid-cols-[1fr_400px] gap-4">
+      <div className="grid gap-4 lg:grid-cols-[1fr_400px]">
         {!optismisticBags?.length ? (
           <div className="grid place-items-center border">
             <p className="text-7xl uppercase text-muted-foreground/50">Vazio</p>
@@ -118,7 +118,7 @@ const BagSection = ({ bags, selectedLimit, user }: Props) => {
           <div className="flex flex-col border">
             {optismisticBags?.map((bag, i, array) => (
               <div key={bag.id} className={cn("p-4", array.length !== i + 1 && "border-b")}>
-                <div className="flex gap-6">
+                <div className="relative flex gap-6">
                   <Checkbox
                     name={`book-${bag.book.id}`}
                     checked={isChecked(bag.book.id)}
@@ -127,7 +127,7 @@ const BagSection = ({ bags, selectedLimit, user }: Props) => {
                     onCheckedChange={(checked) =>
                       handleBooksAndBagsIdSelected(checked, { bookId: bag.book.id, bagId: bag.id })
                     }
-                    className="self-center"
+                    className="absolute -left-4 self-center lg:static"
                   />
                   <Link href={`/book/${bag.book.id}`} className="h-[150px] w-[110px]">
                     <Image
@@ -138,18 +138,22 @@ const BagSection = ({ bags, selectedLimit, user }: Props) => {
                       className="h-full"
                     />
                   </Link>
-                  <div className="flex flex-col justify-between">
+                  <div className="flex flex-1 flex-col justify-between">
                     <div className="space-y-1">
                       <Link href={`/book/${bag.book.id}`}>
-                        <strong className="font-semibold">
+                        <strong className="line-clamp-3 text-sm font-semibold lg:line-clamp-none lg:text-base">
                           {bag.book.title} -{" "}
                           <span className="font-normal text-muted-foreground">
                             {bag.book.publisher}
                           </span>
                         </strong>
                       </Link>
-                      <p className="text-sm">por Trancador de ruas</p>
-                      <StarRating size={12} rating={bag.book.averageRating} />
+                      <p className="text-sm lg:block">por Trancador de ruas</p>
+                      <StarRating
+                        size={12}
+                        rating={bag.book.averageRating}
+                        className="hidden lg:block"
+                      />
                       <p className="text-xs text-muted-foreground">
                         {ECoverType[bag.book.coverType]}
                       </p>
@@ -177,7 +181,7 @@ const BagSection = ({ bags, selectedLimit, user }: Props) => {
         <div className="flex h-[370px] flex-col justify-between border p-4">
           <div className="space-y-4">
             <p>
-              Subtotal: <strong>{booksAndBagsIdSelected.length} Livros</strong>
+              Subtotal: <strong>{booksAndBagsIdSelected.length} Livro(s)</strong>
             </p>
             <p>
               Data de Devolução:{" "}
