@@ -21,6 +21,10 @@ const SearchHomePage = () => {
     if (currentURL.searchParams.has("category")) {
       currentURL.searchParams.delete("category");
     }
+    if (currentURL.searchParams.has("pageNumber")) {
+      currentURL.searchParams.delete("pageNumber");
+      currentURL.searchParams.append("pageNumber", String(1));
+    }
     if (value) {
       currentURL.searchParams.append("search", value);
     }
