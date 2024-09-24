@@ -51,7 +51,7 @@ const PunishmentsPage = async () => {
           </p>
         ) : null}
       </div>
-      <Table>
+      <Table className="w-[700px] lg:w-full">
         {NEXT_PUNISH_IS_PERMANENT_BAN ? (
           <TableCaption className="text-sm text-red-500">
             <strong className="text-sm text-red-500">
