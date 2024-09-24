@@ -39,7 +39,7 @@ const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isLoading, startTransition] = useTransition();
-  
+
   const CURRENT_BOOK_ID = String(params.id);
   const BOOK_SELECTED_LIMIT = Constants.BOOK_RENT_MAX_LIMIT - rentsCount;
   const RENTS_REACHED_LIMIT = rentsCount >= 3;
@@ -81,7 +81,7 @@ const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
             Alugar
           </Button>
         </SheetTrigger>
-        <SheetContent className="flex flex-col sm:max-w-[500px]">
+        <SheetContent className="flex w-full flex-col sm:max-w-[500px]">
           <SheetHeader>
             <SheetTitle>Sua Sacola</SheetTitle>
             {!HAS_RENT_IN_PROGRESS && !RENTS_REACHED_LIMIT ? <DefaultSheetDescription /> : null}
@@ -114,10 +114,10 @@ const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
                       className="h-full"
                     />
                   </Link>
-                  <div className="flex flex-col justify-between">
+                  <div className="flex flex-1 flex-col justify-between">
                     <div className="space-y-1">
                       <Link href={`/book/${bag.book.id}`}>
-                        <strong className="block w-[320px] truncate font-semibold">
+                        <strong className="line-clamp-2 text-sm font-semibold lg:text-base">
                           {bag.book.title}
                         </strong>
                       </Link>
@@ -146,7 +146,12 @@ const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
             ))}
             {isLoading ? <SheetBagSkeleton /> : null}
           </div>
-          <Button onClick={() => router.push("/bag")}>Fazer Pedido</Button>
+          <div className="flex flex-col gap-2">
+            <Button onClick={() => router.push("/bag")}>Fazer Pedido</Button>
+            <Button variant="secondary" onClick={() => setOpen(false)}>
+              Continuar Alugando
+            </Button>
+          </div>
         </SheetContent>
       </Sheet>
     </>
