@@ -82,7 +82,7 @@ Os formulários são gerenciados por meio da biblioteca React Hook Form e valida
 
 ### Perfomance
 
-#### useMemo
+#### Memoization
 
 Com o intuito de aprimorar a performance da aplicação, foram adotadas estratégias de memorização para evitar execuções desnecessárias a cada rerender.
 
