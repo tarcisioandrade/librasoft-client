@@ -11,9 +11,6 @@ import React, { useState } from "react";
 import { RentsColumns } from "../columns";
 import { Row } from "@tanstack/react-table";
 import ActionRowDialog from "../../../components/table/action-row-dialog";
-import { confirmRentAction } from "@/actions/rent/confirm.action";
-import { cancelInDashboardRentAction } from "@/actions/rent/cancel-in-dashboard.action";
-import { returnRentAction } from "@/actions/rent/return.action";
 import Link from "next/link";
 
 type Props = {
@@ -28,25 +25,34 @@ const RentTableRowActions = ({ row }: Props) => {
   return (
     <>
       <ActionRowDialog
+        config={{
+          entity: "rent",
+          action: "delete",
+        }}
         messageLabel="Esta ação não pode ser desfeita. Isso vai permanentemente cancelar o aluguél do servidor."
         open={showCancelRentDialog}
         row_id={row.original.id}
         onOpenChange={setShowCancelRentDialog}
-        action={cancelInDashboardRentAction}
       />
       <ActionRowDialog
+        config={{
+          entity: "rent",
+          action: "confirm",
+        }}
         messageLabel="Cancelar aluguél?"
         open={showConfirmRentDialog}
         row_id={row.original.id}
         onOpenChange={setShowConfirmRentDialog}
-        action={confirmRentAction}
       />
       <ActionRowDialog
+        config={{
+          entity: "rent",
+          action: "return",
+        }}
         messageLabel="Confirmar recebimento de aluguél?"
         open={showFinishRentDialog}
         row_id={row.original.id}
         onOpenChange={setShowFinishRentDialog}
-        action={returnRentAction}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

@@ -11,6 +11,8 @@ type GetAllRentsFilterParams = Omit<FilterRentsParams, "search"> & {
   search?: string;
 };
 
+export type RentActionType = "confirm" | "delete" | "return";
+
 export class RentService {
   private readonly endpoint = "/rent";
 
@@ -39,16 +41,16 @@ export class RentService {
     return data;
   }
 
-  async Delete(id: string) {
-    const { error } = await fetchWithCredentials(this.endpoint + `/${id}`, {
-      method: "DELETE",
+  async Action(id: string, actionType: RentActionType) {
+    const { error } = await fetchWithCredentials(this.endpoint + `/${id}/${actionType}`, {
+      method: "POST",
     });
     if (error) {
       return Err({
         message: error.errors,
       });
     }
-    return Ok({ message: "Aluguél Cancelado!" });
+    return Ok({ message: "Solicitação concluída com sucesso!" });
   }
 
   async GetAll(params: FilterRentsParams) {
@@ -74,31 +76,5 @@ export class RentService {
     });
 
     return data!;
-  }
-  // TODO: Juntar methodo Delete, Confirm e Return em um só.
-  async Confirm(id: string) {
-    const { error } = await fetchWithCredentials(this.endpoint + `/${id}/confirm`, {
-      method: "POST",
-    });
-
-    if (error) {
-      return Err({
-        message: error.errors,
-      });
-    }
-    return Ok({ message: "Aluguél Confirmado!" });
-  }
-
-  async Return(id: string) {
-    const { error } = await fetchWithCredentials(this.endpoint + `/${id}/return`, {
-      method: "POST",
-    });
-
-    if (error) {
-      return Err({
-        message: error.errors,
-      });
-    }
-    return Ok({ message: "Aluguél Finalizado!" });
   }
 }
