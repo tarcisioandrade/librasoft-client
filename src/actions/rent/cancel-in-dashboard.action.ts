@@ -7,7 +7,7 @@ import { revalidateTag } from "next/cache";
 const rentService = new RentService();
 
 export async function cancelInDashboardRentAction(id: string) {
-  const res = await rentService.Delete(id);
+  const res = await rentService.Action(id, "delete");
   if (res.success) {
     revalidateTag(CacheKeys.Rent.GetAll);
   }
