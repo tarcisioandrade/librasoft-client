@@ -15,6 +15,8 @@ type GetAllBooksFilterParams = Omit<FilterBooksParams, "title" | "categories"> &
   category?: string;
 };
 
+export type BookActionType = "inactive" | "reactive" | "delete";
+
 export class BookService {
   private baseURL = `${env.BACKEND_URL}/book`;
 
@@ -67,34 +69,14 @@ export class BookService {
     return Ok({ message: "Livro adicionado com sucesso!" });
   }
 
-  async Delete(id: string) {
-    const { response, error } = await fetchWithCredentials(`/book/${id}/delete`, {
-      method: "DELETE",
-    });
-    if (!response.ok && error) {
-      return Err({ message: error.errors });
-    }
-    return Ok({ message: "Livro deletado com sucesso!" });
-  }
-
-  async Reactivate(id: string) {
-    const { response, error } = await fetchWithCredentials(`/book/${id}/reactivate`, {
+  async Action(id: string, actionType: BookActionType) {
+    const { response, error } = await fetchWithCredentials(`/book/${id}/${actionType}`, {
       method: "POST",
     });
     if (!response.ok && error) {
       return Err({ message: error.errors });
     }
-    return Ok({ message: "Livro ativado com sucesso!" });
-  }
-
-  async Inactive(id: string) {
-    const { response, error } = await fetchWithCredentials(`/book/${id}/inactive`, {
-      method: "DELETE",
-    });
-    if (!response.ok && error) {
-      return Err({ message: error.errors });
-    }
-    return Ok({ message: "Livro inativado com sucesso!" });
+    return Ok({ message: `Ação [${actionType}] aplicada com sucesso!` });
   }
 
   async Update(input: EditBookInputType) {
@@ -102,11 +84,9 @@ export class BookService {
       method: "PUT",
       body: input,
     });
-
     if (!response.ok && error) {
       return Err({ message: error.errors });
     }
-
     return Ok({ message: "Livro atualizado com sucesso!" });
   }
 }

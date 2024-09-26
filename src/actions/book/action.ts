@@ -1,13 +1,13 @@
 "use server";
 
 import { CacheKeys } from "@/cache-keys";
-import { BookService } from "@/services/book.service";
+import { BookActionType, BookService } from "@/services/book.service";
 import { revalidateTag } from "next/cache";
 
 const bookService = new BookService();
 
-export async function inactiveBookAction(id: string) {
-  const res = await bookService.Inactive(id);
+export async function bookAction(id: string, actionType: BookActionType) {
+  const res = await bookService.Action(id, actionType);
   if (res.success) {
     revalidateTag(CacheKeys.Book.GetAll);
   }

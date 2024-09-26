@@ -10,30 +10,38 @@ import {
 import React, { useTransition } from "react";
 import { Icons } from "@/components/ui/icons";
 import { toast } from "sonner";
-import { type Err, type Ok } from "@/utils/result";
+import { BookActionType } from "@/services/book.service";
+import { bookAction } from "@/actions/book/action";
+import { RentActionType } from "@/services/rent.service";
+import { rentAction } from "@/actions/rent/action";
 
-type ActionReturn =
-  | Err<{
-      message: string[];
-    }>
-  | Ok<{
-      message: string;
-    }>;
+type ActionDialogConfig =
+  | { entity: "rent"; action: RentActionType }
+  | { entity: "book"; action: BookActionType };
 
-type DeleteTasksDialogProps = {
+type TasksDialogProps = {
   row_id: string;
   showTrigger?: boolean;
   onSuccess?: () => void;
   messageLabel: string;
-  action: (id: string) => Promise<ActionReturn>;
+  config: ActionDialogConfig;
 } & React.ComponentPropsWithoutRef<typeof Dialog>;
 
-const ActionRowDialog = ({ row_id, messageLabel, onSuccess, ...props }: DeleteTasksDialogProps) => {
+const ActionRowDialog = ({
+  row_id,
+  messageLabel,
+  config,
+  onSuccess,
+  ...props
+}: TasksDialogProps) => {
   const [isLoading, startTransition] = useTransition();
 
   function actionFn() {
     startTransition(async () => {
-      const result = await props.action(row_id);
+      const result =
+        config.entity === "book"
+          ? await bookAction(row_id, config.action)
+          : await rentAction(row_id, config.action);
       props.onOpenChange?.(false);
       if (!result.success) {
         toast.error(result.error.message);

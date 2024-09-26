@@ -14,9 +14,6 @@ import { BookColumns } from "../colums";
 import { Ellipsis } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ActionRowDialog from "../../../components/table/action-row-dialog";
-import { deleteBookAction } from "@/actions/book/delete.action";
-import { inactiveBookAction } from "@/actions/book/inactive.action";
-import { reactivateBookAction } from "@/actions/book/reactivate.action";
 
 type Props = {
   row: Row<BookColumns>;
@@ -32,25 +29,34 @@ const TableRowActions = ({ row }: Props) => {
   return (
     <>
       <ActionRowDialog
+        config={{
+          entity: "book",
+          action: "delete",
+        }}
         messageLabel="Esta ação não pode ser desfeita. Isso vai permanentemente deletar o livro do servidor."
         open={showDeleteDialog}
         row_id={row.original.id}
         onOpenChange={setShowDeleteDialog}
-        action={deleteBookAction}
       />
       <ActionRowDialog
+        config={{
+          entity: "book",
+          action: "inactive",
+        }}
         messageLabel="Deseja inativar o livro?"
         open={showInactiveDialog}
         row_id={row.original.id}
         onOpenChange={setShowInactiveDialog}
-        action={inactiveBookAction}
       />
       <ActionRowDialog
+        config={{
+          entity: "book",
+          action: "reactive",
+        }}
         messageLabel="Deseja reativar o livro?"
         open={showReactivateDialog}
         row_id={row.original.id}
         onOpenChange={setShowReactivateDialog}
-        action={reactivateBookAction}
       />
 
       <DropdownMenu>
