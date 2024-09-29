@@ -10,6 +10,7 @@ export async function rentAction(id: string, actionType: RentActionType) {
   const res = await rentService.Action(id, actionType);
   if (res.success) {
     revalidateTag(CacheKeys.Rent.GetAll);
+    revalidateTag(CacheKeys.Book.GetAll);
   }
   return res;
 }
