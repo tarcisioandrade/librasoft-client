@@ -7,32 +7,32 @@ import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
-import { SignForm, signinSchema } from "@/schemas/session.schema";
+import { useForm } from "react-hook-form";
+import { SigninForm, signinSchema } from "@/schemas/session.schema";
 import { Label } from "../../../../components/ui/label";
 
 const FormSignin = () => {
   const [isLoading, startTransition] = useTransition();
 
   const {
+    register,
     handleSubmit,
-    control,
     formState: { errors },
-  } = useForm<SignForm>({
+  } = useForm<SigninForm>({
     resolver: zodResolver(signinSchema),
     defaultValues: { email: "", password: "" },
   });
 
   const callbackUrl = useSearchParams().get("callbackUrl");
 
-  function submitFn(data: SignForm) {
-    const formData = new FormData();
-    formData.append("email", data.email);
-    formData.append("password", data.password);
-    formData.append("callbackUrl", callbackUrl || "/");
-
+  function submitFn(data: SigninForm) {
+    const input = {
+      email: data.email,
+      password: data.password,
+      callbackUrl: callbackUrl || "/",
+    };
     startTransition(async () => {
-      const result = await signinAction(formData);
+      const result = await signinAction(input);
       if (!result.success) {
         toast.error(result.error.message);
       }
@@ -45,29 +45,19 @@ const FormSignin = () => {
       className="mx-auto mt-6 flex flex-col gap-4 rounded border p-6"
     >
       <Label htmlFor="email">Email</Label>
-      <Controller
-        name="email"
-        control={control}
-        render={({ field }) => (
-          <Input {...field} required id="email" type="email" autoComplete="email" />
-        )}
-      />
+      <Input {...register("email")} required id="email" type="email" autoComplete="email" />
       {errors?.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+
       <Label htmlFor="password">Password</Label>
-      <Controller
-        name="password"
-        control={control}
-        render={({ field }) => (
-          <Input
-            {...field}
-            required
-            id="password"
-            type="password"
-            autoComplete="current-password"
-          />
-        )}
+      <Input
+        {...register("password")}
+        required
+        id="password"
+        type="password"
+        autoComplete="current-password"
       />
       {errors?.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
+
       <Button type="submit" disabled={isLoading}>
         {isLoading ? "Enviando" : "Enviar"}
       </Button>

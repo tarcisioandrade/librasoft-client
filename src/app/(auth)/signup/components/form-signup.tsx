@@ -5,7 +5,7 @@ import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { SignupForm, signupSchema } from "@/schemas/session.schema";
 import { Label } from "../../../../components/ui/label";
 import { signupAction } from "@/actions/auth/signup.action";
@@ -14,8 +14,8 @@ const FormSignup = () => {
   const [isLoading, startTransition] = useTransition();
 
   const {
+    register,
     handleSubmit,
-    control,
     formState: { errors },
   } = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
@@ -23,14 +23,14 @@ const FormSignup = () => {
   });
 
   function submitFn(data: SignupForm) {
-    const formData = new FormData();
-    formData.append("email", data.email);
-    formData.append("password", data.password);
-    formData.append("name", data.name);
-    formData.append("telephone", data.telephone);
-
+    const input = {
+      email: data.email,
+      password: data.password,
+      name: data.name,
+      telephone: data.telephone,
+    };
     startTransition(async () => {
-      const result = await signupAction(formData);
+      const result = await signupAction(input);
       if (!result.success) {
         toast.error(result.error.message);
       }
@@ -43,47 +43,27 @@ const FormSignup = () => {
       className="mx-auto mt-6 flex flex-col gap-4 rounded border p-6"
     >
       <Label htmlFor="name">Nome</Label>
-      <Controller
-        name="name"
-        control={control}
-        render={({ field }) => (
-          <Input {...field} required id="name" type="name" autoComplete="name" />
-        )}
-      />
+      <Input {...register("name")} required id="name" type="name" autoComplete="name" />
       {errors?.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
+
       <Label htmlFor="email">Email</Label>
-      <Controller
-        name="email"
-        control={control}
-        render={({ field }) => (
-          <Input {...field} required id="email" type="email" autoComplete="email" />
-        )}
-      />
+      <Input {...register("email")} required id="email" type="email" autoComplete="email" />
       {errors?.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+
       <Label htmlFor="telephone">Celular</Label>
-      <Controller
-        name="telephone"
-        control={control}
-        render={({ field }) => (
-          <Input {...field} required id="telephone" type="tel" autoComplete="tel" />
-        )}
-      />
+      <Input {...register("telephone")} required id="telephone" type="tel" autoComplete="tel" />
       {errors?.telephone && <p className="text-xs text-destructive">{errors.telephone.message}</p>}
+
       <Label htmlFor="password">Password</Label>
-      <Controller
-        name="password"
-        control={control}
-        render={({ field }) => (
-          <Input
-            {...field}
-            required
-            id="password"
-            type="password"
-            autoComplete="current-password"
-          />
-        )}
+      <Input
+        {...register("password")}
+        required
+        id="password"
+        type="password"
+        autoComplete="current-password"
       />
       {errors?.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
+
       <Button type="submit" disabled={isLoading}>
         {isLoading ? "Enviando" : "Enviar"}
       </Button>

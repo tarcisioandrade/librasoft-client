@@ -39,7 +39,7 @@ const authenticateTokensSchema = z.object({
 });
 
 type AuthenticateTokens = z.infer<typeof authenticateTokensSchema>;
-type SignForm = z.infer<typeof signinSchema>;
+type SigninForm = z.infer<typeof signinSchema>;
 type SignupForm = z.infer<typeof signupSchema>;
 
 export {
@@ -47,6 +47,6 @@ export {
   signupSchema,
   authenticateTokensSchema,
   type AuthenticateTokens,
-  type SignForm,
+  type SigninForm,
   type SignupForm,
 };

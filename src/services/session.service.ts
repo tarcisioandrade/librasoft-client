@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cookies } from "next/headers";
-import { authenticateTokensSchema } from "../schemas/session.schema";
+import { authenticateTokensSchema, SigninForm, SignupForm } from "../schemas/session.schema";
 import env from "../env";
 import { decrypt, encrypt } from "@/lib/jwt";
 import { $fetch } from "@/lib/fetch-base";
@@ -13,10 +13,10 @@ import { User } from "@/types/User";
 
 export type Session = { user: User } | null;
 
-export async function signin(formData: FormData) {
+export async function signin(input: SigninForm) {
   const formSignin = {
-    email: formData.get("email"),
-    password: formData.get("password"),
+    email: input.email,
+    password: input.password,
   };
 
   const { data, error } = await $fetch(`${env.BACKEND_URL}/authenticate/signin`, {
@@ -52,12 +52,12 @@ export async function signin(formData: FormData) {
   return Ok(null);
 }
 
-export async function signup(formData: FormData) {
+export async function signup(input: SignupForm) {
   const formSignup = {
-    name: formData.get("name"),
-    email: formData.get("email"),
-    telephone: formData.get("telephone"),
-    password: formData.get("password"),
+    name: input.name,
+    email: input.email,
+    telephone: input.telephone,
+    password: input.password,
   };
 
   const { error } = await $fetch(`${env.BACKEND_URL}/authenticate/signup`, {
