@@ -18,7 +18,7 @@
 - **[TypeScript](https://www.typescriptlang.org/)**: Linguagem de programação fortemente tipada que se baseia no JavaScript.
 - [**Next.js (App Router)**](https://nextjs.org/): Utilizado para gerenciamento de rotas com a nova abordagem de roteamento do Next.js.
 - **[Tailwind CSS](https://tailwindcss.com/)**: Framework CSS utilitário para um design rápido e responsivo.
-- **[Shadcn/UI](shadcn/ui)**: Biblioteca de componentes acessíveis e personalizados para melhorar a interface do usuário.
+- **[Shadcn/UI](https://ui.shadcn.com)**: Biblioteca de componentes acessíveis e personalizados para melhorar a interface do usuário.
 - **[Zod](https://zod.dev/)**: Biblioteca para validação de esquemas e tipos TypeScript de forma simples e eficiente.
 - **[React Hook Form](https://react-hook-form.com/)**: Gerenciamento de formulários no React com foco em desempenho e facilidade de uso.
 - [**Better Fetch**](https://better-fetch.vercel.app/):  Fetch wrapper com compatibilidade ao cacheamento do next e schemas do zod.
