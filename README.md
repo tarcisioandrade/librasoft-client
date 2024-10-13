@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/0fd944e9-ce10-4915-825e-891256db86ab" />
+  <img src="https://github.com/user-attachments/assets/c739a20e-f0e4-4eb3-9123-094497fff1b7" />
 	<p>LibraSoft é um sistema bibliotecário que proporciona aos usuários acesso online ao acervo de livros, bem como a realização de solicitações de empréstimo e o gerenciamento através de um dashboard disponivel para usuários administradores.</p>
     <a href="https://librasoft.vercel.app/?pageNumber=1" target="_blank">
 	    <img src="https://deploy-badge.vercel.app/vercel/librasoft" alt="Vercel Deploy"/>
