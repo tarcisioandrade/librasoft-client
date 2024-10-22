@@ -1,6 +1,6 @@
 "use server";
 
-import { ChangePassword, ChangePasswordInput } from "@/schemas/change-password.schema";
+import { ChangePasswordInput } from "@/schemas/change-password.schema";
 import { UserService } from "@/services/user.service";
 
 const userService = new UserService();

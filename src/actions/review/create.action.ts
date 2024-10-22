@@ -4,8 +4,9 @@ import { CacheKeys } from "@/cache-keys";
 import { Constants } from "@/constants";
 import { reviewSchema } from "@/schemas/review.schema";
 import { ReviewService } from "@/services/review.service";
-import { Err, Ok } from "@/utils/result";
+import { Err } from "@/utils/result";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 
 type State =
   | {
@@ -47,5 +48,5 @@ export async function CreateReview(_prevState: State, formData: FormData) {
   const callbackUrl = formData.get("callbackUrl")?.toString()!;
   revalidatePath(callbackUrl);
   revalidateTag(CacheKeys.Book.GetAll);
-  return Ok(null);
+  redirect(`/book/${body.bookId}`);
 }
