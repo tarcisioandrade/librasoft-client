@@ -27,22 +27,24 @@ import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
 import dynamic from "next/dynamic";
 import Page from "@/components/page";
 
-const FormRentDynamic = dynamic(() => import("./components/form-rent"));
+const FormRentDynamic = dynamic(() =>
+  import("./components/form-rent").then((mod) => ({ default: mod.default })),
+);
 
 const bookService = new BookService();
 const reviewService = new ReviewService();
 const likeService = new LikeService();
 
-export const generateMetadata = async ({
-  params,
-}: {
-  params: { id: string };
+export const generateMetadata = async (props: {
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> => {
+  const params = await props.params;
   const book = await bookService.GetById(params.id);
   return generateCustomMetadata(book?.data.title);
 };
 
-const BookPage = async ({ params }: { params: { id: string } }) => {
+const BookPage = async (props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   const session = await getSession();
   const book = await bookService.GetById(params.id);
 

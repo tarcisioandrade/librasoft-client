@@ -16,13 +16,14 @@ export const metadata: Metadata = generateCustomMetadata("Avaliações");
 const reviewService = new ReviewService();
 const likeService = new LikeService();
 
-const ReviewBookPage = async ({
-  params,
-  searchParams,
-}: {
-  params: { id: string };
-  searchParams: { [key: string]: string };
-}) => {
+const ReviewBookPage = async (
+  props: {
+    params: Promise<{ id: string }>;
+    searchParams: Promise<{ [key: string]: string }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const session = await getSession();
   const reviews = await reviewService.GetAll(params.id, Number(searchParams.pageNumber));
 

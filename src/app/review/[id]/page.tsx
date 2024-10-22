@@ -15,7 +15,8 @@ export const metadata: Metadata = generateCustomMetadata("Avaliação");
 const bookService = new BookService();
 const reviewService = new ReviewService();
 
-const ReviewPage = async ({ params }: { params: { id: string } }) => {
+const ReviewPage = async (props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   const book = await bookService.GetById(params.id);
   if (!book) notFound();
   const review = await reviewService.Get(book.data.id);

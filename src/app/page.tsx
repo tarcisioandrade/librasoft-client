@@ -20,11 +20,12 @@ import {
 const bookService = new BookService();
 const categoryService = new CategoryService();
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined };
-}) {
+export default async function Home(
+  props: {
+    searchParams: Promise<{ [key: string]: string | undefined }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const queries: FilterBooksParams = {
     categories: searchParams.category,
     pageNumber: searchParams.pageNumber || "1",

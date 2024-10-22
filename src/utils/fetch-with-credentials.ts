@@ -17,7 +17,7 @@ export async function fetchWithCredentials<TData>(
   path: string,
   options?: BetterFetchOption,
 ): Promise<FetchReturns<TData>> {
-  const access_token = cookies().get("access_token")?.value;
+  const access_token = (await cookies()).get("access_token")?.value;
 
   if (!access_token) {
     console.error(`Access token not found. Path=${path}`);
