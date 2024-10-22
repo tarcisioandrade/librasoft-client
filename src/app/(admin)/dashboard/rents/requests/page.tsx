@@ -4,11 +4,12 @@ import { filterRentsParamsSchema } from "@/schemas/filterParams.schema";
 
 const rentService = new RentService();
 
-const RentRequestPage = ({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined };
-}) => {
+const RentRequestPage = async (
+  props: {
+    searchParams: Promise<{ [key: string]: string | undefined }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
   const queries = filterRentsParamsSchema.parse(searchParams);
   const rents = rentService.GetAll(queries);
 

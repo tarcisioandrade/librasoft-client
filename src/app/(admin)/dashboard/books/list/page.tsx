@@ -8,11 +8,12 @@ import TableSkeleton from "./components/table-skeleton";
 const bookService = new BookService();
 const categoryService = new CategoryService();
 
-const ListPage = async ({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined };
-}) => {
+const ListPage = async (
+  props: {
+    searchParams: Promise<{ [key: string]: string | undefined }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
   const queries = filterBooksParamsSchema.parse(searchParams);
 
   const books = bookService.GetAll(queries);

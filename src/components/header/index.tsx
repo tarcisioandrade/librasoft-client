@@ -11,7 +11,7 @@ const categoryService = new CategoryService();
 
 const Header = async () => {
   const session = await getSession();
-  const callbackUrl = headers().get("x-current-path");
+  const callbackUrl = (await headers()).get("x-current-path");
   const categories = (await categoryService.getAll())?.data || [];
   let bagCount: number | null = null;
   let IS_PROFILE_COMPLETE = false;

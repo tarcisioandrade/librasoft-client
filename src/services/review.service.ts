@@ -13,6 +13,7 @@ export class ReviewService {
     const res = await $fetch<Pagination<Review>>(
       this.baseURL + `/${bookId}?pageNumber=${pageNumber}`,
       {
+        cache: "force-cache",
         next: { tags: [CacheKeys.Review.GetAll] },
       },
     );

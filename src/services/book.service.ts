@@ -40,6 +40,7 @@ export class BookService {
     });
 
     const { data } = await $fetch<Pagination<Book>>(url.href, {
+      cache: "force-cache",
       next: { tags: [CacheKeys.Book.GetAll] },
     });
 

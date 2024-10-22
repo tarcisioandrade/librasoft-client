@@ -1,21 +1,20 @@
 "use client";
 
 import { Star } from "lucide-react";
-import React, { useState } from "react";
+import React, { useActionState, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { CreateReview } from "@/actions/review/create.action";
-import { useParams, useRouter } from "next/navigation";
-import { useFormState, useFormStatus } from "react-dom";
+import { useParams } from "next/navigation";
+import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import Divider from "@/components/divider";
 
 const FormReview = () => {
   const [rating, setRating] = useState(1);
   const params = useParams();
-  const route = useRouter();
-  const [state, formAction] = useFormState(CreateReview, {
+  const [state, formAction] = useActionState(CreateReview, {
     success: false,
     error: {},
   });
@@ -47,10 +46,6 @@ const FormReview = () => {
 
   if (!state.success && "server" in state.error) {
     toast.error(state.error.server);
-  }
-
-  if (state.success) {
-    route.push(`/book/${params.id}`);
   }
 
   return (
@@ -87,7 +82,7 @@ const FormReview = () => {
             <p className="text-xs text-destructive">{state.error.comment}</p>
           )}
         </div>
-        <input hidden name="bookId" defaultValue={params.id.toString()} />
+        <input hidden name="bookId" defaultValue={params.id?.toString()} />
         <input hidden name="callbackUrl" defaultValue={`/book/${params.id}`} />
         <div className="h-px bg-slate-300" />
         <Submit />

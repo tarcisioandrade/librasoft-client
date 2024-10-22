@@ -34,7 +34,7 @@ export async function signin(input: SigninForm) {
     });
   }
 
-  cookies().set({
+  (await cookies()).set({
     name: "access_token",
     secure: process.env.NODE_ENV === "production",
     value: data.access_token,
@@ -45,7 +45,7 @@ export async function signin(input: SigninForm) {
   const session = await setSession();
 
   if (!session.success) {
-    logout();
+    await logout();
     return Err(session.error);
   }
 
@@ -77,13 +77,17 @@ export async function signup(input: SignupForm) {
   return Ok(null);
 }
 
-export function logout() {
-  cookies().delete("access_token");
-  cookies().delete("session");
+export async function logout() {
+  const cookiesService = await cookies();
+
+  cookiesService.delete("access_token");
+  cookiesService.delete("session");
 }
 
 export async function setSession(user?: User) {
-  const access_token = cookies().get("access_token")?.value;
+  const cookiesService = await cookies();
+
+  const access_token = cookiesService.get("access_token")?.value;
 
   let data = user;
 
@@ -107,7 +111,7 @@ export async function setSession(user?: User) {
 
   const parsed = await encrypt(data);
 
-  cookies().set({
+  cookiesService.set({
     name: "session",
     value: parsed,
     httpOnly: true,
@@ -119,7 +123,7 @@ export async function setSession(user?: User) {
 }
 
 export async function getSession(): Promise<Session> {
-  const sessionEncrypted = cookies().get("session")?.value;
+  const sessionEncrypted = (await cookies()).get("session")?.value;
   if (!sessionEncrypted) return null;
   const sessionDecrypted = (await decrypt(sessionEncrypted)) as User;
 
@@ -127,7 +131,7 @@ export async function getSession(): Promise<Session> {
 }
 
 export async function validateSession() {
-  const access_token = cookies().get("access_token")?.value;
+  const access_token = (await cookies()).get("access_token")?.value;
   if (!access_token) return false;
   const { response } = await fetchWithCredentials(`/authenticate/check`);
   return response.ok;

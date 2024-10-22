@@ -20,7 +20,8 @@ export const metadata: Metadata = generateCustomMetadata("Detalhes");
 
 const rentService = new RentService();
 
-const RentDetailsPage = async ({ params }: { params: { id: string } }) => {
+const RentDetailsPage = async (props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   const rent = await rentService.Get(params.id);
   if (!rent) notFound();
 

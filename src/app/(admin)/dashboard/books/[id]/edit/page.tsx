@@ -7,7 +7,8 @@ import FormEditBook from "./components/form-edit";
 const bookService = new BookService();
 const categoryService = new CategoryService();
 
-const EditBookPage = async ({ params }: { params: { id: string } }) => {
+const EditBookPage = async (props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   const book = await bookService.GetById(params.id);
   if (!book) notFound();
   const categories = (await categoryService.getAll())?.data ?? [];
