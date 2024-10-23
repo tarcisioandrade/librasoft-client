@@ -30,7 +30,7 @@ export async function signin(input: SigninForm) {
 
   if (error) {
     return Err({
-      message: [error.errors ?? Constants.DEFAULT_ERROR_MESSAGE],
+      message: [error.errors[0] ?? Constants.DEFAULT_ERROR_MESSAGE],
     });
   }
 
