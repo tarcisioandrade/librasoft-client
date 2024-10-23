@@ -9,7 +9,7 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
-    include: ["**/*.spec.tsx"],
+    include: ["**/*.{spec,test}.tsx"],
     globals: true,
   },
 });

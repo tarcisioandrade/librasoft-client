@@ -1,10 +1,10 @@
-import FormSignin from "@/app/(auth)/signin/components/form-signin";
 import Page from "@/components/page";
 import { Button } from "@/components/ui/button";
 import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
 import { Metadata } from "next";
 import Link from "next/link";
 import React, { Suspense } from "react";
+import FormSigninWrapper from "./components/form-signin";
 
 export const metadata: Metadata = generateCustomMetadata("Signin");
 
@@ -15,7 +15,7 @@ const SigninPage = () => {
         LibraSoft
       </Link>
       <Suspense>
-        <FormSignin />
+        <FormSigninWrapper />
       </Suspense>
       <div className="mt-6 flex flex-col items-center gap-4">
         <p className="text-sm text-muted-foreground">Não tem conta?</p>
