@@ -1,4 +1,4 @@
-import FormSignup from "@/app/(auth)/signup/components/form-signup";
+import FormSignupWrapper from "@/app/(auth)/signup/components/form-signup";
 import Page from "@/components/page";
 import { Button } from "@/components/ui/button";
 import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
@@ -14,7 +14,7 @@ const SignupPage = () => {
       <Link href="/" className="block text-center text-2xl font-bold">
         LibraSoft
       </Link>
-      <FormSignup />
+      <FormSignupWrapper />
       <div className="mt-6 flex flex-col items-center gap-4">
         <p className="text-sm text-muted-foreground">Já tem uma conta?</p>
         <Button variant="secondary" className="w-full" asChild>
