@@ -2,7 +2,7 @@ import { fireEvent, render, waitFor } from "@testing-library/react";
 import { IFormSigninService, SigninActionProps } from "./form.type";
 import { useFormSigninModel } from "./form.model";
 import { Err } from "@/utils/result";
-import { changeInput } from "@/utils/tests/change-input";
+import { changeInput } from "@/tests/change-input";
 import FormSignin from "./form-signin.view";
 import { vi } from "vitest";
 

@@ -4,7 +4,7 @@ import { Err } from "@/utils/result";
 import { useFormSignupModel } from "./form-signup.model";
 import FormSignup from "./form-signup.view";
 import { fireEvent, render, waitFor } from "@testing-library/react";
-import { changeInput } from "@/utils/tests/change-input";
+import { changeInput } from "@/tests/change-input";
 import { SignupForm } from "@/schemas/session.schema";
 
 const MockSignupService: IFormSignupService = {
