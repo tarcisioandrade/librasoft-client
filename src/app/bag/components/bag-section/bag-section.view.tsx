@@ -1,123 +1,39 @@
-"use client";
-
-import { deleteBagAction } from "@/actions/bag/delete.action";
-import { createRentAction } from "@/actions/rent/create.action";
 import StarRating from "@/components/star-rating";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Constants } from "@/constants";
 import { ECoverType } from "@/enums/ECoverType";
 import { cn } from "@/lib/utils";
-import { Bag } from "@/types/Bag";
-import { User } from "@/types/User";
-import { CheckedState } from "@radix-ui/react-checkbox";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useOptimistic, useState, useTransition } from "react";
-import { toast } from "sonner";
+import { useBagSectionModel } from "./bag-section.model";
 
-type Props = {
-  bags: Bag[] | null;
-  selectedLimit: number;
-  user: User;
-};
+type Props = ReturnType<typeof useBagSectionModel>;
 
-type BookAndBagId = {
-  bookId: string;
-  bagId: string;
-};
-
-const BagSection = ({ bags, selectedLimit, user }: Props) => {
-  const [booksAndBagsIdSelected, setBooksAndBagsIdSelected] = useState<BookAndBagId[]>([]);
-  const [isLoading, startTransition] = useTransition();
-  const [optismisticBags, removeOptimisticBags] = useOptimistic(bags, (state, bagId: string) => {
-    return state?.filter((bag) => bag.id !== bagId) ?? null;
-  });
-  const router = useRouter();
-
-  function isChecked(bookId: string) {
-    return booksAndBagsIdSelected.some((item) => item.bookId === bookId);
-  }
-
-  function isDisabled(bookId: string) {
-    return (
-      booksAndBagsIdSelected.length === selectedLimit &&
-      !booksAndBagsIdSelected.find((book) => book.bookId === bookId)
-    );
-  }
-
-  function handleBooksAndBagsIdSelected(checked: CheckedState, input: BookAndBagId) {
-    if (isDisabled(input.bookId)) return;
-
-    setBooksAndBagsIdSelected((state) => {
-      let currentIdBooks = state;
-      currentIdBooks = checked
-        ? [...currentIdBooks, input]
-        : currentIdBooks.filter((id) => id.bookId !== input.bookId);
-      return currentIdBooks;
-    });
-  }
-
-  async function createRent(_: FormData) {
-    if (user.status !== "Active" || !user.address) return;
-    startTransition(async () => {
-      const books = booksAndBagsIdSelected.map((id) => ({
-        id: id.bookId,
-      }));
-      const response = await createRentAction(books);
-      if (!response.success) {
-        toast.error(response.error.message);
-        return;
-      }
-      const bags = booksAndBagsIdSelected.map((id) => ({
-        id: id.bagId,
-      }));
-      for (let bag of bags) {
-        await deleteBagAction(bag.id);
-      }
-      router.push("/rent");
-    });
-  }
-
-  const deleteBag = (bagId: string) => async () => {
-    removeOptimisticBags(bagId);
-    await deleteBagAction(bagId);
-  };
-
-  function calculateReturnDate(returnDate: Date) {
-    let daysAdded = 0;
-
-    while (daysAdded < Constants.AMOUNT_DAY_TO_RETURN_BOOK) {
-      const numberReferenceASaturday = 5;
-      const numberReferenceAMonday = 6;
-
-      returnDate.setDate(returnDate.getDate() + 1);
-
-      if (
-        returnDate.getDay() !== numberReferenceASaturday &&
-        returnDate.getDay() !== numberReferenceAMonday
-      ) {
-        daysAdded++;
-      }
-    }
-    return returnDate;
-  }
-
-  const BUTTON_DISABLED =
-    !user.address || !booksAndBagsIdSelected.length || user.status !== "Active" || isLoading;
+const BagSection = (props: Props) => {
+  const {
+    calculateReturnDate,
+    createRent,
+    deleteBag,
+    handleBooksAndBagsIdSelected,
+    isChecked,
+    isDisabled,
+    isLoading,
+    optismisticBags,
+    booksAndBagsIdSelected,
+    BUTTON_DISABLED,
+  } = props;
 
   return (
     <>
       <div className="grid gap-4 lg:grid-cols-[1fr_400px]">
         {!optismisticBags?.length ? (
-          <div className="grid place-items-center border">
+          <div className="grid place-items-center border" data-testid="bag-empty">
             <p className="text-7xl uppercase text-muted-foreground/50">Vazio</p>
           </div>
         ) : (
           <div className="flex flex-col border">
             {optismisticBags?.map((bag, i, array) => (
-              <div key={bag.id} className={cn("p-4", array.length !== i + 1 && "border-b")}>
+              <div key={bag.id} className={cn("p-4", array.length !== i + 1 && "border-b")} data-testid="bag-item">
                 <div className="relative flex gap-6">
                   <Checkbox
                     name={`book-${bag.book.id}`}
@@ -128,6 +44,7 @@ const BagSection = ({ bags, selectedLimit, user }: Props) => {
                       handleBooksAndBagsIdSelected(checked, { bookId: bag.book.id, bagId: bag.id })
                     }
                     className="absolute -left-4 self-center lg:static"
+                    data-testid={`checkbox-${bag.book.id}`}
                   />
                   <Link href={`/book/${bag.book.id}`} className="h-[150px] w-[110px]">
                     <Image
@@ -148,7 +65,7 @@ const BagSection = ({ bags, selectedLimit, user }: Props) => {
                           </span>
                         </strong>
                       </Link>
-                      <p className="text-sm lg:block">por Trancador de ruas</p>
+                      <p className="text-sm lg:block">por {bag.book.authorName}</p>
                       <StarRating
                         size={12}
                         rating={bag.book.averageRating}
@@ -168,6 +85,7 @@ const BagSection = ({ bags, selectedLimit, user }: Props) => {
                       <Button
                         variant="link"
                         className="h-fit w-fit p-0 text-xs text-muted-foreground"
+                        data-testid="remove-button"
                       >
                         Excluir
                       </Button>
@@ -180,7 +98,7 @@ const BagSection = ({ bags, selectedLimit, user }: Props) => {
         )}
         <div className="flex h-[370px] flex-col justify-between border p-4">
           <div className="space-y-4">
-            <p>
+            <p data-testid="subtotal-count">
               Subtotal: <strong>{booksAndBagsIdSelected.length} Livro(s)</strong>
             </p>
             <p>
@@ -197,7 +115,7 @@ const BagSection = ({ bags, selectedLimit, user }: Props) => {
             </div>
           </div>
           <form action={createRent}>
-            <Button className="w-full" disabled={BUTTON_DISABLED} aria-disabled={BUTTON_DISABLED}>
+            <Button className="w-full" disabled={BUTTON_DISABLED} aria-disabled={BUTTON_DISABLED} data-testid="submit-button">
               {isLoading ? "Fechando..." : "Fechar Pedido"}
             </Button>
           </form>

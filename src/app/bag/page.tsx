@@ -1,6 +1,5 @@
 import Header from "@/components/header";
 import React from "react";
-import BagSection from "./components/bag-section";
 import { BagService } from "@/services/bag.service";
 import { RentService } from "@/services/rent.service";
 import { Constants } from "@/constants";
@@ -11,6 +10,7 @@ import { getSession } from "@/services/session.service";
 import { generateCustomMetadata } from "@/utils/generate-custom-metadata";
 import { Metadata } from "next";
 import Page from "@/components/page";
+import BagSectionWrapper from "./components/bag-section";
 
 export const metadata: Metadata = generateCustomMetadata("Bolsa");
 
@@ -101,7 +101,7 @@ const RentPage = async () => {
           ) : null}
         </div>
 
-        <BagSection
+        <BagSectionWrapper
           bags={bags ? bags.data : null}
           selectedLimit={BOOK_SELECTED_LIMIT}
           user={session!.user}

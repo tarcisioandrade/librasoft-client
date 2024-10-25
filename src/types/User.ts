@@ -12,7 +12,7 @@ export type User = {
     state: string;
     district: string;
     zipCode: string;
-  };
+  } | null;
   role: keyof typeof EUserRole;
   status: keyof typeof EUserStatus;
 };
