@@ -148,7 +148,7 @@ const BagSection = ({ bags, selectedLimit, user }: Props) => {
                           </span>
                         </strong>
                       </Link>
-                      <p className="text-sm lg:block">por Trancador de ruas</p>
+                      <p className="text-sm lg:block">por {bag.book.authorName}</p>
                       <StarRating
                         size={12}
                         rating={bag.book.averageRating}
