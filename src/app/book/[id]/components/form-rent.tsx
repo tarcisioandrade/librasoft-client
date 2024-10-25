@@ -1,12 +1,12 @@
 import { Book } from "@/types/Book";
 import React from "react";
-import SheetBagAndButton from "./sheet-bag-and-button";
 import { BagService } from "@/services/bag.service";
 import { RentService } from "@/services/rent.service";
 import { getSession } from "@/services/session.service";
 import { Response } from "@/types/Response";
 import { Rent } from "@/types/Rent";
 import { Bag } from "@/types/Bag";
+import SheetBagAndButtonWrapper from "./sheet-bag-and-button";
 
 type Props = {
   book: Book;
@@ -28,9 +28,8 @@ const FormRent = async ({ book }: Props) => {
   return (
     <>
       <input hidden name="bookId" defaultValue={book.id} />
-      <SheetBagAndButton
-        bags={bags?.data ?? []}
-        disabled={book.copiesAvaliable <= 0}
+      <SheetBagAndButtonWrapper
+        bags={bags?.data || []}
         rentsCount={booksRented}
         session={session?.user}
       />
