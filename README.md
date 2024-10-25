@@ -22,10 +22,8 @@
 - **[Zod](https://zod.dev/)**: Biblioteca para validação de esquemas e tipos TypeScript de forma simples e eficiente.
 - **[React Hook Form](https://react-hook-form.com/)**: Gerenciamento de formulários no React com foco em desempenho e facilidade de uso.
 - [**Better Fetch**](https://better-fetch.vercel.app/):  Fetch wrapper com compatibilidade ao cacheamento do next e schemas do zod.
-<!--
-- **[Playwright](https://playwright.dev/)**: Ferramenta de automação para testes end-to-end, garantindo a qualidade do front-end.
-- **[Vitest](https://vitest.dev/)**: Framework de testes unitários rápido e moderno, integrado com o ambiente de desenvolvimento Vite.
--->
+- **[Vitest](https://vitest.dev/)**: Framework de testes rápido e moderno.
+
 
 # Abordagem
 
@@ -104,7 +102,7 @@ Essa abordagem é comumente utilizada na aplicação, conforme demonstrado no ex
 Para melhorar o desempenho do carregamento inicial da aplicação, foi usado importações dinâmicas que divide ó código em partes menores que podem ser carregadas conforme necessário, reduzindo a quantidade de código que precisa ser analisada e executada quando um usuário visita a página pela primeira vez.
 
 ```ts
-const FormRentDynamic = dynamic(() => import("./components/form-rent"));
+const FormRentDynamic = dynamic(() => import("./components/form-rent").then((mod) => ({ default: mod.default })));
 
 export const ...
 

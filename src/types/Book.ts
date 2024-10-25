@@ -41,6 +41,7 @@ export interface BookInBag {
   id: string;
   title: string;
   publisher: string;
+  authorName: string;
   image: string;
   copiesAvaliable: number;
   averageRating: number;

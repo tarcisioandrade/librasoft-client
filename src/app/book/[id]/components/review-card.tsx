@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Review } from "@/types/Review";
 import { User } from "lucide-react";
 import { ComponentProps, useOptimistic } from "react";
-import { Button } from "../../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import { createLike } from "@/actions/like/create.action";
 import { deleteLike } from "@/actions/like/delete.action";
 import { useRouter } from "next/navigation";

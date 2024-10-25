@@ -1,16 +1,10 @@
-"use client";
-
 import { Button, ButtonProps } from "@/components/ui/button";
-import React, { useOptimistic, useState, useTransition } from "react";
-import { Bag } from "@/types/Bag";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ECoverType } from "@/enums/ECoverType";
 import StarRating from "@/components/star-rating";
-import { createBagAction } from "@/actions/bag/create.action";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import { deleteBagAction } from "@/actions/bag/delete.action";
 import { Constants } from "@/constants";
 import {
   Sheet,
@@ -20,55 +14,29 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import SheetBagSkeleton from "./sheet-bag-skeleton";
-import { User } from "@/types/User";
+import SheetBagSkeleton from "../sheet-bag-skeleton";
+import { useSheetBagAndButton } from "./sheet-bag-and-button.model";
 
-type Props = ButtonProps & {
-  bags: Bag[];
-  rentsCount: number;
-  session?: User;
-};
+type Props = ButtonProps & ReturnType<typeof useSheetBagAndButton>;
 
-const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
-  const [open, setOpen] = useState(false);
-  const [optismisticBags, removeOptimisticBags] = useOptimistic(
-    bags,
-    (state, bagId: string) => state.filter((bag) => bag.id !== bagId) ?? [],
-  );
-  const params = useParams();
-  const router = useRouter();
-  const pathname = usePathname();
-  const [isLoading, startTransition] = useTransition();
-
-  const CURRENT_BOOK_ID = String(params.id);
-  const BOOK_SELECTED_LIMIT = Constants.BOOK_RENT_MAX_LIMIT - rentsCount;
-  const RENTS_REACHED_LIMIT = rentsCount >= 3;
-  const HAS_RENT_IN_PROGRESS = rentsCount > 0 && rentsCount < 3;
-
-  function createBagFn() {
-    startTransition(async () => {
-      await createBagAction(CURRENT_BOOK_ID);
-    });
-  }
-
-  function handleSheet(state: boolean) {
-    if (!session) {
-      router.push(`/signin?callbackUrl=${pathname}`);
-      return;
-    }
-    setOpen(state);
-    const BOOK_ALREADY_IN_BAG = bags.some((b) => b.book.id === params.id);
-    if (BOOK_ALREADY_IN_BAG || !state) return;
-    createBagFn();
-  }
-
-  const deleteBag = (bagId: string) => async () => {
-    removeOptimisticBags(bagId);
-    deleteBagAction(bagId);
-  };
+const SheetBagAndButton = (props: Props) => {
+  const {
+    BOOK_SELECTED_LIMIT,
+    HAS_RENT_IN_PROGRESS,
+    RENTS_REACHED_LIMIT,
+    deleteBag,
+    handleSheet,
+    isLoading,
+    open,
+    optismisticBags,
+    rentsCount,
+    router,
+    setOpen,
+    ...properties
+  } = props;
 
   const DefaultSheetDescription = () => (
-    <SheetDescription>
+    <SheetDescription data-testid="default-message">
       Você pode ter no máximo {Constants.BOOK_RENT_MAX_LIMIT} livros alugados simultanêamente.
     </SheetDescription>
   );
@@ -77,7 +45,7 @@ const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
     <>
       <Sheet open={open} onOpenChange={handleSheet}>
         <SheetTrigger asChild>
-          <Button className="w-full" type="submit" {...props}>
+          <Button className="w-full" type="submit" data-testid="rent-button" {...properties}>
             Alugar
           </Button>
         </SheetTrigger>
@@ -87,14 +55,14 @@ const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
             {!HAS_RENT_IN_PROGRESS && !RENTS_REACHED_LIMIT ? <DefaultSheetDescription /> : null}
 
             {HAS_RENT_IN_PROGRESS ? (
-              <SheetDescription className="text-yellow-600">
+              <SheetDescription className="text-yellow-600" data-testid="in-progress">
                 Você ja tem {rentsCount} livro(s) com aluguel em andamento. Você pode alugar só mais{" "}
                 {BOOK_SELECTED_LIMIT} livro(s).
               </SheetDescription>
             ) : null}
 
             {RENTS_REACHED_LIMIT ? (
-              <SheetDescription className="text-red-500">
+              <SheetDescription className="text-red-500" data-testid="limit-reached">
                 Você já alcançou o limite máximo de {Constants.BOOK_RENT_MAX_LIMIT} livros em
                 alguel. Faça a devolução para fazer outro pedido.
               </SheetDescription>
@@ -103,7 +71,11 @@ const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
 
           <div className="h-full overflow-y-auto pb-8">
             {optismisticBags.map((bag, i, array) => (
-              <div key={bag.id} className={cn("py-6", array.length !== i + 1 && "border-b")}>
+              <div
+                key={bag.id}
+                className={cn("py-6", array.length !== i + 1 && "border-b")}
+                data-testid="book-in-bag"
+              >
                 <div className="flex gap-6">
                   <Link href={`/book/${bag.book.id}`} className="h-[150px] w-[110px]">
                     <Image
@@ -121,7 +93,7 @@ const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
                           {bag.book.title}
                         </strong>
                       </Link>
-                      <p className="text-sm">por Trancador de ruas</p>
+                      <p className="text-sm">por {bag.book.authorName}</p>
                       <StarRating size={12} rating={bag.book.averageRating} />
                       <p className="text-xs text-muted-foreground">
                         {ECoverType[bag.book.coverType]}
@@ -136,6 +108,7 @@ const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
                       <Button
                         variant="link"
                         className="h-fit w-fit p-0 text-xs text-muted-foreground"
+                        data-testid="remove-button"
                       >
                         Excluir
                       </Button>
@@ -147,8 +120,14 @@ const SheetBagAndButton = ({ bags, rentsCount, session, ...props }: Props) => {
             {isLoading ? <SheetBagSkeleton /> : null}
           </div>
           <div className="flex flex-col gap-2">
-            <Button onClick={() => router.push("/bag")}>Fazer Pedido</Button>
-            <Button variant="secondary" onClick={() => setOpen(false)}>
+            <Button onClick={() => router.push("/bag")} data-testid="request-button">
+              Fazer Pedido
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => setOpen(false)}
+              data-testid="continue-button"
+            >
               Continuar Alugando
             </Button>
           </div>
