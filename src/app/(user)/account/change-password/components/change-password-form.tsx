@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ChangePassword, changePasswordSchema } from "@/schemas/change-password.schema";
 import { changePasswordAction } from "@/actions/user/change-password.action";
 import { toast } from "sonner";
+import ErrorMessage from "@/components/ui/error-message";
 
 const ChangePasswordForm = () => {
   const {
@@ -50,7 +51,7 @@ const ChangePasswordForm = () => {
               <Label htmlFor="password">Senha atual</Label>
               <Input type="password" id="password" {...field} />
               {errors?.password && (
-                <p className="mt-1 text-xs text-destructive">{errors.password.message}</p>
+                <ErrorMessage className="mt-1">{errors.password.message}</ErrorMessage>
               )}
             </div>
           )}
@@ -63,7 +64,7 @@ const ChangePasswordForm = () => {
               <Label htmlFor="newPassword">Nova senha (mínimo 6 caracteres e uma letra)</Label>
               <Input type="password" id="newPassword" {...field} />
               {errors?.newPassword && (
-                <p className="mt-1 text-xs text-destructive">{errors.newPassword.message}</p>
+                <ErrorMessage className="mt-1">{errors.newPassword.message}</ErrorMessage>
               )}
             </div>
           )}
@@ -76,7 +77,7 @@ const ChangePasswordForm = () => {
               <Label htmlFor="confirmPassword">Confirmar nova senha</Label>
               <Input type="password" id="confirmPassword" {...field} />
               {errors?.confirmPassword && (
-                <p className="mt-1 text-xs text-destructive">{errors.confirmPassword.message}</p>
+                <ErrorMessage className="mt-1">{errors.confirmPassword.message}</ErrorMessage>
               )}
             </div>
           )}

@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useFormUserDataModel } from "./form-user-data.model";
+import ErrorMessage from "@/components/ui/error-message";
 
 type Props = ReturnType<typeof useFormUserDataModel>;
 
@@ -25,9 +26,7 @@ const FormUserData = (props: Props) => {
             <div>
               <Label htmlFor="name">Name</Label>
               <Input required id="name" {...field} />
-              {errors?.name && (
-                <p className="mt-1 text-xs text-destructive">{errors.name.message}</p>
-              )}
+              {errors?.name && <ErrorMessage className="mt-1">{errors.name.message}</ErrorMessage>}
             </div>
           )}
         />
@@ -39,7 +38,7 @@ const FormUserData = (props: Props) => {
               <Label htmlFor="telephone">Celular</Label>
               <Input required id="telephone" type="tel" {...field} />
               {errors?.telephone && (
-                <p className="mt-1 text-xs text-destructive">{errors.telephone.message}</p>
+                <ErrorMessage className="mt-1">{errors.telephone.message}</ErrorMessage>
               )}
             </div>
           )}
@@ -52,7 +51,7 @@ const FormUserData = (props: Props) => {
               <Label htmlFor="email">E-mail</Label>
               <Input required id="email" {...field} type="email" />
               {errors?.email && (
-                <p className="mt-1 text-xs text-destructive">{errors.email.message}</p>
+                <ErrorMessage className="mt-1">{errors.email.message}</ErrorMessage>
               )}
             </div>
           )}
@@ -74,17 +73,11 @@ const FormUserData = (props: Props) => {
               render={({ field }) => (
                 <div>
                   <Label htmlFor="zipCode">CEP</Label>
-                  <Input
-                    required
-                    id="zipCode"
-                    type="text"
-                    placeholder="Ex. 12345000"
-                    {...field}
-                  />
+                  <Input required id="zipCode" type="text" placeholder="Ex. 12345000" {...field} />
                   {errors?.address?.zipCode && (
-                    <p className="mt-1 text-xs text-destructive" data-testid="error-message">
+                    <ErrorMessage className="mt-1" data-testid="error-message">
                       {errors.address?.zipCode.message}
-                    </p>
+                    </ErrorMessage>
                   )}
                 </div>
               )}
@@ -97,9 +90,7 @@ const FormUserData = (props: Props) => {
                   <Label htmlFor="street">Rua</Label>
                   <Input required id="street" {...field} />
                   {errors?.address?.street && (
-                    <p className="mt-1 text-xs text-destructive">
-                      {errors.address?.street.message}
-                    </p>
+                    <ErrorMessage className="mt-1">{errors.address?.street.message}</ErrorMessage>
                   )}
                 </div>
               )}
@@ -112,9 +103,7 @@ const FormUserData = (props: Props) => {
                   <Label htmlFor="district">Bairro</Label>
                   <Input required id="district" {...field} />
                   {errors?.address?.district && (
-                    <p className="mt-1 text-xs text-destructive">
-                      {errors.address?.district.message}
-                    </p>
+                    <ErrorMessage className="mt-1">{errors.address?.district.message}</ErrorMessage>
                   )}
                 </div>
               )}
@@ -133,7 +122,7 @@ const FormUserData = (props: Props) => {
                     {...field}
                   />
                   {errors?.address?.city && (
-                    <p className="mt-1 text-xs text-destructive">{errors.address?.city.message}</p>
+                    <ErrorMessage className="mt-1">{errors.address?.city.message}</ErrorMessage>
                   )}
                 </div>
               )}
@@ -152,7 +141,7 @@ const FormUserData = (props: Props) => {
                     {...field}
                   />
                   {errors?.address?.state && (
-                    <p className="mt-1 text-xs text-destructive">{errors.address?.state.message}</p>
+                    <ErrorMessage className="mt-1">{errors.address?.state.message}</ErrorMessage>
                   )}
                 </div>
               )}
@@ -167,5 +156,5 @@ const FormUserData = (props: Props) => {
     </form>
   );
 };
-  
+
 export default FormUserData;

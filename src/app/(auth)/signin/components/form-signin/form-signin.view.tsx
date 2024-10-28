@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useFormSigninModel } from "./form.model";
+import ErrorMessage from "@/components/ui/error-message";
 
 type FormSigninProps = ReturnType<typeof useFormSigninModel>;
 
@@ -15,11 +16,7 @@ const FormSignin = ({ submitFn, register, isLoading, errors }: FormSigninProps) 
     >
       <Label htmlFor="email">Email</Label>
       <Input {...register("email")} required id="email" type="email" autoComplete="email" />
-      {errors?.email && (
-        <p className="text-xs text-destructive" data-testid="error-message">
-          {errors.email.message}
-        </p>
-      )}
+      {errors?.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
 
       <Label htmlFor="password">Password</Label>
       <Input
@@ -30,11 +27,7 @@ const FormSignin = ({ submitFn, register, isLoading, errors }: FormSigninProps) 
         type="password"
         autoComplete="current-password"
       />
-      {errors?.password && (
-        <p className="text-xs text-destructive" data-testid="error-message">
-          {errors.password.message}
-        </p>
-      )}
+      {errors?.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
 
       <Button data-testid="button-test" type="submit" disabled={isLoading}>
         {isLoading ? "Enviando" : "Enviar"}

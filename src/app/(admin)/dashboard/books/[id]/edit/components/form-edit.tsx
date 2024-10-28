@@ -26,6 +26,7 @@ import { AuthorSelect } from "@/app/(admin)/dashboard/components/author-select";
 import { useParams } from "next/navigation";
 import { editBookFormSchema, EditBookFormType } from "@/schemas/edit-book.schema";
 import { editBookAction } from "@/actions/book/edit.action";
+import ErrorMessage from "@/components/ui/error-message";
 
 type Props = {
   categories: Category[];
@@ -83,6 +84,7 @@ const FormEditBook = ({ categories, book }: Props) => {
         label: categ.title,
         value: categ.title,
       })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
@@ -159,9 +161,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                 <div className="space-y-1">
                   <Label htmlFor="title">Titulo</Label>
                   <Input required type="text" id="title" {...field} />
-                  {errors?.title && (
-                    <p className="text-xs text-destructive">{errors.title.message}</p>
-                  )}
+                  {errors?.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
                 </div>
               )}
             />
@@ -172,9 +172,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                 <div className="space-y-1">
                   <Label htmlFor="image">Imagem URL</Label>
                   <Input required type="text" id="image" {...field} />
-                  {errors?.image && (
-                    <p className="text-xs text-destructive">{errors.image.message}</p>
-                  )}
+                  {errors?.image && <ErrorMessage>{errors.image.message}</ErrorMessage>}
                 </div>
               )}
             />
@@ -185,9 +183,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                 <div className="space-y-1">
                   <Label htmlFor="isbn">ISBN</Label>
                   <Input required type="text" id="isbn" {...field} disabled />
-                  {errors?.isbn && (
-                    <p className="text-xs text-destructive">{errors.isbn.message}</p>
-                  )}
+                  {errors?.isbn && <ErrorMessage>{errors.isbn.message}</ErrorMessage>}
                 </div>
               )}
             />
@@ -203,9 +199,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
-                      {errors?.coverType && (
-                        <p className="text-xs text-destructive">{errors.coverType.message}</p>
-                      )}
+                      {errors?.coverType && <ErrorMessage>{errors.coverType.message}</ErrorMessage>}
                       <SelectContent>
                         {coverTypeEntries.map(([key, value]) => (
                           <SelectItem key={key} value={key}>
@@ -226,9 +220,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                     <Select {...rest} onValueChange={rest.onChange} required>
                       <SelectTrigger>
                         <SelectValue />
-                        {errors?.language && (
-                          <p className="text-xs text-destructive">{errors.language.message}</p>
-                        )}
+                        {errors?.language && <ErrorMessage>{errors.language.message}</ErrorMessage>}
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="português">Português</SelectItem>
@@ -251,9 +243,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                 setAuthorError(null);
               }}
             />
-            {authorError?.author && (
-              <p className="text-xs text-destructive">{authorError.author.message}</p>
-            )}
+            {authorError?.author && <ErrorMessage>{authorError.author.message}</ErrorMessage>}
           </div>
           <div className="flex-1 space-y-1">
             <Label>Categorias</Label>
@@ -279,9 +269,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                 <>
                   <Label htmlFor="publisher">Editora</Label>
                   <Input required type="text" id="publisher" {...field} />
-                  {errors?.publisher && (
-                    <p className="text-xs text-destructive">{errors.publisher.message}</p>
-                  )}
+                  {errors?.publisher && <ErrorMessage>{errors.publisher.message}</ErrorMessage>}
                 </>
               )}
             />
@@ -295,7 +283,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                   <Label htmlFor="publicationAt">Data de Publicação</Label>
                   <Input required className="block" type="date" id="publicationAt" {...field} />
                   {errors?.publicationAt && (
-                    <p className="text-xs text-destructive">{errors.publicationAt.message}</p>
+                    <ErrorMessage>{errors.publicationAt.message}</ErrorMessage>
                   )}
                 </>
               )}
@@ -319,7 +307,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                     {...field}
                   />
                   {errors?.copiesAvailable && (
-                    <p className="text-xs text-destructive">{errors.copiesAvailable.message}</p>
+                    <ErrorMessage>{errors.copiesAvailable.message}</ErrorMessage>
                   )}
                 </>
               )}
@@ -333,9 +321,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                 <>
                   <Label htmlFor="pageCount">Número de Páginas</Label>
                   <Input required type="number" id="pageCount" autoComplete="off" {...field} />
-                  {errors?.pageCount && (
-                    <p className="text-xs text-destructive">{errors.pageCount.message}</p>
-                  )}
+                  {errors?.pageCount && <ErrorMessage>{errors.pageCount.message}</ErrorMessage>}
                 </>
               )}
             />
@@ -352,9 +338,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                   <>
                     <Label htmlFor="width">Largura</Label>
                     <Input required id="width" type="number" autoComplete="off" {...field} />
-                    {errors?.width && (
-                      <p className="text-xs text-destructive">{errors.width.message}</p>
-                    )}
+                    {errors?.width && <ErrorMessage>{errors.width.message}</ErrorMessage>}
                   </>
                 )}
               />
@@ -368,9 +352,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                   <>
                     <Label htmlFor="height">Altura</Label>
                     <Input required id="height" autoComplete="off" type="number" {...field} />
-                    {errors?.height && (
-                      <p className="text-xs text-destructive">{errors.height.message}</p>
-                    )}
+                    {errors?.height && <ErrorMessage>{errors.height.message}</ErrorMessage>}
                   </>
                 )}
               />
@@ -384,9 +366,7 @@ const FormEditBook = ({ categories, book }: Props) => {
                   <>
                     <Label htmlFor="depth">Profundidade</Label>
                     <Input required id="depth" autoComplete="off" type="number" {...field} />
-                    {errors?.depth && (
-                      <p className="text-xs text-destructive">{errors.depth.message}</p>
-                    )}
+                    {errors?.depth && <ErrorMessage>{errors.depth.message}</ErrorMessage>}
                   </>
                 )}
               />
@@ -401,9 +381,7 @@ const FormEditBook = ({ categories, book }: Props) => {
               <>
                 <Label htmlFor="sinopse">Sinopse</Label>
                 <Textarea required rows={25} id="sinopse" autoComplete="off" {...field} />
-                {errors?.sinopse && (
-                  <p className="text-xs text-destructive">{errors.sinopse.message}</p>
-                )}
+                {errors?.sinopse && <ErrorMessage>{errors.sinopse.message}</ErrorMessage>}
               </>
             )}
           />
