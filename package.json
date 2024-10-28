@@ -6,8 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
+    "preview": "rm -rf /s /q .next && npm run build && npm run start",
     "lint": "next lint",
-    "test:watch": "vitest --watch",
     "test": "vitest"
   },
   "dependencies": {

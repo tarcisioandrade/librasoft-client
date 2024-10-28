@@ -24,6 +24,7 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import ErrorMessage from "@/components/ui/error-message";
 
 type Props = {
   categories: Category[];
@@ -74,6 +75,7 @@ const FormCreateBook = ({ categories }: Props) => {
         label: categ.title,
         value: categ.title,
       })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
@@ -158,7 +160,7 @@ const FormCreateBook = ({ categories }: Props) => {
                   <Label htmlFor="title">Titulo</Label>
                   <Input required type="text" id="title" {...field} />
                   {errors?.title && (
-                    <p className="text-xs text-destructive">{errors.title.message}</p>
+                    <ErrorMessage>{errors.title.message}</ErrorMessage>
                   )}
                 </div>
               )}
@@ -171,7 +173,7 @@ const FormCreateBook = ({ categories }: Props) => {
                   <Label htmlFor="image">Imagem URL</Label>
                   <Input required type="text" id="image" {...field} />
                   {errors?.image && (
-                    <p className="text-xs text-destructive">{errors.image.message}</p>
+                    <ErrorMessage>{errors.image.message}</ErrorMessage>
                   )}
                 </div>
               )}
@@ -184,7 +186,7 @@ const FormCreateBook = ({ categories }: Props) => {
                   <Label htmlFor="isbn">ISBN-10</Label>
                   <Input required type="text" id="isbn" {...field} />
                   {errors?.isbn && (
-                    <p className="text-xs text-destructive">{errors.isbn.message}</p>
+                    <ErrorMessage>{errors.isbn.message}</ErrorMessage>
                   )}
                 </div>
               )}
@@ -202,7 +204,7 @@ const FormCreateBook = ({ categories }: Props) => {
                         <SelectValue />
                       </SelectTrigger>
                       {errors?.coverType && (
-                        <p className="text-xs text-destructive">{errors.coverType.message}</p>
+                        <ErrorMessage>{errors.coverType.message}</ErrorMessage>
                       )}
                       <SelectContent>
                         {coverTypeEntries.map(([key, value]) => (
@@ -225,7 +227,7 @@ const FormCreateBook = ({ categories }: Props) => {
                       <SelectTrigger>
                         <SelectValue />
                         {errors?.language && (
-                          <p className="text-xs text-destructive">{errors.language.message}</p>
+                          <ErrorMessage>{errors.language.message}</ErrorMessage>
                         )}
                       </SelectTrigger>
                       <SelectContent>
@@ -250,7 +252,7 @@ const FormCreateBook = ({ categories }: Props) => {
               }}
             />
             {authorError?.author && (
-              <p className="text-xs text-destructive">{authorError.author.message}</p>
+              <ErrorMessage>{authorError.author.message}</ErrorMessage>
             )}
           </div>
           <div className="flex-1 space-y-1">
@@ -278,7 +280,7 @@ const FormCreateBook = ({ categories }: Props) => {
                   <Label htmlFor="publisher">Editora</Label>
                   <Input required type="text" id="publisher" autoComplete="off" {...field} />
                   {errors?.publisher && (
-                    <p className="text-xs text-destructive">{errors.publisher.message}</p>
+                    <ErrorMessage>{errors.publisher.message}</ErrorMessage>
                   )}
                 </>
               )}
@@ -293,7 +295,7 @@ const FormCreateBook = ({ categories }: Props) => {
                   <Label htmlFor="publicationAt">Data de Publicação</Label>
                   <Input required className="block" type="date" id="publicationAt" {...field} />
                   {errors?.publicationAt && (
-                    <p className="text-xs text-destructive">{errors.publicationAt.message}</p>
+                    <ErrorMessage>{errors.publicationAt.message}</ErrorMessage>
                   )}
                 </>
               )}
@@ -317,7 +319,7 @@ const FormCreateBook = ({ categories }: Props) => {
                     {...field}
                   />
                   {errors?.copiesAvailable && (
-                    <p className="text-xs text-destructive">{errors.copiesAvailable.message}</p>
+                    <ErrorMessage>{errors.copiesAvailable.message}</ErrorMessage>
                   )}
                 </>
               )}
@@ -332,7 +334,7 @@ const FormCreateBook = ({ categories }: Props) => {
                   <Label htmlFor="pageCount">Número de Páginas</Label>
                   <Input required type="number" id="pageCount" autoComplete="off" {...field} />
                   {errors?.pageCount && (
-                    <p className="text-xs text-destructive">{errors.pageCount.message}</p>
+                    <ErrorMessage>{errors.pageCount.message}</ErrorMessage>
                   )}
                 </>
               )}
@@ -351,7 +353,7 @@ const FormCreateBook = ({ categories }: Props) => {
                     <Label htmlFor="width">Largura</Label>
                     <Input required id="width" type="number" autoComplete="off" {...field} />
                     {errors?.width && (
-                      <p className="text-xs text-destructive">{errors.width.message}</p>
+                      <ErrorMessage>{errors.width.message}</ErrorMessage>
                     )}
                   </>
                 )}
@@ -367,7 +369,7 @@ const FormCreateBook = ({ categories }: Props) => {
                     <Label htmlFor="height">Altura</Label>
                     <Input required id="height" type="number" autoComplete="off" {...field} />
                     {errors?.height && (
-                      <p className="text-xs text-destructive">{errors.height.message}</p>
+                      <ErrorMessage>{errors.height.message}</ErrorMessage>
                     )}
                   </>
                 )}
@@ -383,7 +385,7 @@ const FormCreateBook = ({ categories }: Props) => {
                     <Label htmlFor="depth">Profundidade</Label>
                     <Input required id="depth" type="number" autoComplete="off" {...field} />
                     {errors?.depth && (
-                      <p className="text-xs text-destructive">{errors.depth.message}</p>
+                      <ErrorMessage>{errors.depth.message}</ErrorMessage>
                     )}
                   </>
                 )}
@@ -400,7 +402,7 @@ const FormCreateBook = ({ categories }: Props) => {
                 <Label htmlFor="sinopse">Sinopse</Label>
                 <Textarea required rows={25} id="sinopse" autoComplete="off" {...field} />
                 {errors?.sinopse && (
-                  <p className="text-xs text-destructive">{errors.sinopse.message}</p>
+                  <ErrorMessage>{errors.sinopse.message}</ErrorMessage>
                 )}
               </>
             )}

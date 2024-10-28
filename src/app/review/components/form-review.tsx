@@ -10,6 +10,7 @@ import { useParams } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import Divider from "@/components/divider";
+import ErrorMessage from "@/components/ui/error-message";
 
 const FormReview = () => {
   const [rating, setRating] = useState(1);
@@ -62,7 +63,7 @@ const FormReview = () => {
           </label>
           <Input id="title" name="title" placeholder="O que você achou?" required maxLength={90} />
           {!state.success && "title" in state.error && (
-            <p className="text-xs text-destructive">{state.error.title}</p>
+            <ErrorMessage>{state.error.title}</ErrorMessage>
           )}
         </div>
         <div className="h-px bg-slate-300" />
@@ -79,7 +80,7 @@ const FormReview = () => {
             rows={15}
           />
           {!state.success && "comment" in state.error && (
-            <p className="text-xs text-destructive">{state.error.comment}</p>
+            <ErrorMessage>{state.error.comment}</ErrorMessage>
           )}
         </div>
         <input hidden name="bookId" defaultValue={params.id?.toString()} />
