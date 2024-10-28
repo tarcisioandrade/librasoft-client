@@ -7,7 +7,7 @@ const TELEPHONE_REGEXP =
 
 export const zipCodeSchema = z
   .string()
-  .max(8)
+  .max(8, "O cep deve conter no máximo 8 carácteres.")
   .regex(
     /^\d{2}\d{3}\d{3}$/,
     "Forneça um CEP válido (somente números, sem hífen) no campo indicado. Se necessário, consulte seu CEP em uma fatura recente e tente novamente.",
@@ -16,7 +16,7 @@ export const zipCodeSchema = z
 export const userSchema = z.object({
   id: z.string(),
   name: z.string(),
-  email: z.string().email(),
+  email: z.string().email("Digite um email válido."),
   telephone: z.string().regex(TELEPHONE_REGEXP, "Digite um número de celular válido."),
   address: z
     .object({

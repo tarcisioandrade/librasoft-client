@@ -1,99 +1,22 @@
-"use client";
-
-import { UserUpdate, userUpdateSchema, zipCodeSchema } from "@/schemas/user.schema";
-import React, { useEffect, useTransition } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import React, { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { updateUserAction } from "@/actions/user/update.action";
-import { toast } from "sonner";
-import { useDebounce } from "@/hooks/use-debounce";
-import { ViaCepService } from "@/services/via-cep.service";
-import { User } from "@/types/User";
+import { useFormUserDataModel } from "./form-user-data.model";
 
-type Props = {
-  user: User;
-};
+type Props = ReturnType<typeof useFormUserDataModel>;
 
-const viaCepService = new ViaCepService();
-
-const FormUserData = ({ user }: Props) => {
-  const {
-    handleSubmit,
-    control,
-    setValue,
-    setError,
-    clearErrors,
-    watch,
-    formState: { errors },
-  } = useForm<UserUpdate>({
-    resolver: zodResolver(userUpdateSchema),
-    defaultValues: {
-      name: user.name,
-      telephone: user.telephone,
-      email: user.email,
-      address: {
-        city: user.address?.city || "",
-        district: user.address?.district || "",
-        state: user.address?.state || "",
-        street: user.address?.street || "",
-        zipCode: user.address?.zipCode || "",
-      },
-    },
-  });
-  const [isLoading, startTransition] = useTransition();
-
-  function submitFn(data: UserUpdate) {
-    startTransition(async () => {
-      const res = await updateUserAction(data);
-      if (!res.success) {
-        toast.error(res.error.message);
-        return;
-      }
-      toast.success(res.value.message);
-    });
-  }
-
-  const cepValue = watch("address.zipCode");
-  const debouncedValue = useDebounce(cepValue, 1000);
-
-  async function handlerCep(cep: string) {
-    if (!cep) return;
-    const parsed = zipCodeSchema.safeParse(cep);
-    if (!parsed.success) {
-      setError("address.zipCode", {
-        message: parsed.error.flatten().formErrors[0],
-      });
-      return;
-    }
-    if (errors.address?.zipCode) clearErrors("address.zipCode");
-
-    const response = await viaCepService.Get(cep);
-
-    if (response?.estado) {
-      setValue("address.state", response.estado);
-    }
-
-    if (response?.localidade) {
-      setValue("address.city", response.localidade);
-    }
-
-    if (response?.logradouro) {
-      setValue("address.street", response.logradouro);
-    }
-    if (response?.uf) {
-      setValue("address.district", response.bairro);
-    }
-  }
+const FormUserData = (props: Props) => {
+  const { debouncedValue, errors, handleCep, isLoading, control, Controller, submitFn, user } =
+    props;
 
   useEffect(() => {
-    handlerCep(debouncedValue);
+    handleCep(debouncedValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedValue]);
 
   return (
-    <form onSubmit={handleSubmit(submitFn)} className="px-4">
+    <form onSubmit={submitFn} className="px-4">
       <div className="mt-4 space-y-4">
         <Controller
           control={control}
@@ -101,7 +24,7 @@ const FormUserData = ({ user }: Props) => {
           render={({ field }) => (
             <div>
               <Label htmlFor="name">Name</Label>
-              <Input id="name" {...field} />
+              <Input required id="name" {...field} />
               {errors?.name && (
                 <p className="mt-1 text-xs text-destructive">{errors.name.message}</p>
               )}
@@ -113,8 +36,8 @@ const FormUserData = ({ user }: Props) => {
           name="telephone"
           render={({ field }) => (
             <div>
-              <Label htmlFor="telephone">Telefone Celular</Label>
-              <Input id="telephone" type="tel" {...field} />
+              <Label htmlFor="telephone">Celular</Label>
+              <Input required id="telephone" type="tel" {...field} />
               {errors?.telephone && (
                 <p className="mt-1 text-xs text-destructive">{errors.telephone.message}</p>
               )}
@@ -127,7 +50,7 @@ const FormUserData = ({ user }: Props) => {
           render={({ field }) => (
             <div>
               <Label htmlFor="email">E-mail</Label>
-              <Input id="email" {...field} type="email" />
+              <Input required id="email" {...field} type="email" />
               {errors?.email && (
                 <p className="mt-1 text-xs text-destructive">{errors.email.message}</p>
               )}
@@ -139,7 +62,7 @@ const FormUserData = ({ user }: Props) => {
           <header className="w-full items-center gap-2 bg-secondary px-4 py-2">
             <p className="text-sm text-muted-foreground">Endereço</p>{" "}
             {!user.address ? (
-              <span className="text-xs text-red-500">
+              <span className="text-xs text-red-500" data-testid="alert-message">
                 Preencha seu endereço para começar a alugar livros.
               </span>
             ) : null}
@@ -152,14 +75,14 @@ const FormUserData = ({ user }: Props) => {
                 <div>
                   <Label htmlFor="zipCode">CEP</Label>
                   <Input
+                    required
                     id="zipCode"
-                    type="number"
-                    maxLength={8}
+                    type="text"
                     placeholder="Ex. 12345000"
                     {...field}
                   />
                   {errors?.address?.zipCode && (
-                    <p className="mt-1 text-xs text-destructive">
+                    <p className="mt-1 text-xs text-destructive" data-testid="error-message">
                       {errors.address?.zipCode.message}
                     </p>
                   )}
@@ -172,7 +95,7 @@ const FormUserData = ({ user }: Props) => {
               render={({ field }) => (
                 <div>
                   <Label htmlFor="street">Rua</Label>
-                  <Input id="street" {...field} />
+                  <Input required id="street" {...field} />
                   {errors?.address?.street && (
                     <p className="mt-1 text-xs text-destructive">
                       {errors.address?.street.message}
@@ -187,7 +110,7 @@ const FormUserData = ({ user }: Props) => {
               render={({ field }) => (
                 <div>
                   <Label htmlFor="district">Bairro</Label>
-                  <Input id="district" {...field} />
+                  <Input required id="district" {...field} />
                   {errors?.address?.district && (
                     <p className="mt-1 text-xs text-destructive">
                       {errors.address?.district.message}
@@ -237,12 +160,12 @@ const FormUserData = ({ user }: Props) => {
           </div>
         </div>
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button type="submit" className="w-full" data-testid="submit-button" disabled={isLoading}>
           Atualizar
         </Button>
       </div>
     </form>
   );
 };
-
+  
 export default FormUserData;

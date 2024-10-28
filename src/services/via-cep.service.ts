@@ -1,5 +1,6 @@
 import { $fetch } from "@/lib/fetch-base";
-import { viaCepResponseSchema } from "@/schemas/via-cep.schema";
+import { AddressInfoSchema } from "@/schemas/address-info.schema";
+import { Err, Ok } from "@/utils/result";
 
 export class ViaCepService {
   private baseURl = "https://viacep.com.br";
@@ -9,9 +10,13 @@ export class ViaCepService {
   }
 
   public async Get(cep: string) {
-    const { data } = await $fetch(this.ComposeUrl(cep), {
-      output: viaCepResponseSchema,
+    const { data } = await $fetch(this.ComposeUrl(cep));
+    const parsed = await AddressInfoSchema.safeParseAsync(data);
+
+    if (parsed.success) return Ok(parsed.data);
+
+    return Err({
+      message: "Não encontramos nenhum resultado, verifique seu cep e tente novamente.",
     });
-    return data;
   }
 }
