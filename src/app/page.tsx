@@ -20,11 +20,9 @@ import {
 const bookService = new BookService();
 const categoryService = new CategoryService();
 
-export default async function Home(
-  props: {
-    searchParams: Promise<{ [key: string]: string | undefined }>;
-  }
-) {
+export default async function Home(props: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}) {
   const searchParams = await props.searchParams;
   const queries: FilterBooksParams = {
     categories: searchParams.category,
@@ -79,7 +77,7 @@ export default async function Home(
                     key={book.id}
                     className="flex w-[calc(50%-8px)] flex-col justify-between rounded bg-secondary/30 md:w-[calc(25%-13px)] lg:w-[calc(20%-13px)] lg:p-2"
                   >
-                    <a href={`/book/${book.id}`}>
+                    <a href={`/book/${book.id}`} className="flex h-full flex-col">
                       <div className="mx-auto h-[250px] lg:w-[180px]">
                         <Image
                           src={book.image}
@@ -89,18 +87,18 @@ export default async function Home(
                           className="h-full"
                         />
                       </div>
-                      <h3 className="mt-2 line-clamp-2 text-sm font-semibold tracking-tighter">
+                      <h3 className="mt-2 line-clamp-2 flex-1 text-sm font-semibold tracking-tighter">
                         {book.title}
                       </h3>
-                      <div className="space-y-1 py-2">
+                      <div className="space-y-1 py-1">
                         <p className="text-sm font-medium tracking-tighter text-muted-foreground">
                           {book.author.name}
                         </p>
                         <p className="text-xs tracking-tighter text-muted-foreground">
                           {ECoverType[book.coverType]}
                         </p>
+                        <StarRating rating={book.averageRating} size={12} />
                       </div>
-                      <StarRating rating={book.averageRating} size={12} />
                     </a>
                   </div>
                 ))}

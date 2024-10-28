@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const createBookFormSchema = z.object({
   title: z.string(),
-  image: z.string(),
+  image: z.string().url(),
   isbn: z.string().length(10, "Um número de ISBN deve conter 10 dígitos."),
   language: z.string(),
   coverType: z.string(),

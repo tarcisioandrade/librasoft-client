@@ -181,7 +181,7 @@ const BookPage = async (props: { params: Promise<{ id: string }> }) => {
           <div className="mt-4 flex gap-4 overflow-x-auto">
             {relatedBooks?.data.map((related) => (
               <Link
-                className="space-y-1 rounded lg:w-[calc(20%-13px)]"
+                className="flex flex-col space-y-1 rounded lg:w-[calc(20%-13px)]"
                 href={`/book/${related.id}`}
                 key={related.id}
               >
@@ -194,10 +194,17 @@ const BookPage = async (props: { params: Promise<{ id: string }> }) => {
                     className="h-full"
                   />
                 </div>
-                <p className="line-clamp-3 w-fit text-sm font-semibold">{related.title}</p>
-                <div className="text-xs text-muted-foreground">{related.authorName}</div>
-                <div className="flex items-center gap-1 text-sm">
-                  {related.averageRating.toFixed(1)} <Star size={14} color="#fb5" fill="#fb5" />
+                <p className="line-clamp-2 w-fit flex-1 text-sm font-semibold">{related.title}</p>
+                <div className="space-y-1 py-1">
+                  <div className="text-sm font-medium tracking-tighter text-muted-foreground">
+                    {related.authorName}
+                  </div>
+                  <p className="text-xs tracking-tighter text-muted-foreground">
+                    {ECoverType[related.coverType]}
+                  </p>
+                  <div className="flex items-center gap-1 text-sm">
+                    {related.averageRating.toFixed(1)} <Star size={14} color="#fb5" fill="#fb5" />
+                  </div>
                 </div>
               </Link>
             ))}
