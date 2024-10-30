@@ -1,7 +1,18 @@
 {
   "name": "librasoft-client",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "private": false,
+  "author": {
+    "name": "Tarcisio Andrade",
+    "email": "tfanndrade@gmail.com",
+    "url": "https://tfandrade.vercel.app"
+  },
+  "repository": {
+    "url": "https://github.com/tarcisioandrade/librasoft-client"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
@@ -63,9 +74,5 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "vitest": "^2.1.3"
-  },
-  "overrides": {
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
   }
 }

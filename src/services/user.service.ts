@@ -36,7 +36,6 @@ export class UserService {
     const { data } = await fetchWithCredentials<Response<Punishment[]>>(
       this.endpoint + "/punishments",
       {
-        cache: "force-cache",
         next: {
           tags: [CacheKeys.Punishment.GetAll],
         },
