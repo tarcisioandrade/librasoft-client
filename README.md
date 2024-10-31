@@ -109,6 +109,21 @@ export const ...
 <FormRentDynamic book={book.data} />
 ```
 
+#### Tests
+
+Para garantir a funcionalidade do código e facilitar a escrita de testes, implementei o padrão MVVM (Model-View-ViewModel) em diversos componentes. Essa abordagem permitiu que eu mockasse dados e métodos, possibilitando testar todos os casos de uso com facilidade.
+
+**Estrutura de Arquivos**
+<div><img src="https://github.com/user-attachments/assets/227b4b16-5225-4746-ad6c-af3f07d783ee" /></div>
+<br/>
+	
+- **Model**: Lógica de negócios do componente, onde são definidas as regras e comportamentos.
+- **View**: Interface do usuário (JSX), onde são utilizadas as propriedades e métodos do Model.
+- **Types**: Definições de tipos e interfaces para serviços e outras tipagens utilizadas no componente.
+- **Service**: Serviço responsável por realizar operações externas, geralmente utilizando Server Actions.
+- **Test**: Testes unitários e integração do componente.
+- **Index.tsx**: Componente que instancia o serviço e o model, injetando-os na view.
+
 ## Créditos
 
 **Design "Inspirado" 😅**
