@@ -7,8 +7,8 @@ import { ComponentProps, useOptimistic } from "react";
 import { Button } from "@/components/ui/button";
 import { createLike } from "@/actions/like/create.action";
 import { deleteLike } from "@/actions/like/delete.action";
-import { useRouter } from "next/navigation";
-import StarRating from "../../../../components/star-rating";
+import { usePathname, useRouter } from "next/navigation";
+import StarRating from "@/components/star-rating";
 
 type Props = {
   review: Review;
@@ -30,13 +30,21 @@ const ReviewCard = ({
   const [optmisticLikesCount, addOptimisticLikesCount] = useOptimistic(
     review.likesCount,
     (state, action: OptmisticLikeCountAction) => {
-      if (action === "increment") return state + 1;
-      if (action === "decrement") return state - 1;
+      if (action === "increment") {
+        isLiked = true;
+        return state + 1;
+      }
+      if (action === "decrement") {
+        isLiked = false;
+        return state - 1;
+      }
       return state;
     },
   );
   const router = useRouter();
-  const pushToLoginPage = () => router.push("/signin");
+  const pathname = usePathname();
+
+  const pushToLoginPage = () => router.push(`/signin?callbackUrl=${pathname}`);
 
   async function formCreateLikeAction(formData: FormData) {
     if (!authenticate) return pushToLoginPage();
