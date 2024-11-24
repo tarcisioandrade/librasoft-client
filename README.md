@@ -31,7 +31,7 @@
 
 A verificação do acesso a rotas por usuários não autenticados foi implementada por meio de um middleware. Nesse processo, verificamos se existe uma sessão armazenada nos cookies que é salva com a diretiva httpOnly e se o token de acesso ainda é válido. Essa abordagem garante a segurança e a restrição adequada de acesso às rotas privadas da aplicação.
 
-### Cache e Keys
+### Cache
 
 Para reduzir requisições desnecessárias e evitar sobrecarga no servidor, algumas rotas foram configuradas para aproveitar o recurso de cache oferecido pelo Next.js. Com o objetivo de facilitar futuras alterações, as chaves usadas para identificar as tags das requisições em cache foram centralizadas na classe `CacheKeys`.
 
@@ -53,11 +53,11 @@ export class CacheKeys {
 }
 ```
 
-### Services & Requests
+### Serviços & Requisições
 
 A aplicação possui requisições de diversos tipos, user, books, author, etc. Todas elas estão no diretório `src/services` separadas por entidade. Todas as requisições são feitas utilizando a biblioteca **better fetch** que possui compatibilidade com o fetch do next e schemas do zod.
 
-### Error Handling
+### Gerenciamento de Erros
 
 Para o gerenciamento de erros, adotei o padrão Result, implementado em `utils/result.ts`. Essa abordagem permite uma manipulação mais segura e expressiva de possíveis falhas, tornando o código mais robusto e fácil de entender. Ao encapsular o resultado de uma operação e um possível erro em uma única estrutura de dados.
 
@@ -74,13 +74,13 @@ async ChangePassword(input: ChangePasswordInput) {
   }
 ```
 
-### Forms & Server Actions
+### Formulários & Ações no Servidor
 
 Os formulários são gerenciados por meio da biblioteca React Hook Form e validados utilizando o Zod antes de serem submetidos a uma server action. Todas as actions estão agrupadas no diretório `src/actions`. Uma vez submetidos, os dados são enviados para uma requisição, que, em caso de sucesso, pode resultar na invalidação do cache ou no redirecionamento do usuário, conforme necessário.
 
 ### Perfomance
 
-#### Memoization
+#### Memorização
 
 Com o intuito de aprimorar a performance da aplicação, foram adotadas estratégias de memorização para evitar execuções desnecessárias a cada rerender.
 
@@ -97,7 +97,7 @@ const categoriesOptions: Option[] = useMemo(
 
 Essa abordagem é comumente utilizada na aplicação, conforme demonstrado no exemplo acima, que emprega a função map para gerar um array com uma estrutura específica. Envolvelo com o useMemo garante que esse cálculo seja realizado apenas uma vez, melhorando assim a eficiência do processo.
 
-#### Dynamic Imports
+#### Importações Dinâmicas
 
 Para melhorar o desempenho do carregamento inicial da aplicação, foi usado importações dinâmicas que divide ó código em partes menores que podem ser carregadas conforme necessário, reduzindo a quantidade de código que precisa ser analisada e executada quando um usuário visita a página pela primeira vez.
 
@@ -109,7 +109,7 @@ export const ...
 <FormRentDynamic book={book.data} />
 ```
 
-### Tests
+### Testes
 
 Para garantir a funcionalidade do código e facilitar a escrita de testes, implementei o padrão MVVM (Model-View-ViewModel) em diversos componentes. Essa abordagem permitiu que eu mockasse dados e métodos, possibilitando testar todos os casos de uso com facilidade.
 
